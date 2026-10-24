@@ -4,21 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clickly - Platform Fotografer & Sewa Alat</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        primary: '#FF6B35', // Orange
-                        secondary: '#00A8E8', // Blue
-                        dark: '#1E293B'
-                    }
+                    colors: { primary: '#FF6B35', secondary: '#00A8E8' }
                 }
             }
         }
@@ -32,8 +25,7 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        /* Hide sections by default */
-        .page-section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .page-section { display: none; animation: fadeIn 0.3s ease-in-out; }
         .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -43,22 +35,15 @@
     <!-- NAVBAR -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- LOGO -->
             <a href="#" onclick="switchPage('beranda')" class="flex items-center gap-2 group">
-                <div class="w-10 h-10 rounded-xl gradient-btn flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-                    <i data-lucide="camera" class="w-5 h-5"></i>
-                </div>
+                <div class="w-10 h-10 rounded-xl gradient-btn flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform"><i data-lucide="camera" class="w-5 h-5"></i></div>
                 <span class="text-2xl font-black tracking-tight text-slate-900">Clickly</span>
             </a>
-
-            <!-- MENU LINKS -->
             <nav class="hidden md:flex items-center gap-8 font-bold text-slate-600 text-sm">
                 <button onclick="switchPage('beranda')" class="hover:text-primary transition-colors">Beranda</button>
                 <button onclick="switchPage('marketplace')" class="hover:text-primary transition-colors">Cari Fotografer</button>
                 <button onclick="switchPage('sewa-alat')" class="hover:text-primary transition-colors">Sewa Alat</button>
             </nav>
-
-            <!-- AUTH & DASHBOARD BTN -->
             <div id="navAuthSection" class="flex items-center gap-3">
                 <button onclick="openAuthModal('login')" class="px-5 py-2 text-slate-600 font-bold text-sm hover:bg-slate-100 rounded-full transition-all">Masuk</button>
                 <button onclick="openAuthModal('register')" class="px-6 py-2.5 gradient-btn text-white font-bold text-sm rounded-full shadow-lg hover:scale-105 transition-all">Daftar</button>
@@ -66,314 +51,280 @@
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
     <main class="min-h-screen">
-
-        <!-- ========================================== -->
-        <!-- HALAMAN 1: BERANDA (Sesuai Desain Gambar) -->
-        <!-- ========================================== -->
+        <!-- 1. BERANDA -->
         <section id="beranda" class="page-section active pt-12 pb-24">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <h1 class="text-5xl sm:text-6xl font-black text-slate-900 leading-[1.1] tracking-tight">Fotografer,<br>Sekali Klik<br>Beres!</h1>
+                    <p class="text-slate-600 leading-relaxed max-w-lg text-lg">Platform marketplace digital terpercaya yang menghubungkan Anda dengan fotografer dan videografer profesional. <strong class="text-slate-900">Tidak ada lagi respon lambat dan harga tidak jelas!</strong></p>
                     
-                    <!-- Kiri: Teks & Fitur -->
-                    <div class="space-y-8">
-                        <h1 class="text-5xl sm:text-6xl font-black text-slate-900 leading-[1.1] tracking-tight">
-                            Fotografer,<br>Sekali Klik<br>Beres!
-                        </h1>
-                        <p class="text-slate-600 leading-relaxed max-w-lg text-lg">
-                            Platform marketplace digital terpercaya yang menghubungkan Anda dengan fotografer dan videografer profesional di seluruh Indonesia. <strong class="text-slate-900">Tidak ada lagi respon lambat dan harga tidak jelas!</strong>
-                        </p>
-
-                        <!-- 4 Badges Fitur -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="flex items-start gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                                <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-primary shrink-0"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div>
-                                <div><h4 class="font-bold text-sm text-slate-900">Harga Transparan</h4><p class="text-[11px] text-slate-500 mt-0.5">Lihat harga jelas tanpa biaya tersembunyi</p></div>
-                            </div>
-                            <div class="flex items-start gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-secondary shrink-0"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
-                                <div><h4 class="font-bold text-sm text-slate-900">Pembayaran Aman</h4><p class="text-[11px] text-slate-500 mt-0.5">Garansi uang kembali 100%</p></div>
-                            </div>
-                            <div class="flex items-start gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                                <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-primary shrink-0"><i data-lucide="check-circle-2" class="w-5 h-5"></i></div>
-                                <div><h4 class="font-bold text-sm text-slate-900">Fotografer Terverifikasi</h4><p class="text-[11px] text-slate-500 mt-0.5">Semua sudah diverifikasi dan terpercaya</p></div>
-                            </div>
-                            <div class="flex items-start gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-secondary shrink-0"><i data-lucide="clock" class="w-5 h-5"></i></div>
-                                <div><h4 class="font-bold text-sm text-slate-900">Respon Instan</h4><p class="text-[11px] text-slate-500 mt-0.5">Booking langsung, tanpa menunggu</p></div>
-                            </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex items-start gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-primary shrink-0"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div>
+                            <div><h4 class="font-bold text-sm text-slate-900">Harga Transparan</h4><p class="text-[11px] text-slate-500 mt-0.5">Lihat harga jelas tanpa biaya tersembunyi</p></div>
                         </div>
-
-                        <!-- Search Box -->
-                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl max-w-lg">
-                            <h3 class="font-bold text-slate-900 mb-4">Mulai Pencarian Anda</h3>
-                            <div class="grid grid-cols-2 gap-3 mb-4">
-                                <select class="w-full bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl px-4 py-3 outline-none focus:border-primary">
-                                    <option>Pilih Kategori</option><option>Wisuda</option><option>Pernikahan</option><option>Event</option>
-                                </select>
-                                <select class="w-full bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl px-4 py-3 outline-none focus:border-primary">
-                                    <option>Pilih Lokasi</option><option>Jabodetabek</option><option>Bandung</option><option>Surabaya</option>
-                                </select>
-                                <select class="w-full bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl px-4 py-3 outline-none focus:border-primary">
-                                    <option>Budget Minimum</option><option>Rp 500k</option><option>Rp 1 Juta</option>
-                                </select>
-                                <select class="w-full bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl px-4 py-3 outline-none focus:border-primary">
-                                    <option>Rating Minimum</option><option>★ 4.0+</option><option>★ 4.5+</option>
-                                </select>
-                            </div>
-                            <button onclick="switchPage('marketplace')" class="w-full gradient-btn text-white font-bold py-3.5 rounded-xl shadow-lg flex justify-center items-center gap-2">
-                                <i data-lucide="search" class="w-4 h-4"></i> Cari Fotografer Sekarang >
-                            </button>
+                        <div class="flex items-start gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-secondary shrink-0"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+                            <div><h4 class="font-bold text-sm text-slate-900">Pembayaran Aman</h4><p class="text-[11px] text-slate-500 mt-0.5">Garansi uang kembali 100%</p></div>
                         </div>
                     </div>
 
-                    <!-- Kanan: Grid Gambar Masonry -->
-                    <div class="relative h-[600px]">
-                        <div class="absolute top-0 left-0 w-5/12 h-[45%] rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-4"><span class="text-white font-bold text-sm">Pernikahan</span></div>
-                        </div>
-                        <div class="absolute top-10 right-0 w-6/12 h-[40%] rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-4"><span class="text-white font-bold text-sm">Wisuda</span></div>
-                        </div>
-                        <div class="absolute bottom-10 left-0 w-6/12 h-[40%] rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-4"><span class="text-white font-bold text-sm">Produk</span></div>
-                        </div>
-                        <div class="absolute bottom-0 right-0 w-5/12 h-[45%] rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-4"><span class="text-white font-bold text-sm">Event & Konser</span></div>
-                        </div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl max-w-lg">
+                        <h3 class="font-bold text-slate-900 mb-4">Mulai Pencarian Anda</h3>
+                        <button onclick="switchPage('marketplace')" class="w-full gradient-btn text-white font-bold py-3.5 rounded-xl shadow-lg flex justify-center items-center gap-2"><i data-lucide="search" class="w-4 h-4"></i> Cari Fotografer Sekarang ></button>
                     </div>
+                </div>
+                <div class="relative h-[600px] hidden lg:block">
+                    <div class="absolute top-0 left-0 w-5/12 h-[45%] rounded-3xl overflow-hidden shadow-lg border-4 border-white"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover"><div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-4"><span class="text-white font-bold text-sm">Pernikahan</span></div></div>
+                    <div class="absolute top-10 right-0 w-6/12 h-[40%] rounded-3xl overflow-hidden shadow-lg border-4 border-white"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover"><div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-4"><span class="text-white font-bold text-sm">Wisuda</span></div></div>
+                    <div class="absolute bottom-10 left-0 w-6/12 h-[40%] rounded-3xl overflow-hidden shadow-lg border-4 border-white"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover"><div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-4"><span class="text-white font-bold text-sm">Produk</span></div></div>
                 </div>
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- HALAMAN 2: MARKETPLACE (Cari Fotografer) -->
-        <!-- ========================================== -->
+        <!-- 2. MARKETPLACE -->
         <section id="marketplace" class="page-section pt-12 pb-24 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="mb-8">
-                    <h2 class="text-3xl font-black text-slate-900">Katalog Fotografer</h2>
-                    <p class="text-slate-500 mt-2">Pilih talent terbaik untuk momen berhargamu.</p>
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black text-slate-900">Katalog Fotografer</h2>
+                        <p class="text-slate-500 mt-2">Pilih talent terbaik dari database.</p>
+                    </div>
                 </div>
                 <div id="photographerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Data diload via JavaScript -->
+                    <!-- Rendered via JS -->
                 </div>
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- HALAMAN 3: SEWA ALAT (Baru) -->
-        <!-- ========================================== -->
+        <!-- 3. SEWA ALAT -->
         <section id="sewa-alat" class="page-section pt-12 pb-24">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-end mb-8">
-                    <div>
-                        <h2 class="text-3xl font-black text-slate-900">Sewa Alat Fotografi</h2>
-                        <p class="text-slate-500 mt-2">Kamera, Lensa, dan Lighting profesional siap sewa harian.</p>
-                    </div>
-                    <div class="hidden sm:block">
-                        <select class="bg-white border border-slate-200 text-sm font-bold rounded-xl px-4 py-2 outline-none">
-                            <option>Semua Kategori</option>
-                            <option>Kamera DSLR/Mirrorless</option>
-                            <option>Lensa</option>
-                            <option>Lighting & Studio</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="rentalGrid">
-                    <!-- Item 1 -->
-                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group">
-                        <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80" class="w-full h-48 object-cover group-hover:scale-105 transition-transform">
-                        <div class="p-5">
-                            <span class="text-[10px] font-bold text-primary uppercase bg-orange-50 px-2 py-1 rounded-md">Kamera</span>
-                            <h3 class="font-bold text-slate-900 mt-2">Sony A7III Body Only</h3>
-                            <p class="text-xs text-slate-500 mt-1">Ready stock • Tersedia 2 unit</p>
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
-                                <div><span class="block text-[10px] text-slate-400">Tarif / Hari</span><strong class="text-slate-900">Rp 250.000</strong></div>
-                                <button onclick="alert('Fitur sewa segera hadir!')" class="px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg">Sewa</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Item 2 -->
-                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group">
-                        <img src="https://images.unsplash.com/photo-1617005082833-1e6bc03e2c38?auto=format&fit=crop&w=400&q=80" class="w-full h-48 object-cover group-hover:scale-105 transition-transform">
-                        <div class="p-5">
-                            <span class="text-[10px] font-bold text-secondary uppercase bg-blue-50 px-2 py-1 rounded-md">Lensa</span>
-                            <h3 class="font-bold text-slate-900 mt-2">Canon EF 50mm f/1.8 STM</h3>
-                            <p class="text-xs text-slate-500 mt-1">Lensa Fix Bokeh • 5 unit</p>
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
-                                <div><span class="block text-[10px] text-slate-400">Tarif / Hari</span><strong class="text-slate-900">Rp 50.000</strong></div>
-                                <button onclick="alert('Fitur sewa segera hadir!')" class="px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg">Sewa</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Item 3 -->
-                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group">
-                        <img src="https://images.unsplash.com/photo-1527011045970-22c9dc5e7e0d?auto=format&fit=crop&w=400&q=80" class="w-full h-48 object-cover group-hover:scale-105 transition-transform">
-                        <div class="p-5">
-                            <span class="text-[10px] font-bold text-primary uppercase bg-orange-50 px-2 py-1 rounded-md">Kamera</span>
-                            <h3 class="font-bold text-slate-900 mt-2">Fujifilm X-T4 + Kit Lensa</h3>
-                            <p class="text-xs text-slate-500 mt-1">Video & Foto • 1 unit</p>
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
-                                <div><span class="block text-[10px] text-slate-400">Tarif / Hari</span><strong class="text-slate-900">Rp 300.000</strong></div>
-                                <button onclick="alert('Fitur sewa segera hadir!')" class="px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg">Sewa</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Item 4 -->
-                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group">
-                        <img src="https://images.unsplash.com/photo-1588607616143-690226c6d057?auto=format&fit=crop&w=400&q=80" class="w-full h-48 object-cover group-hover:scale-105 transition-transform">
-                        <div class="p-5">
-                            <span class="text-[10px] font-bold text-purple-500 uppercase bg-purple-50 px-2 py-1 rounded-md">Lighting</span>
-                            <h3 class="font-bold text-slate-900 mt-2">Godox SL60W Video Light</h3>
-                            <p class="text-xs text-slate-500 mt-1">Termasuk Softbox & Stand</p>
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
-                                <div><span class="block text-[10px] text-slate-400">Tarif / Hari</span><strong class="text-slate-900">Rp 100.000</strong></div>
-                                <button onclick="alert('Fitur sewa segera hadir!')" class="px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg">Sewa</button>
-                            </div>
-                        </div>
-                    </div>
+                <h2 class="text-3xl font-black text-slate-900 mb-8">Sewa Alat Fotografi</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group"><img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80" class="w-full h-48 object-cover group-hover:scale-105 transition-transform"><div class="p-5"><h3 class="font-bold text-slate-900 mt-2">Sony A7III Body Only</h3><div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center"><div><span class="block text-[10px] text-slate-400">Tarif / Hari</span><strong class="text-slate-900">Rp 250.000</strong></div><button class="px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg">Sewa</button></div></div></div>
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group"><img src="https://images.unsplash.com/photo-1617005082833-1e6bc03e2c38?auto=format&fit=crop&w=400&q=80" class="w-full h-48 object-cover group-hover:scale-105 transition-transform"><div class="p-5"><h3 class="font-bold text-slate-900 mt-2">Canon EF 50mm f/1.8</h3><div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center"><div><span class="block text-[10px] text-slate-400">Tarif / Hari</span><strong class="text-slate-900">Rp 50.000</strong></div><button class="px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg">Sewa</button></div></div></div>
                 </div>
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- HALAMAN 4: DASHBOARD FOTOGRAFER -->
-        <!-- ========================================== -->
+        <!-- 4. DASHBOARD -->
         <section id="dashboard" class="page-section pt-12 pb-24 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="mb-8">
-                    <h2 class="text-2xl font-black text-slate-900">Dashboard Fotografer</h2>
-                    <p class="text-xs text-slate-500 mt-1">Kelola bisnis fotografi Anda dalam satu tempat</p>
-                </div>
-                <!-- Kartu Statistik ala Desain -->
+                <div class="mb-8"><h2 class="text-2xl font-black text-slate-900">Dashboard Fotografer</h2></div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-[#FF6B35] rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
-                        <i data-lucide="dollar-sign" class="absolute right-[-20px] bottom-[-20px] w-32 h-32 text-white/10"></i>
-                        <span class="bg-white/20 px-2 py-1 rounded text-[10px] font-bold absolute top-6 right-6">+12%</span>
-                        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-4"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div>
-                        <h3 class="text-3xl font-black" id="dashTotalIncome">Rp 0</h3>
-                        <p class="text-xs mt-1 text-white/80">Pendapatan Bulan Ini</p>
-                    </div>
-                    <div class="bg-[#00A8E8] rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
-                        <i data-lucide="calendar" class="absolute right-[-20px] bottom-[-20px] w-32 h-32 text-white/10"></i>
-                        <span class="bg-white/20 px-2 py-1 rounded text-[10px] font-bold absolute top-6 right-6" id="dashActiveCount">0 Aktif</span>
-                        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-4"><i data-lucide="calendar" class="w-5 h-5"></i></div>
-                        <h3 class="text-3xl font-black" id="dashTotalOrders">0</h3>
-                        <p class="text-xs mt-1 text-white/80">Booking Mendatang</p>
-                    </div>
-                    <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
-                        <span class="text-primary font-bold text-[10px] float-right mt-2">Excellent</span>
-                        <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-primary mb-4"><i data-lucide="star" class="w-5 h-5"></i></div>
-                        <h3 class="text-3xl font-black text-slate-900">4.9</h3>
-                        <p class="text-xs mt-1 text-slate-500">Rating Rata-rata</p>
-                    </div>
+                    <div class="bg-[#FF6B35] rounded-3xl p-6 text-white shadow-lg relative overflow-hidden"><h3 class="text-3xl font-black" id="dashTotalIncome">Rp 0</h3><p class="text-xs mt-1 text-white/80">Pendapatan Bulan Ini</p></div>
+                    <div class="bg-[#00A8E8] rounded-3xl p-6 text-white shadow-lg relative overflow-hidden"><h3 class="text-3xl font-black" id="dashTotalOrders">0</h3><p class="text-xs mt-1 text-white/80">Booking Mendatang</p></div>
                 </div>
-
-                <!-- Daftar Pesanan Masuk -->
                 <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                    <h3 class="font-bold text-lg mb-4 text-slate-800">Booking Mendatang</h3>
-                    <div id="dashboardOrdersList" class="space-y-4">
-                        <!-- Data Booking Supabase Masuk Kesini -->
-                    </div>
+                    <h3 class="font-bold text-lg mb-4 text-slate-800">Booking Masuk (Dari Database)</h3>
+                    <div id="dashboardOrdersList" class="space-y-4"></div>
                 </div>
             </div>
         </section>
-
     </main>
 
     <!-- MODAL AUTH -->
     <div id="authModal" class="fixed inset-0 z-[100] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative">
-            <button onclick="closeModal('authModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <button onclick="closeModal('authModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
             <h3 class="text-2xl font-black text-slate-900 text-center mb-6" id="authTitle">Masuk ke Clickly</h3>
-            <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
+            <div class="grid grid-cols-2 p-1.5 bg-slate-100 rounded-2xl mb-6">
+                <button type="button" id="roleUserBtn" onclick="switchRole('user')" class="py-2 text-xs font-bold rounded-xl bg-white text-slate-800 shadow-sm transition-all">User / Klien</button>
+                <button type="button" id="rolePhotoBtn" onclick="switchRole('photographer')" class="py-2 text-xs font-bold rounded-xl text-slate-500 transition-all">Fotografer</button>
+            </div>
+            <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <input type="hidden" id="selectedRole" value="user">
                 <input type="email" id="authEmail" placeholder="Email Anda" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
                 <input type="password" placeholder="Password" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
+                
+                <div id="photographerFields" class="hidden space-y-4 border-t border-slate-100 pt-4">
+                    <input type="text" id="photoName" placeholder="Nama Lengkap / Studio" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                    <div class="grid grid-cols-2 gap-3">
+                        <select id="photoCategory" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold"><option>Wisuda</option><option>Pernikahan</option></select>
+                        <select id="photoLocation" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold"><option>Jabodetabek</option><option>Bandung</option></select>
+                    </div>
+                    <input type="number" id="photoPrice" placeholder="Tarif Dasar (Rp)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                    <input type="url" id="photoCoverUrl" placeholder="URL Foto Sampul (.jpg/.png)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                </div>
                 <button type="submit" class="w-full py-3.5 gradient-btn text-white font-bold rounded-2xl shadow-lg">Lanjutkan</button>
             </form>
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
-    <script>
-        lucide.createIcons();
+    <!-- MODAL 3: DETAIL & BOOKING -->
+    <div id="detailModal" class="fixed inset-0 z-[100] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative my-8">
+            <button onclick="closeModal('detailModal')" class="absolute top-6 right-6 text-slate-400 z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <div id="detailModalContent" class="grid md:grid-cols-12 gap-8"></div>
+        </div>
+    </div>
 
-        // 1. SISTEM NAVIGASI HALAMAN (SPA)
+    <!-- MODAL 4: QRIS PAYMENT -->
+    <div id="paymentModal" class="fixed inset-0 z-[100] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative text-center">
+            <button onclick="closeModal('paymentModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <i data-lucide="qr-code" class="w-12 h-12 mx-auto text-primary mb-3"></i>
+            <h3 class="text-xl font-black text-slate-900">Scan QRIS Escrow</h3>
+            <div class="my-6 p-4 bg-slate-50 border border-slate-200 rounded-3xl inline-block"><img id="qrisImage" src="" class="w-56 h-56 mx-auto object-contain rounded-xl"></div>
+            <button onclick="confirmPaymentSuccess()" class="w-full py-3.5 bg-emerald-500 text-white font-bold rounded-2xl shadow-lg">Saya Sudah Bayar</button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT & SUPABASE ASLI -->
+    <script>
+        // INISIALISASI HALAMAN & ICON
+        lucide.createIcons();
         function switchPage(pageId) {
-            // Sembunyikan semua halaman
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            // Tampilkan halaman yang dipilih
             document.getElementById(pageId).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 2. KONEKSI SUPABASE (Pastikan URL dan Anon Key kamu disini)
+        // -------------------------------------------------------------
+        // KONEKSI SUPABASE ASLI
+        // -------------------------------------------------------------
         const SUPABASE_URL = 'https://jwjzbqisesreuyotnjxu.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_BUXo9A8fhlN0e-RICss1MA_gBASimd0';
         let supabaseClient = null;
-        
         if (typeof supabase !== 'undefined') {
             supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log('✅ Supabase Connected');
         }
 
-        // 3. MOCK DATA FOTOGRAFER
-        const initialPhotographers = [
-            { id: '1', name: 'Rian Studio', category: 'Wisuda', location: 'Jabodetabek', price: 1250000, coverUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80' },
-            { id: '2', name: 'Lensa Asmara', category: 'Pernikahan', location: 'Bandung', price: 4500000, coverUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80' },
-            { id: '3', name: 'Visual Kreatif', category: 'Event', location: 'Surabaya', price: 850000, coverUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80' }
-        ];
+        let currentPhotographers = [];
+        let activeBookings = [];
+        let currentUser = JSON.parse(localStorage.getItem('clickly_user')) || null;
+        let currentPayingOrder = null;
 
-        // 4. RENDER MARKETPLACE
-        function renderPhotographerGrid() {
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadPhotographersFromDB();
+            await loadBookingsFromDB();
+            updateUserUIState();
+        });
+
+        // AMBIL DATA FOTOGRAFER DARI DATABASE
+        async function loadPhotographersFromDB() {
+            if (supabaseClient) {
+                const { data, error } = await supabaseClient.from('photographers').select('*');
+                if (!error && data && data.length > 0) currentPhotographers = data;
+            }
+            renderPhotographerGrid(currentPhotographers);
+        }
+
+        // AMBIL DATA TRANSAKSI DARI DATABASE
+        async function loadBookingsFromDB() {
+            if (supabaseClient) {
+                const { data, error } = await supabaseClient.from('bookings').select('*');
+                if (!error && data) activeBookings = data;
+            }
+            renderDashboardOrders();
+        }
+
+        // RENDER MARKETPLACE
+        function renderPhotographerGrid(dataList) {
             const grid = document.getElementById('photographerGrid');
-            grid.innerHTML = '';
-            initialPhotographers.forEach(p => {
+            grid.innerHTML = dataList.length === 0 ? '<p>Belum ada fotografer terdaftar.</p>' : '';
+            dataList.forEach(p => {
                 grid.innerHTML += `
                     <div class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all flex flex-col overflow-hidden">
-                        <img src="${p.coverUrl}" class="w-full h-56 object-cover">
+                        <img src="${p.coverUrl || 'https://via.placeholder.com/400x300'}" class="w-full h-56 object-cover">
                         <div class="p-6">
-                            <span class="text-xs text-slate-500 block mb-1">📍 ${p.location}</span>
+                            <span class="text-xs text-slate-500 block mb-1">📍 ${p.location} | ${p.category}</span>
                             <h3 class="font-bold text-lg text-slate-900">${p.name}</h3>
                             <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
-                                <div><span class="text-[10px] text-slate-400 block">Tarif Mulai</span><span class="font-black text-slate-900">Rp ${p.price.toLocaleString('id-ID')}</span></div>
-                                <button onclick="alert('Fitur booking diringkas untuk demo halaman.')" class="px-4 py-2 gradient-btn text-white font-bold text-xs rounded-xl">Booking</button>
+                                <div><span class="text-[10px] text-slate-400 block">Tarif</span><span class="font-black text-slate-900">Rp ${Number(p.price).toLocaleString('id-ID')}</span></div>
+                                <button onclick="openDetailModal('${p.id}')" class="px-4 py-2 gradient-btn text-white font-bold text-xs rounded-xl">Booking</button>
                             </div>
                         </div>
                     </div>
                 `;
             });
         }
-        renderPhotographerGrid();
 
-        // 5. AUTENTIKASI SIMPLE
-        let currentUser = null;
-        function openAuthModal(mode) {
-            document.getElementById('authTitle').innerText = mode === 'login' ? 'Masuk ke Clickly' : 'Daftar Akun Baru';
-            document.getElementById('authModal').classList.remove('hidden');
-        }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        
-        function handleAuth(e) {
-            e.preventDefault();
-            const email = document.getElementById('authEmail').value;
-            currentUser = { email: email, role: 'photographer' }; // Set otomatis jadi fotografer untuk demo
-            
-            document.getElementById('navAuthSection').innerHTML = `
-                <span class="text-xs bg-slate-100 px-3 py-1.5 rounded-full font-bold">${email}</span>
-                <button onclick="switchPage('dashboard')" class="text-xs font-bold text-primary ml-2">Dashboard</button>
+        // PROSES BOOKING & BAYAR
+        function openDetailModal(id) {
+            const p = currentPhotographers.find(item => item.id == id);
+            document.getElementById('detailModalContent').innerHTML = `
+                <div class="md:col-span-7"><img src="${p.coverUrl}" class="w-full h-80 object-cover rounded-3xl shadow-md"><h2 class="text-2xl font-black mt-4">${p.name}</h2></div>
+                <div class="md:col-span-5 bg-slate-50 p-6 rounded-3xl border border-slate-200/80 h-fit space-y-4">
+                    <h3 class="font-bold">Pesan Sesi Foto</h3>
+                    <input type="date" id="bookingDate" class="w-full px-4 py-2.5 rounded-xl border border-slate-200">
+                    <button onclick="startCheckout('${p.id}', ${p.price}, '${p.name}')" class="w-full py-3.5 bg-primary text-white font-bold rounded-2xl">Bayar Rp ${Number(p.price).toLocaleString('id-ID')} via QRIS</button>
+                </div>
             `;
-            closeModal('authModal');
-            alert('Login Berhasil!');
-            switchPage('dashboard');
+            openModal('detailModal');
         }
+
+        function startCheckout(photographerId, amount, photographerName) {
+            const date = document.getElementById('bookingDate').value;
+            if (!date) return alert('Pilih tanggal!');
+            const trxId = 'CLK-' + Math.floor(100000 + Math.random() * 900000);
+            currentPayingOrder = { id: trxId, photographerid: String(photographerId), photographername: photographerName, amount: Number(amount), date, status: 'Lunas' };
+            document.getElementById('qrisImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=CLICKLY-${trxId}`;
+            closeModal('detailModal'); openModal('paymentModal');
+        }
+
+        async function confirmPaymentSuccess() {
+            if (!currentPayingOrder || !supabaseClient) return;
+            // INSERT KE SUPABASE BOOKINGS
+            const { error } = await supabaseClient.from('bookings').insert([currentPayingOrder]);
+            if (error) return alert('Gagal simpan ke database: ' + error.message);
+            
+            activeBookings.push(currentPayingOrder);
+            alert('Berhasil bayar! Data masuk database.');
+            closeModal('paymentModal');
+            loadBookingsFromDB(); // Refresh dashboard
+        }
+
+        // AUTH & DAFTAR FOTOGRAFER
+        function switchRole(role) {
+            document.getElementById('selectedRole').value = role;
+            document.getElementById('photographerFields').style.display = role === 'photographer' ? 'block' : 'none';
+        }
+        async function handleAuthSubmit(e) {
+            e.preventDefault();
+            const role = document.getElementById('selectedRole').value;
+            
+            if (role === 'photographer') {
+                const newT = {
+                    id: String(Date.now()), name: document.getElementById('photoName').value, price: Number(document.getElementById('photoPrice').value),
+                    category: document.getElementById('photoCategory').value, location: document.getElementById('photoLocation').value, coverUrl: document.getElementById('photoCoverUrl').value,
+                };
+                // INSERT KE SUPABASE PHOTOGRAPHERS
+                const { error } = await supabaseClient.from('photographers').insert([newT]);
+                if (error) return alert('Gagal simpan fotografer: ' + error.message);
+                loadPhotographersFromDB();
+            }
+            currentUser = { email: document.getElementById('authEmail').value, role };
+            localStorage.setItem('clickly_user', JSON.stringify(currentUser));
+            closeModal('authModal'); updateUserUIState();
+        }
+
+        function updateUserUIState() {
+            if (currentUser) {
+                document.getElementById('navAuthSection').innerHTML = `<span class="text-xs bg-slate-100 px-3 py-1.5 rounded-full font-bold">${currentUser.email}</span><button onclick="localStorage.clear();location.reload()" class="text-xs text-rose-500 ml-2 font-bold">Logout</button>`;
+                if (currentUser.role === 'photographer') {
+                    document.getElementById('dashboard').classList.add('active'); // Tampilkan dashboard
+                }
+            }
+        }
+
+        function renderDashboardOrders() {
+            const list = document.getElementById('dashboardOrdersList');
+            list.innerHTML = '';
+            let total = 0;
+            activeBookings.forEach(b => {
+                total += Number(b.amount);
+                list.innerHTML += `<div class="p-4 bg-white border rounded-xl text-xs"><span class="text-emerald-500 font-bold">${b.status}</span><p class="font-bold">Trx: ${b.id}</p><p>Tgl: ${b.date}</p><p class="font-black text-primary">Rp ${Number(b.amount).toLocaleString('id-ID')}</p></div>`;
+            });
+            document.getElementById('dashTotalOrders').innerText = activeBookings.length;
+            document.getElementById('dashTotalIncome').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
     </script>
 </body>
 </html>
