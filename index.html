@@ -726,7 +726,7 @@
                 const portfolioUrl = document.getElementById('photoPortfolioUrl').value;
                 const coverurl = document.getElementById('photoCoverUrl').value;
 
-                if(!name || !price || !portfolioUrl || !coverUrl) { 
+                if(!name || !price || !portfolioUrl || !coverurl) { 
                     alert('Lengkapi seluruh data fotografer!'); 
                     return; 
                 }
@@ -738,7 +738,7 @@
                     category: document.getElementById('photoCategory').value,
                     location: document.getElementById('photoLocation').value,
                     portfolioUrl,
-                    coverUrl,
+                    coverurl,
                     rating: 5.0, 
                     reviewsCount: 1,
                     bio: 'Fotografer profesional terverifikasi.'
