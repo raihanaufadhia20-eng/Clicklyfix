@@ -344,6 +344,23 @@
 
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function openAuthModal(mode) {
+        function switchRole(role) {
+            document.getElementById('selectedRole').value = role;
+            const userBtn = document.getElementById('roleUserBtn');
+            const photoBtn = document.getElementById('rolePhotoBtn');
+            const photoFields = document.getElementById('photographerFields');
+
+            if (role === 'user') {
+                if(userBtn) { userBtn.className = "py-2 text-xs font-bold rounded-xl bg-white text-slate-800 shadow-sm transition-all"; }
+                if(photoBtn) { photoBtn.className = "py-2 text-xs font-bold rounded-xl text-slate-500 transition-all"; }
+                if(photoFields) { photoFields.style.display = 'none'; }
+            } else {
+                if(photoBtn) { photoBtn.className = "py-2 text-xs font-bold rounded-xl bg-white text-slate-800 shadow-sm transition-all"; }
+                if(userBtn) { userBtn.className = "py-2 text-xs font-bold rounded-xl text-slate-500 transition-all"; }
+                if(photoFields) { photoFields.style.display = 'block'; }
+            }
+        }
     </script>
 </body>
 </html>
