@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Supabase JS SDK (Opsional jika ingin connect database) -->
+    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
@@ -29,7 +29,7 @@
         .text-gradient {
             background: linear-gradient(135deg, #FF6B35 0%, #00A8E8 100%);
             -webkit-background-clip: text;
-            background-clip: text; /* Fix CSS Warning */
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .bg-glass {
@@ -54,13 +54,9 @@
                                 <stop offset="100%" stop-color="#FF6B35" />
                             </linearGradient>
                         </defs>
-                        <!-- Camera Body -->
                         <path d="M 40 80 Q 40 60 60 60 L 80 60 L 90 45 Q 95 40 105 40 L 125 40 Q 135 40 140 45 L 150 60 L 170 60 Q 190 60 190 80 L 190 140 Q 190 160 170 160 L 60 160 Q 40 160 40 140 Z" fill="none" stroke="url(#logoGrad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-                        <!-- Flash Dots -->
                         <circle cx="160" cy="80" r="6" fill="#FF8A5B"/>
-                        <!-- Lens -->
                         <circle cx="110" cy="110" r="32" fill="none" stroke="url(#logoGrad)" stroke-width="12"/>
-                        <!-- Click Pointer Cursor -->
                         <path d="M 125 115 L 165 155 L 148 160 L 160 185 L 148 190 L 136 165 L 120 178 Z" fill="#FF6B35" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
                     </svg>
                 </div>
@@ -92,8 +88,6 @@
     <section id="hero" class="relative pt-12 pb-20 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-12 gap-12 items-center">
-                
-                <!-- LEFT CONTENT -->
                 <div class="lg:col-span-7 space-y-6">
                     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100/80 border border-orange-200 text-primary text-xs font-bold shadow-sm">
                         <i data-lucide="trending-up" class="w-4 h-4"></i>
@@ -148,7 +142,6 @@
                     </div>
                 </div>
 
-                <!-- RIGHT SHOWCASE MASONRY -->
                 <div class="lg:col-span-5 relative">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-4">
@@ -180,28 +173,24 @@
             <h2 class="text-3xl font-black text-slate-900 mt-2 mb-12">Cara Kerja Clickly</h2>
             
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Step 1 -->
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative">
                     <div class="w-12 h-12 bg-orange-100 text-primary rounded-2xl flex items-center justify-center font-black text-xl absolute -top-6 left-1/2 -translate-x-1/2">1</div>
                     <i data-lucide="search" class="w-8 h-8 text-slate-300 mx-auto mt-6 mb-4"></i>
                     <h3 class="font-bold text-slate-800 mb-2">Cari & Filter</h3>
                     <p class="text-xs text-slate-500">Temukan fotografer berdasarkan kategori acara, lokasi, dan budget kamu.</p>
                 </div>
-                <!-- Step 2 -->
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative">
                     <div class="w-12 h-12 bg-orange-100 text-primary rounded-2xl flex items-center justify-center font-black text-xl absolute -top-6 left-1/2 -translate-x-1/2">2</div>
                     <i data-lucide="git-compare" class="w-8 h-8 text-slate-300 mx-auto mt-6 mb-4"></i>
                     <h3 class="font-bold text-slate-800 mb-2">Bandingkan</h3>
                     <p class="text-xs text-slate-500">Pilih 3 fotografer untuk dibandingkan harga, rating, dan portofolionya.</p>
                 </div>
-                <!-- Step 3 -->
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative">
                     <div class="w-12 h-12 bg-orange-100 text-primary rounded-2xl flex items-center justify-center font-black text-xl absolute -top-6 left-1/2 -translate-x-1/2">3</div>
                     <i data-lucide="shield-check" class="w-8 h-8 text-slate-300 mx-auto mt-6 mb-4"></i>
                     <h3 class="font-bold text-slate-800 mb-2">Booking & Bayar</h3>
                     <p class="text-xs text-slate-500">Pilih tanggal dan bayar pakai QRIS. Dana aman di sistem Escrow kami.</p>
                 </div>
-                <!-- Step 4 -->
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative">
                     <div class="w-12 h-12 bg-orange-100 text-primary rounded-2xl flex items-center justify-center font-black text-xl absolute -top-6 left-1/2 -translate-x-1/2">4</div>
                     <i data-lucide="camera" class="w-8 h-8 text-slate-300 mx-auto mt-6 mb-4"></i>
@@ -221,7 +210,6 @@
                     <h2 class="text-3xl font-black text-slate-900 mt-1">Pilih Fotografer Terbaik</h2>
                 </div>
 
-                <!-- COMPARISON BAR -->
                 <div id="compareBar" class="hidden items-center gap-3 bg-orange-50 border border-orange-200 p-2.5 rounded-2xl">
                     <span class="text-xs font-bold text-slate-700 px-2"><span id="compareCount">0</span>/3 dipilih</span>
                     <button onclick="openCompareModal()" class="px-4 py-2 gradient-brand text-white text-xs font-bold rounded-xl shadow-md hover:scale-105 transition-all">Bandingkan</button>
@@ -231,7 +219,6 @@
                 </div>
             </div>
 
-            <!-- PHOTOGRAPHER GRID -->
             <div id="photographerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Rendered via JS -->
             </div>
@@ -257,10 +244,6 @@
                             <i data-lucide="check-circle" class="text-emerald-400 w-5 h-5"></i>
                             <span>Memberikan jaminan pembayaran aman (Escrow) untuk freelancer.</span>
                         </li>
-                        <li class="flex items-center gap-3">
-                            <i data-lucide="check-circle" class="text-emerald-400 w-5 h-5"></i>
-                            <span>Memperluas jangkauan pasar fotografer daerah ke ranah nasional.</span>
-                        </li>
                     </ul>
                 </div>
                 <div class="bg-slate-800 rounded-3xl p-8 border border-slate-700 relative overflow-hidden">
@@ -281,7 +264,7 @@
         </div>
     </section>
 
-    <!-- DASHBOARD (Hidden by Default) -->
+    <!-- DASHBOARD -->
     <section id="dashboard" class="hidden py-16 bg-slate-50 border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between pb-8 border-b border-slate-200">
@@ -291,7 +274,6 @@
                 </div>
             </div>
             <div class="grid lg:grid-cols-3 gap-8 mt-8">
-                <!-- STATS -->
                 <div class="lg:col-span-1 space-y-4">
                     <div class="p-6 rounded-3xl bg-white shadow-sm border border-slate-100">
                         <p class="text-xs text-slate-400 font-bold uppercase">Total Pendapatan</p>
@@ -302,12 +284,9 @@
                         <h3 class="text-2xl font-black text-primary mt-2" id="dashTotalOrders">0</h3>
                     </div>
                 </div>
-                <!-- ORDERS -->
                 <div class="lg:col-span-2 p-6 rounded-3xl bg-white shadow-sm border border-slate-100">
                     <h3 class="font-bold text-lg mb-4 text-slate-800">Pesanan Masuk</h3>
-                    <div id="dashboardOrdersList" class="space-y-3">
-                        <!-- Rendered via JS -->
-                    </div>
+                    <div id="dashboardOrdersList" class="space-y-3"></div>
                 </div>
             </div>
         </div>
@@ -320,7 +299,6 @@
             <div class="text-center mb-6">
                 <h3 id="authTitle" class="text-2xl font-black text-slate-900">Masuk ke Clickly</h3>
             </div>
-            <!-- Role Toggle -->
             <div class="grid grid-cols-2 p-1.5 bg-slate-100 rounded-2xl mb-6">
                 <button type="button" id="roleUserBtn" onclick="switchRole('user')" class="py-2 text-xs font-bold rounded-xl bg-white text-slate-800 shadow-sm transition-all">User / Klien</button>
                 <button type="button" id="rolePhotoBtn" onclick="switchRole('photographer')" class="py-2 text-xs font-bold rounded-xl text-slate-500 transition-all">Fotografer</button>
@@ -337,7 +315,6 @@
                     <input type="password" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
                 </div>
                 
-                <!-- Extra Fields for Photographer -->
                 <div id="photographerFields" class="hidden space-y-4 border-t border-slate-100 pt-4">
                     <p class="text-xs font-bold text-primary uppercase">Profil Fotografer (Wajib diisi)</p>
                     <input type="text" id="photoName" placeholder="Nama Lengkap / Studio" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
@@ -357,7 +334,7 @@
                     </div>
                     <input type="number" id="photoPrice" placeholder="Tarif Dasar (Rp)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
                     <input type="url" id="photoPortfolioUrl" placeholder="URL Link Portofolio (IG/Drive)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
-                    <input type="url" id="photoCoverUrl" placeholder="URL Foto Sampul (Format .jpg/.png)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                    <input type="url" id="photoCoverUrl" placeholder="URL Foto Sampul" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
                 </div>
                 <button type="submit" class="w-full py-3.5 gradient-brand text-white font-bold rounded-2xl shadow-lg">Lanjutkan</button>
             </form>
@@ -401,9 +378,20 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT & SUPABASE INTEGRATION -->
     <script>
-        // MOCK DATA AWAL
+        // -------------------------------------------------------------
+        // KONEKSI SUPABASE (URL & ANON KEY YANG BENAR)
+        // -------------------------------------------------------------
+        const SUPABASE_URL = 'https://jwjzbqisesreuyotnjxu.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_BUXo9A8fhlN0e-RICss1MA_gBASimd0';
+        
+        let supabaseClient = null;
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('✅ Supabase Connected Successfully');
+        }
+
         const initialPhotographers = [
             { id: '1', name: 'Rian Studio & Lens', category: 'Wisuda', location: 'Jabodetabek', price: 1250000, rating: 4.9, reviewsCount: 48, coverUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80', portfolioUrl: 'https://instagram.com/rian_lens' },
             { id: '2', name: 'Lensa Asmara Wedding', category: 'Pernikahan', location: 'Bandung', price: 4500000, rating: 5.0, reviewsCount: 112, coverUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80', portfolioUrl: 'https://instagram.com/lensa_asmara' },
@@ -415,15 +403,38 @@
         let currentUser = JSON.parse(localStorage.getItem('clickly_user')) || null;
         let activeBookings = JSON.parse(localStorage.getItem('clickly_bookings')) || [];
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
-            currentPhotographers = JSON.parse(localStorage.getItem('clickly_photographers')) || initialPhotographers;
-            if(!localStorage.getItem('clickly_photographers')) localStorage.setItem('clickly_photographers', JSON.stringify(initialPhotographers));
-            renderPhotographerGrid(currentPhotographers);
+            await loadPhotographersFromDB();
+            await loadBookingsFromDB();
             updateUserUIState();
         });
 
-        // 1. RENDER MARKETPLACE
+        // LOAD PHOTOGRAPHERS FROM SUPABASE
+        async function loadPhotographersFromDB() {
+            if (supabaseClient) {
+                const { data, error } = await supabaseClient.from('photographers').select('*');
+                if (!error && data && data.length > 0) {
+                    currentPhotographers = data;
+                } else {
+                    currentPhotographers = initialPhotographers;
+                }
+            } else {
+                currentPhotographers = initialPhotographers;
+            }
+            renderPhotographerGrid(currentPhotographers);
+        }
+
+        // LOAD BOOKINGS FROM SUPABASE
+        async function loadBookingsFromDB() {
+            if (supabaseClient) {
+                const { data, error } = await supabaseClient.from('bookings').select('*');
+                if (!error && data) {
+                    activeBookings = data;
+                }
+            }
+        }
+
         function renderPhotographerGrid(dataList) {
             const grid = document.getElementById('photographerGrid');
             grid.innerHTML = '';
@@ -448,7 +459,7 @@
                             <div>
                                 <div class="flex justify-between text-xs text-slate-500 mb-1">
                                     <span>📍 ${p.location}</span>
-                                    <span class="text-amber-500 font-bold">★ ${p.rating} (${p.reviewsCount})</span>
+                                    <span class="text-amber-500 font-bold">★ ${p.rating || 5.0} (${p.reviewsCount || 1})</span>
                                 </div>
                                 <h3 class="font-bold text-lg text-slate-900 group-hover:text-primary transition-colors">${p.name}</h3>
                             </div>
@@ -460,24 +471,21 @@
                     </div>
                 `;
             });
+            lucide.createIcons();
         }
 
-        // 2. FILTER SEARCH
         function applyMarketplaceFilter() {
             const cat = document.getElementById('filterCategory').value;
             const loc = document.getElementById('filterLocation').value;
             const budget = Number(document.getElementById('filterBudget').value);
 
             const filtered = currentPhotographers.filter(p => {
-                return (!cat || p.category === cat) && (!loc || p.location === loc) && (p.price <= budget);
+                return (!cat || p.category === cat) && (!loc || p.location === loc) && (Number(p.price) <= budget);
             });
             renderPhotographerGrid(filtered);
-            
-            // Scroll ke bawah (bagian marketplace) setelah search diklik
             document.getElementById('marketplace').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 3. COMPARISON
         function toggleCompare(id) {
             if (selectedForCompare.includes(id)) selectedForCompare = selectedForCompare.filter(item => item !== id);
             else if (selectedForCompare.length >= 3) { alert('Maksimal membandingkan 3 orang!'); renderPhotographerGrid(currentPhotographers); return; }
@@ -505,9 +513,9 @@
             openModal('compareModal');
         }
 
-        // 4. DETAIL & BOOKING
         function openDetailModal(id) {
-            const p = currentPhotographers.find(item => item.id === id);
+            const p = currentPhotographers.find(item => item.id == id);
+            if(!p) return;
             document.getElementById('detailModalContent').innerHTML = `
                 <div class="md:col-span-7 space-y-4">
                     <img src="${p.coverUrl}" class="w-full h-80 object-cover rounded-3xl shadow-md">
@@ -527,14 +535,13 @@
             openModal('detailModal');
         }
 
-        // 5. CHECKOUT QRIS
         let currentPayingOrder = null;
         function startCheckout(photographerId, amount, photographerName) {
             const date = document.getElementById('bookingDate').value;
             if (!date) { alert('Pilih tanggal dulu!'); return; }
 
             const trxId = 'CLK-' + Math.floor(100000 + Math.random() * 900000);
-            currentPayingOrder = { id: trxId, amount, date, status: 'Menunggu' };
+            currentPayingOrder = { id: trxId, photographerid: String(photographerId), photographername: photographerName, amount: Number(amount), date, status: 'Menunggu' };
 
             document.getElementById('qrisImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=CLICKLY-${trxId}`;
             document.getElementById('payPhotographerName').innerText = photographerName;
@@ -543,16 +550,28 @@
             closeModal('detailModal');
             openModal('paymentModal');
         }
-        function confirmPaymentSuccess() {
+
+        async function confirmPaymentSuccess() {
+            if (!currentPayingOrder) return;
             currentPayingOrder.status = 'Lunas (Escrow)';
+
+            // SIMPAN KE SUPABASE TABLE BOOKINGS
+            if (supabaseClient) {
+                const { error } = await supabaseClient.from('bookings').insert([currentPayingOrder]);
+                if (error) {
+                    console.error('Gagal simpan booking:', error.message);
+                    alert('Gagal mencatat transaksi ke database: ' + error.message);
+                    return;
+                }
+            }
+
             activeBookings.push(currentPayingOrder);
             localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
-            alert('Pembayaran Berhasil! Dana aman di sistem Clickly.');
+            alert('Pembayaran Berhasil! Data tercatat aman di database Clickly.');
             closeModal('paymentModal');
             if (currentUser && currentUser.role === 'photographer') renderDashboardOrders();
         }
 
-        // 6. AUTHENTICATION & DASHBOARD
         function openAuthModal(mode) {
             document.getElementById('authMode').value = mode;
             document.getElementById('authTitle').innerText = mode === 'login' ? 'Masuk ke Clickly' : 'Daftar Akun Baru';
@@ -566,23 +585,44 @@
             const curr = document.getElementById('authMode').value;
             openAuthModal(curr === 'login' ? 'register' : 'login');
         }
-        function handleAuthSubmit(e) {
+
+        async function handleAuthSubmit(e) {
             e.preventDefault();
             const role = document.getElementById('selectedRole').value;
             
             if (role === 'photographer' && document.getElementById('authMode').value === 'register') {
                 const name = document.getElementById('photoName').value;
                 const price = document.getElementById('photoPrice').value;
-                if(!name || !price) { alert('Lengkapi data fotografer!'); return; }
+                const portfolioUrl = document.getElementById('photoPortfolioUrl').value;
+                const coverUrl = document.getElementById('photoCoverUrl').value;
+
+                if(!name || !price || !portfolioUrl || !coverUrl) { 
+                    alert('Lengkapi seluruh data fotografer!'); 
+                    return; 
+                }
                 
                 const newT = {
-                    id: String(Date.now()), name, price: Number(price),
+                    id: String(Date.now()), 
+                    name, 
+                    price: Number(price),
                     category: document.getElementById('photoCategory').value,
                     location: document.getElementById('photoLocation').value,
-                    portfolioUrl: document.getElementById('photoPortfolioUrl').value,
-                    coverUrl: document.getElementById('photoCoverUrl').value,
-                    rating: 5.0, reviewsCount: 1
+                    portfolioUrl,
+                    coverUrl,
+                    rating: 5.0, 
+                    reviewsCount: 1,
+                    bio: 'Fotografer profesional terverifikasi.'
                 };
+
+                // SIMPAN KE SUPABASE TABLE PHOTOGRAPHERS
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.from('photographers').insert([newT]);
+                    if (error) {
+                        alert('Gagal mendaftarkan fotografer ke database: ' + error.message);
+                        return;
+                    }
+                }
+
                 currentPhotographers.push(newT);
                 localStorage.setItem('clickly_photographers', JSON.stringify(currentPhotographers));
                 renderPhotographerGrid(currentPhotographers);
@@ -592,12 +632,12 @@
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
             closeModal('authModal');
             updateUserUIState();
-            alert('Login Berhasil!');
+            alert('Login / Pendaftaran Berhasil!');
         }
 
         function updateUserUIState() {
             if (currentUser) {
-                document.getElementById('navAuthSection').innerHTML = `<span class="text-xs bg-slate-100 px-3 py-1.5 rounded-full">${currentUser.email}</span><button onclick="logout()" class="text-xs text-rose-500 font-bold ml-2">Keluar</button>`;
+                document.getElementById('navAuthSection').innerHTML = `<span class="text-xs bg-slate-100 px-3 py-1.5 rounded-full font-bold">${currentUser.email} (${currentUser.role})</span><button onclick="logout()" class="text-xs text-rose-500 font-bold ml-2">Keluar</button>`;
                 if (currentUser.role === 'photographer') {
                     document.getElementById('dashboard').classList.remove('hidden');
                     renderDashboardOrders();
@@ -612,25 +652,14 @@
             let totalIncome = 0;
             activeBookings.forEach(b => {
                 totalIncome += Number(b.amount);
-                list.innerHTML += `<div class="p-4 bg-slate-50 border rounded-xl text-xs"><span class="text-emerald-500 font-bold">${b.status}</span><p class="font-bold text-sm">Trx: ${b.id}</p><p class="text-slate-500">Tgl: ${b.date}</p><p class="font-black text-primary mt-1">Rp ${Number(b.amount).toLocaleString('id-ID')}</p></div>`;
+                list.innerHTML += `<div class="p-4 bg-slate-50 border rounded-xl text-xs space-y-1"><span class="text-emerald-500 font-bold">${b.status}</span><p class="font-bold text-sm">Trx: ${b.id}</p><p class="text-slate-500">Tgl: ${b.date}</p><p class="font-black text-primary mt-1">Rp ${Number(b.amount).toLocaleString('id-ID')}</p></div>`;
             });
             document.getElementById('dashTotalOrders').innerText = activeBookings.length;
             document.getElementById('dashTotalIncome').innerText = `Rp ${totalIncome.toLocaleString('id-ID')}`;
         }
 
-        // 7. UTILS
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        
-        // KONEKSI SUPABASE YANG BENAR
-        const SUPABASE_URL = 'https://jwjzbqisesreuyotnjxu.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_BUXo9A8fhlN0e-RICss1MA_gBASimd0';
-        
-        let supabaseClient = null;
-        if (typeof supabase !== 'undefined') {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('✅ Supabase Connected');
-        }
     </script>
 </body>
 </html>
