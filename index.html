@@ -622,8 +622,15 @@
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         
-    NEXT_PUBLIC_SUPABASE_URL=https://jwjzbqisesreuyotnjxu.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_BUXo9A8fhlN0e-RICss1MA_gBASimd0
+        // KONEKSI SUPABASE YANG BENAR
+        const SUPABASE_URL = 'https://jwjzbqisesreuyotnjxu.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_BUXo9A8fhlN0e-RICss1MA_gBASimd0';
+        
+        let supabaseClient = null;
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('✅ Supabase Connected');
+        }
     </script>
 </body>
 </html>
