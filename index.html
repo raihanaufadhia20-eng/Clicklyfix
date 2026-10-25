@@ -73,6 +73,7 @@
                 <button onclick="switchPage('sdg')" id="nav-sdg" class="hover:text-primary transition-colors">Dampak SDG 8</button>
             </nav>
 
+            <!-- AUTH / AVATAR SECTION DI KANAN ATAS -->
             <div id="navAuthSection" class="flex items-center gap-3">
                 <button onclick="openAuthModal('login')" class="px-5 py-2.5 rounded-full text-slate-700 font-semibold text-sm hover:bg-slate-100 transition-all">Masuk</button>
                 <button onclick="openAuthModal('register')" class="px-6 py-2.5 rounded-full gradient-brand text-white font-semibold text-sm shadow-lg hover:scale-[1.02] transition-all">Daftar Sekarang</button>
@@ -166,7 +167,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: SEWA ALAT (DENGAN SEARCH BAR & INTERAKTIF) -->
+        <!-- TAB 3: SEWA ALAT (DENGAN SEARCH BAR) -->
         <div id="view-rental" class="page-view py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="mb-8 text-center">
@@ -240,7 +241,7 @@
             </div>
         </div>
 
-        <!-- TAB 6: DASHBOARD & EDIT PROFIL -->
+        <!-- TAB 6: DASHBOARD & HALAMAN EDIT PROFIL -->
         <div id="view-dashboard" class="page-view py-12 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
@@ -265,6 +266,7 @@
                     </div>
                 </div>
 
+                <!-- FORM EDIT PROFIL (TERSAMBUNG KE TABEL users & photographer) -->
                 <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                     <h3 class="font-bold text-xl text-slate-900 mb-4 flex items-center gap-2">
                         <i data-lucide="user-pen" class="w-5 h-5 text-primary"></i> Edit Profil Akun
@@ -329,18 +331,33 @@
 
     </main>
 
-    <!-- MODAL AUTH -->
+    <!-- MODAL AUTH (DENGAN FORM USERS DATABASE) -->
     <div id="authModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative">
             <button onclick="closeModal('authModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
             <h3 id="authTitle" class="text-2xl font-black text-center mb-6 text-slate-900">Masuk ke Clickly</h3>
-            <div class="grid grid-cols-2 p-1.5 bg-slate-100 rounded-2xl mb-6">
+            
+            <div id="roleSelectorContainer" class="grid grid-cols-2 p-1.5 bg-slate-100 rounded-2xl mb-6">
                 <button type="button" id="roleUserBtn" onclick="switchRole('user')" class="py-2 text-xs font-bold rounded-xl bg-white text-slate-800 shadow-sm">User / Klien</button>
                 <button type="button" id="rolePhotoBtn" onclick="switchRole('photographer')" class="py-2 text-xs font-bold rounded-xl text-slate-500">Fotografer</button>
             </div>
+
             <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <input type="hidden" id="selectedRole" value="user">
                 <input type="hidden" id="authMode" value="login">
+
+                <!-- FIELD SESUAI TABEL USERS DATABASE: email, role, full_name, phone_number -->
+                <div id="registerFieldsOnly" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap (full_name)</label>
+                        <input type="text" id="regFullName" placeholder="Nama Anda" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Nomor Telepon (phone_number)</label>
+                        <input type="text" id="regPhone" placeholder="08xxxxxxxxxx" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
+                    </div>
+                </div>
+
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">Email</label>
                     <input type="email" id="authEmail" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
@@ -351,8 +368,8 @@
                 </div>
                 
                 <div id="photographerFields" class="hidden space-y-4 border-t border-slate-100 pt-4">
-                    <p class="text-xs font-bold text-primary uppercase">Profil Fotografer (Wajib diisi)</p>
-                    <input type="text" id="photoName" placeholder="Nama Lengkap / Studio" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                    <p class="text-xs font-bold text-primary uppercase">Detail Tambahan Fotografer (Tabel photographer)</p>
+                    <input type="text" id="photoName" placeholder="Nama Studio / Talent" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
                     <div class="grid grid-cols-2 gap-3">
                         <select id="photoCategory" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold">
                             <option value="Wisuda">Wisuda</option><option value="Pernikahan">Pernikahan</option><option value="Produk UMKM">Produk UMKM</option><option value="Event">Event</option>
@@ -362,9 +379,10 @@
                         </select>
                     </div>
                     <input type="number" id="photoPrice" placeholder="Tarif Dasar (Rp)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
-                    <input type="url" id="photoPortfolioUrl" placeholder="URL Link Portofolio (IG/Drive)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
-                    <input type="url" id="photoCoverUrl" placeholder="URL Foto Sampul" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                    <input type="url" id="photoPortfolioUrl" placeholder="URL Link Portofolio" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
+                    <input type="url" id="photoCoverUrl" placeholder="URL Foto Sampul (Avatar/Cover)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm">
                 </div>
+
                 <button type="submit" class="w-full py-3.5 gradient-brand text-white font-bold rounded-2xl shadow-lg">Lanjutkan</button>
             </form>
             <button onclick="toggleAuthMode()" class="w-full text-center mt-4 text-xs text-slate-500 font-bold hover:text-primary">Belum punya akun? Daftar di sini</button>
@@ -380,7 +398,7 @@
         </div>
     </div>
 
-    <!-- MODAL DETAIL / BOOKING JASA FOTO -->
+    <!-- MODAL DETAIL / BOOKING FOTOGRAFER (DENGAN PILIHAN BANK & QR) -->
     <div id="detailModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative my-8">
             <button onclick="closeModal('detailModal')" class="absolute top-6 right-6 text-slate-400 z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -388,7 +406,7 @@
         </div>
     </div>
 
-    <!-- MODAL SEWA ALAT (INTERAKTIF TANGGAL, HARGA, PILIHAN BANK, & QR) -->
+    <!-- MODAL SEWA ALAT -->
     <div id="rentalModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative my-8">
             <button onclick="closeModal('rentalModal')" class="absolute top-6 right-6 text-slate-400 z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -483,7 +501,6 @@
             lucide.createIcons();
         }
 
-        // RENDER & SEARCH SEWA ALAT
         function renderEquipmentGrid(dataList) {
             const grid = document.getElementById('equipmentGrid');
             if(!grid) return; grid.innerHTML = '';
@@ -516,7 +533,7 @@
             renderEquipmentGrid(filtered);
         }
 
-        // MODAL INTERAKTIF SEWA ALAT (DENGAN TANGGAL, KALKULASI HARGA, PILIHAN BANK, & QR)
+        // MODAL SEWA ALAT
         let activeRentalItem = null;
         function openRentalModal(id) {
             const eq = currentEquipments.find(item => item.id == id);
@@ -546,12 +563,11 @@
                     </div>
 
                     <div class="pt-2">
-                        <label class="block text-xs font-bold text-slate-700 mb-2">Pilih Metode Pembayaran (Bank / QRIS)</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Pilih Metode Pembayaran</label>
                         <select id="paymentMethodSelect" class="w-full px-4 py-3 rounded-xl border text-xs font-bold bg-white">
-                            <option value="">-- Pilih Bank / E-Wallet --</option>
+                            <option value="">-- Pilih Bank / QRIS --</option>
                             <option value="BCA">Virtual Account BCA</option>
                             <option value="Mandiri">Virtual Account Mandiri</option>
-                            <option value="BNI">Virtual Account BNI</option>
                             <option value="QRIS">QRIS (GoPay/OVO/Dana)</option>
                         </select>
                     </div>
@@ -571,11 +587,8 @@
             const start = document.getElementById('rentalStart').value;
             const end = document.getElementById('rentalEnd').value;
             if(start && end) {
-                const startDate = new Date(start);
-                const endDate = new Date(end);
-                const diffTime = endDate - startDate;
+                const diffTime = new Date(end) - new Date(start);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-                
                 if(diffDays > 0) {
                     const total = diffDays * pricePerDay;
                     document.getElementById('rentalTotalDisplay').innerText = `Rp ${total.toLocaleString('id-ID')} (${diffDays} Hari)`;
@@ -585,7 +598,6 @@
             }
         }
 
-        // Munculkan QR saat memilih metode pembayaran
         document.addEventListener('change', function(e) {
             if(e.target && e.target.id === 'paymentMethodSelect') {
                 const method = e.target.value;
@@ -598,6 +610,16 @@
                     qrCont.classList.add('hidden');
                 }
             }
+            if(e.target && e.target.id === 'bookingPaymentMethod') {
+                const method = e.target.value;
+                const qrCont = document.getElementById('bookingQrContainer');
+                if(method) {
+                    qrCont.classList.remove('hidden');
+                    document.getElementById('bookingQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CLICKLY-BOOKING-${method}`;
+                } else {
+                    qrCont.classList.add('hidden');
+                }
+            }
         });
 
         async function processRentalPayment() {
@@ -605,14 +627,9 @@
             const end = document.getElementById('rentalEnd').value;
             const method = document.getElementById('paymentMethodSelect').value;
 
-            if(!start || !end || !method) {
-                alert('Harap lengkapi tanggal sewa dan pilih metode pembayaran!');
-                return;
-            }
+            if(!start || !end || !method) return alert('Harap lengkapi tanggal dan pilih pembayaran!');
 
-            const startDate = new Date(start);
-            const endDate = new Date(end);
-            const diffDays = Math.max(1, Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1);
+            const diffDays = Math.max(1, Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24)) + 1);
             const totalAmount = diffDays * activeRentalItem.price;
 
             const rentalRecord = {
@@ -625,9 +642,7 @@
                 status: 'Lunas (' + method + ')'
             };
 
-            if (supabaseClient) {
-                await supabaseClient.from('equipments_rental').insert([rentalRecord]);
-            }
+            if (supabaseClient) await supabaseClient.from('equipments_rental').insert([rentalRecord]);
 
             activeBookings.push({
                 id: rentalRecord.id,
@@ -702,12 +717,11 @@
             const trxId = 'CLK-' + Math.floor(100000 + Math.random() * 900000);
             currentPayingOrder = { id: trxId, booking_id: trxId, item_description: name, quantity: 1, subtotal: Number(amount) };
             
-            // Menggunakan modal detail untuk integrasi pilihan bank/QRIS juga
             document.getElementById('detailModalContent').innerHTML = `
                 <div class="md:col-span-12 text-center space-y-4">
-                    <h3 class="text-xl font-black">Pilih Pembayaran untuk Booking ${name}</h3>
+                    <h3 class="text-xl font-black">Pilih Metode Pembayaran untuk ${name}</h3>
                     <select id="bookingPaymentMethod" class="w-full max-w-sm mx-auto px-4 py-3 rounded-xl border text-xs font-bold bg-white">
-                        <option value="">-- Pilih Bank / E-Wallet --</option>
+                        <option value="">-- Pilih Bank / QRIS --</option>
                         <option value="BCA">Virtual Account BCA</option>
                         <option value="Mandiri">Virtual Account Mandiri</option>
                         <option value="QRIS">QRIS (GoPay/OVO/Dana)</option>
@@ -720,19 +734,6 @@
                 </div>
             `;
         }
-
-        document.addEventListener('change', function(e) {
-            if(e.target && e.target.id === 'bookingPaymentMethod') {
-                const method = e.target.value;
-                const qrCont = document.getElementById('bookingQrContainer');
-                if(method) {
-                    qrCont.classList.remove('hidden');
-                    document.getElementById('bookingQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CLICKLY-BOOKING-${method}`;
-                } else {
-                    qrCont.classList.add('hidden');
-                }
-            }
-        });
 
         async function confirmBookingPayment() {
             const method = document.getElementById('bookingPaymentMethod').value;
@@ -749,6 +750,8 @@
         function openAuthModal(mode) {
             document.getElementById('authMode').value = mode;
             document.getElementById('authTitle').innerText = mode === 'login' ? 'Masuk ke Clickly' : 'Daftar Akun Baru';
+            const regFields = document.getElementById('registerFieldsOnly');
+            if(regFields) regFields.style.display = mode === 'register' ? 'block' : 'none';
             openModal('authModal');
         }
 
@@ -764,28 +767,40 @@
             openAuthModal(mode === 'login' ? 'register' : 'login');
         }
 
+        // PENDAFTARAN & LOGIN TERSAMBUNG KE TABEL users DATABASE
         async function handleAuthSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('authEmail').value;
             const role = document.getElementById('selectedRole').value;
             const userId = String(Date.now());
+            const mode = document.getElementById('authMode').value;
 
-            currentUser = { id: userId, email, role, full_name: email.split('@')[0], phone_number: '08123456789' };
+            let fullName = email.split('@')[0];
+            let phone = '08123456789';
+
+            if (mode === 'register') {
+                fullName = document.getElementById('regFullName').value || fullName;
+                phone = document.getElementById('regPhone').value || phone;
+            }
+
+            currentUser = { id: userId, email, role, full_name: fullName, phone_number: phone };
 
             if (supabaseClient) {
+                // Menyimpan ke tabel 'users'
                 await supabaseClient.from('users').upsert([currentUser]);
-                if (role === 'photographer' && document.getElementById('authMode').value === 'register') {
+
+                if (role === 'photographer' && mode === 'register') {
                     const newPhoto = {
                         id: userId,
-                        name: document.getElementById('photoName').value,
+                        name: document.getElementById('photoName').value || fullName,
                         category: document.getElementById('photoCategory').value,
                         location: document.getElementById('photoLocation').value,
-                        price: Number(document.getElementById('photoPrice').value),
-                        coverurl: document.getElementById('photoCoverUrl').value,
-                        portfoliourl: document.getElementById('photoPortfolioUrl').value,
+                        price: Number(document.getElementById('photoPrice').value) || 500000,
+                        coverurl: document.getElementById('photoCoverUrl').value || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80',
+                        portfoliourl: document.getElementById('photoPortfolioUrl').value || '#',
                         rating: 5.0,
                         reviewscount: 1,
-                        bio: 'Fotografer profesional'
+                        bio: 'Fotografer profesional terverifikasi'
                     };
                     await supabaseClient.from('photographer').insert([newPhoto]);
                     currentPhotographers.push(newPhoto);
@@ -826,21 +841,38 @@
 
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
             alert('Profil Berhasil Diperbarui!');
+            updateUserUIState();
             loadPhotographersFromDB();
         }
 
+        // MENAMPILKAN FOTO PROFIL / AVATAR DI POJOK KANAN ATAS
         function updateUserUIState() {
             if (currentUser) {
-                document.getElementById('navAuthSection').innerHTML = `
-                    <button onclick="switchPage('dashboard')" class="text-xs bg-slate-100 px-3 py-2 rounded-full font-bold hover:bg-slate-200">${currentUser.email}</button>
-                    <button onclick="localStorage.removeItem('clickly_user'); location.reload()" class="text-xs text-rose-500 font-bold ml-1">Keluar</button>
-                `;
+                const navAuth = document.getElementById('navAuthSection');
+                if(navAuth) {
+                    let avatarUrl = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80';
+                    if (currentUser.role === 'photographer') {
+                        const pData = currentPhotographers.find(p => p.id == currentUser.id);
+                        if (pData && pData.coverurl) avatarUrl = pData.coverurl;
+                    }
+
+                    navAuth.innerHTML = `
+                        <div class="flex items-center gap-3 cursor-pointer" onclick="switchPage('dashboard')">
+                            <img src="${avatarUrl}" class="w-10 h-10 rounded-full object-cover border-2 border-primary shadow-sm">
+                            <div class="hidden sm:block text-left">
+                                <span class="text-xs font-bold block text-slate-800">${currentUser.full_name || currentUser.email}</span>
+                                <span class="text-[10px] text-primary uppercase font-bold">${currentUser.role}</span>
+                            </div>
+                        </div>
+                        <button onclick="localStorage.removeItem('clickly_user'); location.reload()" class="text-xs text-rose-500 font-bold ml-2 p-2">Keluar</button>
+                    `;
+                }
 
                 document.getElementById('editFullName').value = currentUser.full_name || '';
                 document.getElementById('editPhone').value = currentUser.phone_number || '';
 
                 const isPhoto = currentUser.role === 'photographer';
-                document.getElementById('editPhotographerExtra').style.display = isPhoto ? 'block' : 'hidden';
+                document.getElementById('editPhotographerExtra').style.display = isPhoto ? 'block' : 'none';
                 document.getElementById('photographerStatsSection').style.display = isPhoto ? 'grid' : 'none';
                 document.getElementById('dashTitleMain').innerText = isPhoto ? 'Dashboard Fotografer' : 'Dashboard Klien';
 
