@@ -15,8 +15,8 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#FF6B35', // Vibrant Orange / Peach
-                        secondary: '#00A8E8', // Sky Blue / Teal
+                        primary: '#FF6B35',
+                        secondary: '#00A8E8',
                     }
                 }
             }
@@ -41,7 +41,6 @@
     <!-- NAVBAR -->
     <header class="sticky top-0 z-40 bg-glass border-b border-slate-200/80 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- LOGO CLICKLY -->
             <a href="#" onclick="switchPage('home')" class="flex items-center gap-3 group">
                 <div class="w-12 h-12 rounded-2xl bg-white shadow-md border border-slate-100 flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform">
                     <svg viewBox="0 0 200 200" class="w-full h-full">
@@ -66,7 +65,6 @@
                 </div>
             </a>
 
-            <!-- NAV LINKS -->
             <nav class="hidden md:flex items-center gap-8 font-medium text-slate-600 text-sm">
                 <button onclick="switchPage('home')" id="nav-home" class="hover:text-primary transition-colors font-bold text-primary">Beranda</button>
                 <button onclick="switchPage('marketplace')" id="nav-marketplace" class="hover:text-primary transition-colors">Cari Fotografer</button>
@@ -75,7 +73,6 @@
                 <button onclick="switchPage('sdg')" id="nav-sdg" class="hover:text-primary transition-colors">Dampak SDG 8</button>
             </nav>
 
-            <!-- AUTH BUTTONS -->
             <div id="navAuthSection" class="flex items-center gap-3">
                 <button onclick="openAuthModal('login')" class="px-5 py-2.5 rounded-full text-slate-700 font-semibold text-sm hover:bg-slate-100 transition-all">Masuk</button>
                 <button onclick="openAuthModal('register')" class="px-6 py-2.5 rounded-full gradient-brand text-white font-semibold text-sm shadow-lg hover:scale-[1.02] transition-all">Daftar Sekarang</button>
@@ -128,7 +125,6 @@
         <!-- TAB 2: CARI FOTOGRAFER (MARKETPLACE) -->
         <div id="view-marketplace" class="page-view py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- FILTER BAR -->
                 <div class="p-4 bg-white rounded-3xl shadow-xl border border-slate-100 mb-8 space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                         <div class="p-2.5 bg-slate-50 rounded-2xl border border-slate-200/80">
@@ -170,7 +166,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: SEWA ALAT (DENGAN SEARCH BAR) -->
+        <!-- TAB 3: SEWA ALAT (DENGAN SEARCH BAR & INTERAKTIF) -->
         <div id="view-rental" class="page-view py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="mb-8 text-center">
@@ -179,7 +175,6 @@
                     <p class="text-slate-600 text-sm mt-2 max-w-xl mx-auto">Sewa harian body kamera, lensa, atau lampu studio dengan jaminan unit prima.</p>
                 </div>
                 
-                <!-- SEARCH BAR SEWA ALAT -->
                 <div class="max-w-xl mx-auto mb-10">
                     <div class="relative">
                         <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
@@ -213,13 +208,13 @@
                         <div class="w-12 h-12 bg-orange-100 text-primary rounded-2xl flex items-center justify-center font-black text-xl absolute -top-6 left-1/2 -translate-x-1/2">3</div>
                         <i data-lucide="shield-check" class="w-8 h-8 text-slate-300 mx-auto mt-6 mb-4"></i>
                         <h3 class="font-bold text-slate-800 mb-2">Booking & Bayar</h3>
-                        <p class="text-xs text-slate-500">Pilih tanggal dan bayar via QRIS Escrow.</p>
+                        <p class="text-xs text-slate-500">Pilih tanggal dan bayar via pilihan bank/QRIS.</p>
                     </div>
                     <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative">
                         <div class="w-12 h-12 bg-orange-100 text-primary rounded-2xl flex items-center justify-center font-black text-xl absolute -top-6 left-1/2 -translate-x-1/2">4</div>
                         <i data-lucide="camera" class="w-8 h-8 text-slate-300 mx-auto mt-6 mb-4"></i>
                         <h3 class="font-bold text-slate-800 mb-2">Sesi Selesai!</h3>
-                        <p class="text-xs text-slate-500">Fotografer datang dan hasil foto diserahkan.</p>
+                        <p class="text-xs text-slate-500">Alat dikirim atau sesi foto dilakukan.</p>
                     </div>
                 </div>
             </div>
@@ -245,17 +240,16 @@
             </div>
         </div>
 
-        <!-- TAB 6: DASHBOARD & FITUR EDIT PROFIL -->
+        <!-- TAB 6: DASHBOARD & EDIT PROFIL -->
         <div id="view-dashboard" class="page-view py-12 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
                     <div>
                         <h2 id="dashTitleMain" class="text-3xl font-black text-slate-900">Dashboard Pengguna</h2>
-                        <p class="text-xs text-slate-500 mt-1" id="dashSubTitle">Kelola akun dan aktivitas Anda di Clickly</p>
+                        <p class="text-xs text-slate-500 mt-1">Kelola akun dan aktivitas Anda di Clickly</p>
                     </div>
                 </div>
 
-                <!-- STATS KHUSUS FOTOGRAFER -->
                 <div id="photographerStatsSection" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="bg-primary rounded-3xl p-6 text-white shadow-xl">
                         <h3 class="text-3xl font-black" id="dashTotalIncome">Rp 0</h3>
@@ -271,7 +265,6 @@
                     </div>
                 </div>
 
-                <!-- FORM EDIT PROFIL (BISA UNTUK USER ATAUPUN FOTOGRAFER) -->
                 <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                     <h3 class="font-bold text-xl text-slate-900 mb-4 flex items-center gap-2">
                         <i data-lucide="user-pen" class="w-5 h-5 text-primary"></i> Edit Profil Akun
@@ -288,7 +281,6 @@
                             </div>
                         </div>
 
-                        <!-- INPUT TAMBAHAN KHUSUS ROLE FOTOGRAFER -->
                         <div id="editPhotographerExtra" class="space-y-4 pt-4 border-t border-slate-100 hidden">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
@@ -328,7 +320,6 @@
                     </form>
                 </div>
 
-                <!-- DAFTAR PESANAN -->
                 <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                     <h3 class="font-bold text-lg mb-4 text-slate-800">Riwayat / Daftar Pesanan</h3>
                     <div id="dashboardOrdersList" class="space-y-4"></div>
@@ -338,7 +329,6 @@
 
     </main>
 
-    <!-- MODALS -->
     <!-- MODAL AUTH -->
     <div id="authModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative">
@@ -390,7 +380,7 @@
         </div>
     </div>
 
-    <!-- MODAL DETAIL -->
+    <!-- MODAL DETAIL / BOOKING JASA FOTO -->
     <div id="detailModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative my-8">
             <button onclick="closeModal('detailModal')" class="absolute top-6 right-6 text-slate-400 z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -398,20 +388,11 @@
         </div>
     </div>
 
-    <!-- MODAL QRIS -->
-    <div id="paymentModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-8 relative text-center">
-            <button onclick="closeModal('paymentModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
-            <i data-lucide="qr-code" class="w-12 h-12 mx-auto text-primary mb-3"></i>
-            <h3 class="text-xl font-black text-slate-900">Scan QRIS Escrow</h3>
-            <div class="my-6 p-4 bg-slate-50 border border-slate-200 rounded-3xl inline-block">
-                <img id="qrisImage" src="" alt="QRIS" class="w-56 h-56 mx-auto object-contain rounded-xl">
-            </div>
-            <div class="bg-slate-50 p-4 rounded-2xl text-left text-xs mb-6 border border-slate-100 space-y-2">
-                <div class="flex justify-between text-slate-500"><span>Talent:</span><strong id="payPhotographerName" class="text-slate-800"></strong></div>
-                <div class="flex justify-between font-bold text-sm border-t border-slate-200 pt-2"><span>Total Tagihan:</span><span id="payTotalAmount" class="text-primary"></span></div>
-            </div>
-            <button onclick="confirmPaymentSuccess()" class="w-full py-3.5 bg-emerald-500 text-white font-bold rounded-2xl">Saya Sudah Bayar</button>
+    <!-- MODAL SEWA ALAT (INTERAKTIF TANGGAL, HARGA, PILIHAN BANK, & QR) -->
+    <div id="rentalModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative my-8">
+            <button onclick="closeModal('rentalModal')" class="absolute top-6 right-6 text-slate-400 z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <div id="rentalModalContent"></div>
         </div>
     </div>
 
@@ -445,7 +426,6 @@
             updateUserUIState();
         });
 
-        // LOAD FOTOGRAFER DARI TABEL 'photographer'
         async function loadPhotographersFromDB() {
             if (supabaseClient) {
                 const { data, error } = await supabaseClient.from('photographer').select('*');
@@ -454,7 +434,6 @@
             renderPhotographerGrid(currentPhotographers);
         }
 
-        // LOAD ALAT DARI TABEL 'equipments'
         async function loadEquipmentsFromDB() {
             if (supabaseClient) {
                 const { data, error } = await supabaseClient.from('equipments').select('*');
@@ -525,7 +504,7 @@
                         </div>
                         <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
                             <div><span class="text-[10px] text-slate-400 block">Tarif / Hari</span><strong class="text-slate-900 font-black">Rp ${Number(eq.price).toLocaleString('id-ID')}</strong></div>
-                            <button onclick="alert('Fitur sewa alat langsung aktif!')" class="px-4 py-2 bg-slate-900 hover:bg-primary text-white text-xs font-bold rounded-xl transition-all">Sewa</button>
+                            <button onclick="openRentalModal('${eq.id}')" class="px-4 py-2 bg-slate-900 hover:bg-primary text-white text-xs font-bold rounded-xl transition-all">Sewa</button>
                         </div>
                     </div>`;
             });
@@ -535,6 +514,133 @@
             const query = document.getElementById('searchEquipmentInput').value.toLowerCase();
             const filtered = currentEquipments.filter(eq => eq.name.toLowerCase().includes(query) || eq.category.toLowerCase().includes(query));
             renderEquipmentGrid(filtered);
+        }
+
+        // MODAL INTERAKTIF SEWA ALAT (DENGAN TANGGAL, KALKULASI HARGA, PILIHAN BANK, & QR)
+        let activeRentalItem = null;
+        function openRentalModal(id) {
+            const eq = currentEquipments.find(item => item.id == id);
+            if(!eq) return;
+            activeRentalItem = eq;
+
+            document.getElementById('rentalModalContent').innerHTML = `
+                <div class="space-y-4">
+                    <img src="${eq.imageurl}" class="w-full h-48 object-cover rounded-2xl">
+                    <h3 class="font-black text-xl text-slate-900">${eq.name}</h3>
+                    <p class="text-xs text-primary font-bold">Tarif: Rp ${Number(eq.price).toLocaleString('id-ID')} / hari</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Tanggal Mulai</label>
+                            <input type="date" id="rentalStart" onchange="calculateRentalTotal(${eq.price})" class="w-full px-3 py-2 rounded-xl border text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Tanggal Selesai</label>
+                            <input type="date" id="rentalEnd" onchange="calculateRentalTotal(${eq.price})" class="w-full px-3 py-2 rounded-xl border text-xs">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-2xl border flex justify-between items-center text-sm font-black">
+                        <span>Total Biaya Sewa:</span>
+                        <span id="rentalTotalDisplay" class="text-primary">Rp 0</span>
+                    </div>
+
+                    <div class="pt-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Pilih Metode Pembayaran (Bank / QRIS)</label>
+                        <select id="paymentMethodSelect" class="w-full px-4 py-3 rounded-xl border text-xs font-bold bg-white">
+                            <option value="">-- Pilih Bank / E-Wallet --</option>
+                            <option value="BCA">Virtual Account BCA</option>
+                            <option value="Mandiri">Virtual Account Mandiri</option>
+                            <option value="BNI">Virtual Account BNI</option>
+                            <option value="QRIS">QRIS (GoPay/OVO/Dana)</option>
+                        </select>
+                    </div>
+
+                    <div id="qrContainer" class="hidden text-center p-4 bg-slate-50 border rounded-2xl space-y-2">
+                        <p class="text-xs font-bold text-slate-700">Scan QR / Transfer ke <span id="selectedBankName" class="text-primary"></span></p>
+                        <img id="dynamicQrImage" src="" class="w-40 h-40 mx-auto object-contain rounded-lg">
+                    </div>
+
+                    <button onclick="processRentalPayment()" class="w-full py-3.5 gradient-brand text-white font-bold rounded-xl shadow-lg mt-4">Konfirmasi & Bayar Sewa</button>
+                </div>
+            `;
+            openModal('rentalModal');
+        }
+
+        function calculateRentalTotal(pricePerDay) {
+            const start = document.getElementById('rentalStart').value;
+            const end = document.getElementById('rentalEnd').value;
+            if(start && end) {
+                const startDate = new Date(start);
+                const endDate = new Date(end);
+                const diffTime = endDate - startDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                
+                if(diffDays > 0) {
+                    const total = diffDays * pricePerDay;
+                    document.getElementById('rentalTotalDisplay').innerText = `Rp ${total.toLocaleString('id-ID')} (${diffDays} Hari)`;
+                } else {
+                    document.getElementById('rentalTotalDisplay').innerText = `Tanggal tidak valid`;
+                }
+            }
+        }
+
+        // Munculkan QR saat memilih metode pembayaran
+        document.addEventListener('change', function(e) {
+            if(e.target && e.target.id === 'paymentMethodSelect') {
+                const method = e.target.value;
+                const qrCont = document.getElementById('qrContainer');
+                if(method) {
+                    qrCont.classList.remove('hidden');
+                    document.getElementById('selectedBankName').innerText = method;
+                    document.getElementById('dynamicQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CLICKLY-RENTAL-${method}`;
+                } else {
+                    qrCont.classList.add('hidden');
+                }
+            }
+        });
+
+        async function processRentalPayment() {
+            const start = document.getElementById('rentalStart').value;
+            const end = document.getElementById('rentalEnd').value;
+            const method = document.getElementById('paymentMethodSelect').value;
+
+            if(!start || !end || !method) {
+                alert('Harap lengkapi tanggal sewa dan pilih metode pembayaran!');
+                return;
+            }
+
+            const startDate = new Date(start);
+            const endDate = new Date(end);
+            const diffDays = Math.max(1, Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1);
+            const totalAmount = diffDays * activeRentalItem.price;
+
+            const rentalRecord = {
+                id: 'RNT-' + Math.floor(100000 + Math.random() * 900000),
+                equipment_id: String(activeRentalItem.id),
+                user_id: currentUser ? currentUser.id : 'guest',
+                rental_start_date: start,
+                rental_end_date: end,
+                total_price: totalAmount,
+                status: 'Lunas (' + method + ')'
+            };
+
+            if (supabaseClient) {
+                await supabaseClient.from('equipments_rental').insert([rentalRecord]);
+            }
+
+            activeBookings.push({
+                id: rentalRecord.id,
+                booking_id: rentalRecord.id,
+                item_description: `Sewa Alat: ${activeRentalItem.name} (${diffDays} Hari)`,
+                quantity: diffDays,
+                subtotal: totalAmount
+            });
+
+            alert('Pembayaran Sewa Alat Berhasil!');
+            closeModal('rentalModal');
+            renderDashboardOrders();
+            switchPage('dashboard');
         }
 
         function applyMarketplaceFilter() {
@@ -584,7 +690,7 @@
                     <div class="flex justify-between font-black text-slate-900 text-lg border-t pt-2">
                         <span>Total:</span><span class="text-primary">Rp ${Number(p.price).toLocaleString('id-ID')}</span>
                     </div>
-                    <button onclick="startCheckout('${p.id}', ${p.price}, '${p.name}')" class="w-full py-3.5 bg-primary text-white font-bold rounded-2xl">Bayar via QRIS</button>
+                    <button onclick="startCheckout('${p.id}', ${p.price}, '${p.name}')" class="w-full py-3.5 bg-primary text-white font-bold rounded-2xl">Lanjutkan Pembayaran</button>
                 </div>`;
             closeModal('compareModal'); openModal('detailModal');
         }
@@ -595,18 +701,49 @@
             if (!date) return alert('Pilih tanggal dulu!');
             const trxId = 'CLK-' + Math.floor(100000 + Math.random() * 900000);
             currentPayingOrder = { id: trxId, booking_id: trxId, item_description: name, quantity: 1, subtotal: Number(amount) };
-            document.getElementById('qrisImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${trxId}`;
-            document.getElementById('payPhotographerName').innerText = name;
-            document.getElementById('payTotalAmount').innerText = `Rp ${Number(amount).toLocaleString('id-ID')}`;
-            closeModal('detailModal'); openModal('paymentModal');
+            
+            // Menggunakan modal detail untuk integrasi pilihan bank/QRIS juga
+            document.getElementById('detailModalContent').innerHTML = `
+                <div class="md:col-span-12 text-center space-y-4">
+                    <h3 class="text-xl font-black">Pilih Pembayaran untuk Booking ${name}</h3>
+                    <select id="bookingPaymentMethod" class="w-full max-w-sm mx-auto px-4 py-3 rounded-xl border text-xs font-bold bg-white">
+                        <option value="">-- Pilih Bank / E-Wallet --</option>
+                        <option value="BCA">Virtual Account BCA</option>
+                        <option value="Mandiri">Virtual Account Mandiri</option>
+                        <option value="QRIS">QRIS (GoPay/OVO/Dana)</option>
+                    </select>
+                    <div id="bookingQrContainer" class="hidden p-4 bg-slate-50 border rounded-2xl space-y-2 max-w-sm mx-auto">
+                        <p class="text-xs font-bold text-slate-700">Scan QR / Transfer:</p>
+                        <img id="bookingQrImage" src="" class="w-40 h-40 mx-auto object-contain rounded-lg">
+                    </div>
+                    <button onclick="confirmBookingPayment()" class="w-full max-w-sm py-3.5 bg-emerald-500 text-white font-bold rounded-2xl mx-auto block">Konfirmasi Pembayaran</button>
+                </div>
+            `;
         }
 
-        async function confirmPaymentSuccess() {
-            if (!currentPayingOrder) return;
+        document.addEventListener('change', function(e) {
+            if(e.target && e.target.id === 'bookingPaymentMethod') {
+                const method = e.target.value;
+                const qrCont = document.getElementById('bookingQrContainer');
+                if(method) {
+                    qrCont.classList.remove('hidden');
+                    document.getElementById('bookingQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CLICKLY-BOOKING-${method}`;
+                } else {
+                    qrCont.classList.add('hidden');
+                }
+            }
+        });
+
+        async function confirmBookingPayment() {
+            const method = document.getElementById('bookingPaymentMethod').value;
+            if(!method) return alert('Pilih metode pembayaran dulu!');
+            
             if (supabaseClient) await supabaseClient.from('order_detail').insert([currentPayingOrder]);
             activeBookings.push(currentPayingOrder);
-            alert('Pembayaran Berhasil Dicatat ke Tabel order_detail!');
-            closeModal('paymentModal'); renderDashboardOrders();
+            alert('Pembayaran Booking Berhasil!');
+            closeModal('detailModal');
+            renderDashboardOrders();
+            switchPage('dashboard');
         }
 
         function openAuthModal(mode) {
@@ -627,7 +764,6 @@
             openAuthModal(mode === 'login' ? 'register' : 'login');
         }
 
-        // LOGIN / REGISTER HANDLING (Tabel 'users' & 'photographer')
         async function handleAuthSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('authEmail').value;
@@ -637,9 +773,7 @@
             currentUser = { id: userId, email, role, full_name: email.split('@')[0], phone_number: '08123456789' };
 
             if (supabaseClient) {
-                // Simpan ke tabel 'users'
                 await supabaseClient.from('users').upsert([currentUser]);
-
                 if (role === 'photographer' && document.getElementById('authMode').value === 'register') {
                     const newPhoto = {
                         id: userId,
@@ -666,7 +800,6 @@
             switchPage('dashboard');
         }
 
-        // UPDATE PROFIL (FITUR EDIT PROFIL UNTUK KEDUA ROLE)
         async function handleUpdateProfile(e) {
             e.preventDefault();
             if (!currentUser) return;
@@ -703,7 +836,6 @@
                     <button onclick="localStorage.removeItem('clickly_user'); location.reload()" class="text-xs text-rose-500 font-bold ml-1">Keluar</button>
                 `;
 
-                // Set Form Edit Profil Berdasarkan Data User
                 document.getElementById('editFullName').value = currentUser.full_name || '';
                 document.getElementById('editPhone').value = currentUser.phone_number || '';
 
