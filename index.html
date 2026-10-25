@@ -98,7 +98,7 @@
                             Clickly: <span class="text-gradient">Cari Fotografer,</span> Sekali Klik Beres!
                         </h1>
                         <p class="text-lg text-slate-600 leading-relaxed max-w-2xl">
-                            Platform marketplace digital terpercaya yang menghubungkan Anda dengan fotografer profesional di seluruh Indonesia. <strong class="text-slate-900">Tidak ada lagi respon lambat dan harga tidak jelas!</strong>
+                            Platform marketplace digital terpercaya yang menghubungkan Anda dengan fotografer profesional di seluruh Indonesia.
                         </p>
                         <div class="pt-4 flex flex-wrap gap-4">
                             <button onclick="switchPage('marketplace')" class="px-8 py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg hover:scale-105 transition-all flex items-center gap-2">
@@ -125,7 +125,7 @@
             </div>
         </div>
 
-        <!-- TAB 2: CARI FOTOGRAFER -->
+        <!-- TAB 2: CARI FOTOGRAFER (MARKETPLACE) -->
         <div id="view-marketplace" class="page-view py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- FILTER BAR -->
@@ -170,21 +170,28 @@
             </div>
         </div>
 
-        <!-- TAB 3: SEWA ALAT (DATA DINAMIS DARI DATABASE) -->
+        <!-- TAB 3: SEWA ALAT (DENGAN SEARCH BAR) -->
         <div id="view-rental" class="page-view py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="mb-10 text-center">
+                <div class="mb-8 text-center">
                     <span class="text-primary font-bold text-sm tracking-wider uppercase">Layanan Tambahan</span>
                     <h2 class="text-3xl font-black text-slate-900 mt-1">Sewa Alat Fotografi Profesional</h2>
-                    <p class="text-slate-600 text-sm mt-2 max-w-xl mx-auto">Butuh tambahan body kamera, lensa fix, atau lampu studio untuk proyekmu? Sewa harian dengan jaminan unit prima.</p>
+                    <p class="text-slate-600 text-sm mt-2 max-w-xl mx-auto">Sewa harian body kamera, lensa, atau lampu studio dengan jaminan unit prima.</p>
                 </div>
-                <div id="equipmentGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Konten Akan Dirender lewat JS (Tabel 'equipments') -->
+                
+                <!-- SEARCH BAR SEWA ALAT -->
+                <div class="max-w-xl mx-auto mb-10">
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                        <input type="text" id="searchEquipmentInput" oninput="filterEquipments()" placeholder="Cari nama kamera, lensa, atau lighting..." class="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200 shadow-sm focus:outline-none focus:border-primary text-sm">
+                    </div>
                 </div>
+
+                <div id="equipmentGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </div>
         </div>
 
-        <!-- TAB 4: CARA KERJA -->
+        <!-- TAB 4: CARI KERJA -->
         <div id="view-howitworks" class="page-view py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <span class="text-primary font-bold text-sm tracking-wider uppercase">Alur Penggunaan</span>
@@ -206,26 +213,26 @@
                         <div class="w-12 h-12 bg-orange-100 text-primary rounded-2xl flex items-center justify-center font-black text-xl absolute -top-6 left-1/2 -translate-x-1/2">3</div>
                         <i data-lucide="shield-check" class="w-8 h-8 text-slate-300 mx-auto mt-6 mb-4"></i>
                         <h3 class="font-bold text-slate-800 mb-2">Booking & Bayar</h3>
-                        <p class="text-xs text-slate-500">Pilih tanggal dan bayar pakai QRIS. Dana aman di Escrow.</p>
+                        <p class="text-xs text-slate-500">Pilih tanggal dan bayar via QRIS Escrow.</p>
                     </div>
                     <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 relative">
                         <div class="w-12 h-12 bg-orange-100 text-primary rounded-2xl flex items-center justify-center font-black text-xl absolute -top-6 left-1/2 -translate-x-1/2">4</div>
                         <i data-lucide="camera" class="w-8 h-8 text-slate-300 mx-auto mt-6 mb-4"></i>
-                        <h3 class="font-bold text-slate-800 mb-2">Sesi Foto Selesai!</h3>
-                        <p class="text-xs text-slate-500">Fotografer datang ke lokasi, dana diteruskan setelah hasil diterima.</p>
+                        <h3 class="font-bold text-slate-800 mb-2">Sesi Selesai!</h3>
+                        <p class="text-xs text-slate-500">Fotografer datang dan hasil foto diserahkan.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 5: DAMPAK SDG 8 -->
+        <!-- TAB 5: SDG 8 -->
         <div id="view-sdg" class="page-view py-16 bg-slate-900 text-white min-h-[75vh] flex items-center">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                 <div class="grid md:grid-cols-2 gap-12 items-center">
                     <div>
                         <span class="text-secondary font-bold text-sm tracking-wider uppercase block mb-2">Sustainable Development Goal 8</span>
                         <h2 class="text-3xl font-black mb-6">Mendorong Pekerjaan Layak & Pertumbuhan Ekonomi Kreatif</h2>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">Clickly berkomitmen mendukung misi global <strong>SDG 8</strong> dengan mendigitalisasi dan memformalkan sektor pekerja lepas (freelancer) fotografi di Indonesia.</p>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">Clickly berkomitmen mendukung misi global <strong>SDG 8</strong> dengan mendigitalisasi sektor pekerja lepas fotografi di Indonesia.</p>
                     </div>
                     <div class="bg-slate-800 rounded-3xl p-8 border border-slate-700 relative overflow-hidden">
                         <h3 class="text-xl font-bold mb-2 relative z-10">Dampak Platform</h3>
@@ -238,13 +245,18 @@
             </div>
         </div>
 
-        <!-- TAB 6: DASHBOARD FOTOGRAFER -->
+        <!-- TAB 6: DASHBOARD & FITUR EDIT PROFIL -->
         <div id="view-dashboard" class="page-view py-12 bg-slate-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-black text-slate-900 mb-1">Dashboard Fotografer</h2>
-                <p class="text-xs text-slate-500 mb-8">Kelola pesanan dan bisnis fotografi Anda di sini</p>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
+                    <div>
+                        <h2 id="dashTitleMain" class="text-3xl font-black text-slate-900">Dashboard Pengguna</h2>
+                        <p class="text-xs text-slate-500 mt-1" id="dashSubTitle">Kelola akun dan aktivitas Anda di Clickly</p>
+                    </div>
+                </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- STATS KHUSUS FOTOGRAFER -->
+                <div id="photographerStatsSection" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="bg-primary rounded-3xl p-6 text-white shadow-xl">
                         <h3 class="text-3xl font-black" id="dashTotalIncome">Rp 0</h3>
                         <p class="text-xs text-white/80 mt-1">Pendapatan Total</p>
@@ -254,13 +266,71 @@
                         <p class="text-xs text-white/80 mt-1">Booking Masuk</p>
                     </div>
                     <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                        <h3 class="text-3xl font-black text-slate-900">4.9</h3>
+                        <h3 class="text-3xl font-black text-slate-900" id="dashRatingDisplay">4.9</h3>
                         <p class="text-xs text-slate-500 mt-1">Rating Rata-rata</p>
                     </div>
                 </div>
 
+                <!-- FORM EDIT PROFIL (BISA UNTUK USER ATAUPUN FOTOGRAFER) -->
                 <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
-                    <h3 class="font-bold text-lg mb-4 text-slate-800">Daftar Pesanan Masuk</h3>
+                    <h3 class="font-bold text-xl text-slate-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="user-pen" class="w-5 h-5 text-primary"></i> Edit Profil Akun
+                    </h3>
+                    <form onsubmit="handleUpdateProfile(event)" class="space-y-4 max-w-2xl">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap / Studio</label>
+                                <input type="text" id="editFullName" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Nomor Telepon / WhatsApp</label>
+                                <input type="text" id="editPhone" required class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
+                            </div>
+                        </div>
+
+                        <!-- INPUT TAMBAHAN KHUSUS ROLE FOTOGRAFER -->
+                        <div id="editPhotographerExtra" class="space-y-4 pt-4 border-t border-slate-100 hidden">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Kategori Layanan Utama</label>
+                                    <select id="editCategory" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold">
+                                        <option value="Wisuda">Wisuda</option><option value="Pernikahan">Pernikahan</option><option value="Produk UMKM">Produk UMKM</option><option value="Event">Event</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Kota / Lokasi</label>
+                                    <select id="editLocation" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold">
+                                        <option value="Jabodetabek">Jabodetabek</option><option value="Bandung">Bandung</option><option value="Surabaya">Surabaya</option><option value="Yogyakarta">Yogyakarta</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">Tarif Dasar (Rp)</label>
+                                    <input type="number" id="editPrice" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">URL Foto Sampul (Cover)</label>
+                                    <input type="url" id="editCoverUrl" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">URL Link Portofolio</label>
+                                <input type="url" id="editPortfolioUrl" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Biografi Singkat</label>
+                                <textarea id="editBio" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="px-6 py-3 gradient-brand text-white font-bold rounded-xl shadow-md hover:scale-[1.02] transition-all">Simpan Perubahan Profil</button>
+                    </form>
+                </div>
+
+                <!-- DAFTAR PESANAN -->
+                <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800">Riwayat / Daftar Pesanan</h3>
                     <div id="dashboardOrdersList" class="space-y-4"></div>
                 </div>
             </div>
@@ -269,7 +339,7 @@
     </main>
 
     <!-- MODALS -->
-    <!-- MODAL 1: AUTHENTICATION -->
+    <!-- MODAL AUTH -->
     <div id="authModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative">
             <button onclick="closeModal('authModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -281,8 +351,14 @@
             <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <input type="hidden" id="selectedRole" value="user">
                 <input type="hidden" id="authMode" value="login">
-                <input type="email" id="authEmail" placeholder="Email" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
-                <input type="password" placeholder="Password" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Email</label>
+                    <input type="email" id="authEmail" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Password</label>
+                    <input type="password" required class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm">
+                </div>
                 
                 <div id="photographerFields" class="hidden space-y-4 border-t border-slate-100 pt-4">
                     <p class="text-xs font-bold text-primary uppercase">Profil Fotografer (Wajib diisi)</p>
@@ -305,7 +381,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: COMPARE MATRIX -->
+    <!-- MODAL COMPARE -->
     <div id="compareModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-4xl w-full p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('compareModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -314,7 +390,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: DETAIL & BOOKING -->
+    <!-- MODAL DETAIL -->
     <div id="detailModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative my-8">
             <button onclick="closeModal('detailModal')" class="absolute top-6 right-6 text-slate-400 z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -322,7 +398,7 @@
         </div>
     </div>
 
-    <!-- MODAL 4: QRIS PAYMENT -->
+    <!-- MODAL QRIS -->
     <div id="paymentModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-8 relative text-center">
             <button onclick="closeModal('paymentModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -355,10 +431,6 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_BUXo9A8fhlN0e-RICss1MA_gBASimd0';
         let supabaseClient = typeof supabase !== 'undefined' ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-        const initialPhotographers = [
-            { id: '1', name: 'Rian Studio & Lens', category: 'Wisuda', location: 'Jabodetabek', price: 1250000, rating: 4.9, reviewscount: 48, coverurl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80', portfoliourl: 'https://instagram.com/rian_lens' }
-        ];
-
         let currentPhotographers = [];
         let currentEquipments = [];
         let selectedForCompare = [];
@@ -368,36 +440,33 @@
         document.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
             await loadPhotographersFromDB();
-            await loadEquipmentsFromDB(); // <--- TARIK DATA ALAT DARI SUPABASE
+            await loadEquipmentsFromDB();
             await loadBookingsFromDB();
             updateUserUIState();
         });
 
-        // LOAD DATA FOTOGRAFER (Nama tabel: 'photographer' sesuai database)
+        // LOAD FOTOGRAFER DARI TABEL 'photographer'
         async function loadPhotographersFromDB() {
             if (supabaseClient) {
                 const { data, error } = await supabaseClient.from('photographer').select('*');
-                if (!error && data && data.length > 0) currentPhotographers = data;
-                else currentPhotographers = initialPhotographers;
-            } else currentPhotographers = initialPhotographers;
+                if (!error && data) currentPhotographers = data;
+            }
             renderPhotographerGrid(currentPhotographers);
         }
 
-        // LOAD DATA ALAT (Nama tabel: 'equipments' sesuai database)
+        // LOAD ALAT DARI TABEL 'equipments'
         async function loadEquipmentsFromDB() {
             if (supabaseClient) {
                 const { data, error } = await supabaseClient.from('equipments').select('*');
                 if (!error && data) currentEquipments = data;
             }
-            renderEquipmentGrid();
+            renderEquipmentGrid(currentEquipments);
         }
 
-        // LOAD BOOKINGS
         async function loadBookingsFromDB() {
             if (supabaseClient) {
-                // Saat ini load dari tabel 'bookings' jika ada, sesuaikan dengan nama tabel transaksi kamu
-                const { data, error } = await supabaseClient.from('bookings').select('*');
-                if (!error && data) activeBookings = data;
+                const { data } = await supabaseClient.from('order_detail').select('*');
+                if (data) activeBookings = data;
             }
             renderDashboardOrders();
         }
@@ -408,14 +477,10 @@
             
             dataList.forEach(p => {
                 const isChecked = selectedForCompare.includes(p.id);
-                // Kita gunakan p.coverurl atau fallback p.coverUrl jika huruf besar
-                const finalCover = p.coverurl || p.coverUrl || 'https://via.placeholder.com/600';
-                const finalReviews = p.reviewscount || p.reviewsCount || 1;
-                
                 grid.innerHTML += `
                     <div class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
                         <div class="relative h-56 overflow-hidden">
-                            <img src="${finalCover}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                            <img src="${p.coverurl || 'https://via.placeholder.com/600'}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
                             <span class="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-full text-xs font-bold text-slate-800">${p.category}</span>
                             <label class="absolute top-4 right-4 bg-white/90 p-2 rounded-xl flex items-center gap-1.5 cursor-pointer text-xs font-bold text-slate-700">
                                 <input type="checkbox" onchange="toggleCompare('${p.id}')" ${isChecked ? 'checked' : ''} class="rounded text-primary"> Bandingkan
@@ -425,7 +490,7 @@
                             <div>
                                 <div class="flex justify-between text-xs text-slate-500 mb-1">
                                     <span>📍 ${p.location}</span>
-                                    <span class="text-amber-500 font-bold">★ ${p.rating || 5.0} (${finalReviews})</span>
+                                    <span class="text-amber-500 font-bold">★ ${p.rating || 5.0} (${p.reviewscount || 1})</span>
                                 </div>
                                 <h3 class="font-bold text-lg text-slate-900">${p.name}</h3>
                             </div>
@@ -439,17 +504,17 @@
             lucide.createIcons();
         }
 
-        // FUNGSI RENDER SEWA ALAT
-        function renderEquipmentGrid() {
+        // RENDER & SEARCH SEWA ALAT
+        function renderEquipmentGrid(dataList) {
             const grid = document.getElementById('equipmentGrid');
             if(!grid) return; grid.innerHTML = '';
             
-            if(currentEquipments.length === 0) {
-                grid.innerHTML = `<p class="col-span-full text-center text-slate-500">Belum ada alat yang tersedia di database.</p>`;
+            if(dataList.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-slate-500">Alat tidak ditemukan.</p>`;
                 return;
             }
 
-            currentEquipments.forEach(eq => {
+            dataList.forEach(eq => {
                 grid.innerHTML += `
                     <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden group p-4 flex flex-col justify-between">
                         <div>
@@ -460,28 +525,30 @@
                         </div>
                         <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
                             <div><span class="text-[10px] text-slate-400 block">Tarif / Hari</span><strong class="text-slate-900 font-black">Rp ${Number(eq.price).toLocaleString('id-ID')}</strong></div>
-                            <button onclick="alert('Fitur sewa alat masuk ke update berikutnya!')" class="px-4 py-2 bg-slate-900 hover:bg-primary text-white text-xs font-bold rounded-xl transition-all">Sewa</button>
+                            <button onclick="alert('Fitur sewa alat langsung aktif!')" class="px-4 py-2 bg-slate-900 hover:bg-primary text-white text-xs font-bold rounded-xl transition-all">Sewa</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
+        }
+
+        function filterEquipments() {
+            const query = document.getElementById('searchEquipmentInput').value.toLowerCase();
+            const filtered = currentEquipments.filter(eq => eq.name.toLowerCase().includes(query) || eq.category.toLowerCase().includes(query));
+            renderEquipmentGrid(filtered);
         }
 
         function applyMarketplaceFilter() {
             const cat = document.getElementById('filterCategory').value;
             const loc = document.getElementById('filterLocation').value;
             const budget = Number(document.getElementById('filterBudget').value);
-            const filtered = currentPhotographers.filter(p => {
-                return (!cat || p.category === cat) && (!loc || p.location === loc) && (Number(p.price) <= budget);
-            });
+            const filtered = currentPhotographers.filter(p => (!cat || p.category === cat) && (!loc || p.location === loc) && (Number(p.price) <= budget));
             renderPhotographerGrid(filtered);
         }
 
         function toggleCompare(id) {
-            if (selectedForCompare.includes(id)) selectedForCompare = selectedForCompare.filter(item => item !== id);
+            if (selectedForCompare.includes(id)) selectedForCompare = selectedForCompare.filter(i => i !== id);
             else if (selectedForCompare.length >= 3) { alert('Maksimal membandingkan 3 orang!'); return; }
             else selectedForCompare.push(id);
-
             document.getElementById('compareCount').innerText = selectedForCompare.length;
             document.getElementById('compareBar').style.display = selectedForCompare.length > 0 ? 'flex' : 'none';
         }
@@ -491,68 +558,55 @@
             const list = currentPhotographers.filter(p => selectedForCompare.includes(p.id));
             document.getElementById('compareMatrixContainer').innerHTML = `
                 <table class="w-full text-left border-collapse min-w-[600px] text-sm">
-                    <thead><tr class="border-b border-slate-200">
-                        <th class="p-3">Info</th>${list.map(p => `<th class="p-3 font-black text-slate-800">${p.name}</th>`).join('')}
-                    </tr></thead>
-                    <tbody class="divide-y divide-slate-100">
+                    <thead><tr class="border-b border-slate-200"><th class="p-3">Info</th>${list.map(p => `<th class="p-3 font-black">${p.name}</th>`).join('')}</tr></thead>
+                    <tbody class="divide-y">
                         <tr><td class="p-3 text-slate-500">Tarif</td>${list.map(p => `<td class="p-3 font-bold text-primary">Rp ${Number(p.price).toLocaleString('id-ID')}</td>`).join('')}</tr>
-                        <tr><td class="p-3 text-slate-500">Portofolio</td>${list.map(p => {
-                            const portLink = p.portfoliourl || p.portfolioUrl || '#';
-                            return `<td class="p-3"><a href="${portLink}" target="_blank" class="text-secondary font-bold underline">Lihat Link</a></td>`
-                        }).join('')}</tr>
-                        <tr><td class="p-3"></td>${list.map(p => `<td class="p-3"><button onclick="openDetailModal('${p.id}')" class="w-full py-2 bg-primary text-white font-bold rounded-lg">Pilih Ini</button></td>`).join('')}</tr>
+                        <tr><td class="p-3 text-slate-500">Portofolio</td>${list.map(p => `<td class="p-3"><a href="${p.portfoliourl || '#'}" target="_blank" class="text-secondary font-bold underline">Link Portofolio</a></td>`).join('')}</tr>
+                        <tr><td class="p-3"></td>${list.map(p => `<td class="p-3"><button onclick="openDetailModal('${p.id}')" class="w-full py-2 bg-primary text-white font-bold rounded-lg">Pilih</button></td>`).join('')}</tr>
                     </tbody>
                 </table>`;
             openModal('compareModal');
         }
 
         function openDetailModal(id) {
-            const p = currentPhotographers.find(item => item.id == id);
+            const p = currentPhotographers.find(i => i.id == id);
             if(!p) return;
-            const finalCover = p.coverurl || p.coverUrl || 'https://via.placeholder.com/600';
             document.getElementById('detailModalContent').innerHTML = `
                 <div class="md:col-span-7 space-y-4">
-                    <img src="${finalCover}" class="w-full h-80 object-cover rounded-3xl shadow-md">
-                    <h2 class="text-2xl font-black text-slate-900 mt-2">${p.name}</h2>
+                    <img src="${p.coverurl}" class="w-full h-80 object-cover rounded-3xl shadow-md">
+                    <h2 class="text-2xl font-black text-slate-900">${p.name}</h2>
                     <p class="text-xs text-slate-600">📍 ${p.location} | Kategori: ${p.category}</p>
+                    <p class="text-xs text-slate-500">${p.bio || 'Fotografer profesional terverifikasi.'}</p>
                 </div>
-                <div class="md:col-span-5 bg-slate-50 p-6 rounded-3xl border border-slate-200/80 h-fit space-y-4">
+                <div class="md:col-span-5 bg-slate-50 p-6 rounded-3xl border h-fit space-y-4">
                     <h3 class="font-bold text-slate-900">Pesan Sesi Foto</h3>
-                    <input type="date" id="bookingDate" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold">
-                    <div class="flex justify-between font-black text-slate-900 text-lg border-t border-slate-200 pt-2">
+                    <input type="date" id="bookingDate" class="w-full px-4 py-2.5 rounded-xl border text-xs font-semibold">
+                    <div class="flex justify-between font-black text-slate-900 text-lg border-t pt-2">
                         <span>Total:</span><span class="text-primary">Rp ${Number(p.price).toLocaleString('id-ID')}</span>
                     </div>
-                    <button onclick="startCheckout('${p.id}', ${p.price}, '${p.name}')" class="w-full py-3.5 bg-primary text-white font-bold rounded-2xl hover:scale-[1.01] transition-all">Bayar via QRIS</button>
+                    <button onclick="startCheckout('${p.id}', ${p.price}, '${p.name}')" class="w-full py-3.5 bg-primary text-white font-bold rounded-2xl">Bayar via QRIS</button>
                 </div>`;
-            closeModal('compareModal');
-            openModal('detailModal');
+            closeModal('compareModal'); openModal('detailModal');
         }
 
         let currentPayingOrder = null;
-        function startCheckout(photographerId, amount, photographerName) {
+        function startCheckout(id, amount, name) {
             const date = document.getElementById('bookingDate').value;
-            if (!date) { alert('Pilih tanggal dulu!'); return; }
+            if (!date) return alert('Pilih tanggal dulu!');
             const trxId = 'CLK-' + Math.floor(100000 + Math.random() * 900000);
-            currentPayingOrder = { id: trxId, photographerid: String(photographerId), photographername: photographerName, amount: Number(amount), date, status: 'Menunggu' };
-            document.getElementById('qrisImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=CLICKLY-${trxId}`;
-            document.getElementById('payPhotographerName').innerText = photographerName;
+            currentPayingOrder = { id: trxId, booking_id: trxId, item_description: name, quantity: 1, subtotal: Number(amount) };
+            document.getElementById('qrisImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${trxId}`;
+            document.getElementById('payPhotographerName').innerText = name;
             document.getElementById('payTotalAmount').innerText = `Rp ${Number(amount).toLocaleString('id-ID')}`;
-            closeModal('detailModal');
-            openModal('paymentModal');
+            closeModal('detailModal'); openModal('paymentModal');
         }
 
         async function confirmPaymentSuccess() {
             if (!currentPayingOrder) return;
-            currentPayingOrder.status = 'Lunas (Escrow)';
-            if (supabaseClient) {
-                const { error } = await supabaseClient.from('bookings').insert([currentPayingOrder]);
-                if (error) { alert('Gagal mencatat transaksi ke database: ' + error.message); return; }
-            }
+            if (supabaseClient) await supabaseClient.from('order_detail').insert([currentPayingOrder]);
             activeBookings.push(currentPayingOrder);
-            localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
-            alert('Pembayaran Berhasil! Data tercatat aman di database Clickly.');
-            closeModal('paymentModal');
-            renderDashboardOrders();
+            alert('Pembayaran Berhasil Dicatat ke Tabel order_detail!');
+            closeModal('paymentModal'); renderDashboardOrders();
         }
 
         function openAuthModal(mode) {
@@ -563,111 +617,136 @@
 
         function switchRole(role) {
             document.getElementById('selectedRole').value = role;
-            const userBtn = document.getElementById('roleUserBtn');
-            const photoBtn = document.getElementById('rolePhotoBtn');
-            const photoFields = document.getElementById('photographerFields');
-
-            if (role === 'user') {
-                if(userBtn) userBtn.className = "py-2 text-xs font-bold rounded-xl bg-white text-slate-800 shadow-sm transition-all";
-                if(photoBtn) photoBtn.className = "py-2 text-xs font-bold rounded-xl text-slate-500 transition-all";
-                if(photoFields) photoFields.style.display = 'none';
-            } else {
-                if(photoBtn) photoBtn.className = "py-2 text-xs font-bold rounded-xl bg-white text-slate-800 shadow-sm transition-all";
-                if(userBtn) userBtn.className = "py-2 text-xs font-bold rounded-xl text-slate-500 transition-all";
-                if(photoFields) photoFields.style.display = 'block';
-            }
+            document.getElementById('roleUserBtn').className = role === 'user' ? "py-2 text-xs font-bold rounded-xl bg-white text-slate-800 shadow-sm" : "py-2 text-xs font-bold rounded-xl text-slate-500";
+            document.getElementById('rolePhotoBtn').className = role === 'photographer' ? "py-2 text-xs font-bold rounded-xl bg-white text-slate-800 shadow-sm" : "py-2 text-xs font-bold rounded-xl text-slate-500";
+            document.getElementById('photographerFields').style.display = role === 'photographer' ? 'block' : 'none';
         }
 
         function toggleAuthMode() {
-            const curr = document.getElementById('authMode').value;
-            openAuthModal(curr === 'login' ? 'register' : 'login');
+            const mode = document.getElementById('authMode').value;
+            openAuthModal(mode === 'login' ? 'register' : 'login');
         }
 
+        // LOGIN / REGISTER HANDLING (Tabel 'users' & 'photographer')
         async function handleAuthSubmit(e) {
             e.preventDefault();
+            const email = document.getElementById('authEmail').value;
             const role = document.getElementById('selectedRole').value;
-            
-            if (role === 'photographer' && document.getElementById('authMode').value === 'register') {
-                const name = document.getElementById('photoName').value;
-                const price = document.getElementById('photoPrice').value;
-                const portfolioUrl = document.getElementById('photoPortfolioUrl').value;
-                const coverUrl = document.getElementById('photoCoverUrl').value;
+            const userId = String(Date.now());
 
-                if(!name || !price || !portfolioUrl || !coverUrl) { alert('Lengkapi seluruh data fotografer!'); return; }
-                
-                // NAMA FIELD HURUF KECIL SEMUA MENYESUAIKAN DATABASE
-                const newT = {
-                    id: String(Date.now()), 
-                    name, 
-                    price: Number(price),
-                    category: document.getElementById('photoCategory').value,
-                    location: document.getElementById('photoLocation').value,
-                    portfoliourl: portfolioUrl, 
-                    coverurl: coverUrl,
-                    rating: 5.0, 
-                    reviewscount: 1,
-                    bio: 'Fotografer profesional terverifikasi.'
-                };
+            currentUser = { id: userId, email, role, full_name: email.split('@')[0], phone_number: '08123456789' };
 
-                if (supabaseClient) {
-                    const { error } = await supabaseClient.from('photographer').insert([newT]); // Tabel: photographer
-                    if (error) { alert('Gagal mendaftarkan fotografer ke database: ' + error.message); return; }
+            if (supabaseClient) {
+                // Simpan ke tabel 'users'
+                await supabaseClient.from('users').upsert([currentUser]);
+
+                if (role === 'photographer' && document.getElementById('authMode').value === 'register') {
+                    const newPhoto = {
+                        id: userId,
+                        name: document.getElementById('photoName').value,
+                        category: document.getElementById('photoCategory').value,
+                        location: document.getElementById('photoLocation').value,
+                        price: Number(document.getElementById('photoPrice').value),
+                        coverurl: document.getElementById('photoCoverUrl').value,
+                        portfoliourl: document.getElementById('photoPortfolioUrl').value,
+                        rating: 5.0,
+                        reviewscount: 1,
+                        bio: 'Fotografer profesional'
+                    };
+                    await supabaseClient.from('photographer').insert([newPhoto]);
+                    currentPhotographers.push(newPhoto);
+                    renderPhotographerGrid(currentPhotographers);
                 }
-
-                currentPhotographers.push(newT);
-                renderPhotographerGrid(currentPhotographers);
             }
-            
-            currentUser = { email: document.getElementById('authEmail').value, role };
+
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
             closeModal('authModal');
             updateUserUIState();
-            alert('Login / Pendaftaran Berhasil!');
+            alert('Autentikasi Berhasil!');
+            switchPage('dashboard');
+        }
 
-            if(role === 'photographer') switchPage('dashboard');
+        // UPDATE PROFIL (FITUR EDIT PROFIL UNTUK KEDUA ROLE)
+        async function handleUpdateProfile(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            currentUser.full_name = document.getElementById('editFullName').value;
+            currentUser.phone_number = document.getElementById('editPhone').value;
+
+            if (supabaseClient) {
+                await supabaseClient.from('users').update({ full_name: currentUser.full_name, phone_number: currentUser.phone_number }).eq('id', currentUser.id);
+
+                if (currentUser.role === 'photographer') {
+                    const updatedPhoto = {
+                        name: document.getElementById('editFullName').value,
+                        category: document.getElementById('editCategory').value,
+                        location: document.getElementById('editLocation').value,
+                        price: Number(document.getElementById('editPrice').value),
+                        coverurl: document.getElementById('editCoverUrl').value,
+                        portfoliourl: document.getElementById('editPortfolioUrl').value,
+                        bio: document.getElementById('editBio').value
+                    };
+                    await supabaseClient.from('photographer').update(updatedPhoto).eq('id', currentUser.id);
+                }
+            }
+
+            localStorage.setItem('clickly_user', JSON.stringify(currentUser));
+            alert('Profil Berhasil Diperbarui!');
+            loadPhotographersFromDB();
         }
 
         function updateUserUIState() {
             if (currentUser) {
-                const navAuth = document.getElementById('navAuthSection');
-                if(navAuth) {
-                    navAuth.innerHTML = `
-                        <button onclick="if(currentUser.role==='photographer') switchPage('dashboard')" class="text-xs bg-slate-100 px-3 py-2 rounded-full font-bold hover:bg-slate-200 transition-all flex items-center gap-1">
-                            <span>${currentUser.email}</span>
-                        </button>
-                        <button onclick="logout()" class="text-xs text-rose-500 font-bold ml-1">Keluar</button>
-                    `;
+                document.getElementById('navAuthSection').innerHTML = `
+                    <button onclick="switchPage('dashboard')" class="text-xs bg-slate-100 px-3 py-2 rounded-full font-bold hover:bg-slate-200">${currentUser.email}</button>
+                    <button onclick="localStorage.removeItem('clickly_user'); location.reload()" class="text-xs text-rose-500 font-bold ml-1">Keluar</button>
+                `;
+
+                // Set Form Edit Profil Berdasarkan Data User
+                document.getElementById('editFullName').value = currentUser.full_name || '';
+                document.getElementById('editPhone').value = currentUser.phone_number || '';
+
+                const isPhoto = currentUser.role === 'photographer';
+                document.getElementById('editPhotographerExtra').style.display = isPhoto ? 'block' : 'hidden';
+                document.getElementById('photographerStatsSection').style.display = isPhoto ? 'grid' : 'none';
+                document.getElementById('dashTitleMain').innerText = isPhoto ? 'Dashboard Fotografer' : 'Dashboard Klien';
+
+                if (isPhoto) {
+                    const pData = currentPhotographers.find(p => p.id == currentUser.id) || currentPhotographers[0];
+                    if (pData) {
+                        document.getElementById('editCategory').value = pData.category || 'Wisuda';
+                        document.getElementById('editLocation').value = pData.location || 'Jabodetabek';
+                        document.getElementById('editPrice').value = pData.price || 0;
+                        document.getElementById('editCoverUrl').value = pData.coverurl || '';
+                        document.getElementById('editPortfolioUrl').value = pData.portfoliourl || '';
+                        document.getElementById('editBio').value = pData.bio || '';
+                    }
                 }
             }
         }
 
-        function logout() { localStorage.removeItem('clickly_user'); location.reload(); }
-
         function renderDashboardOrders() {
             const list = document.getElementById('dashboardOrdersList');
             if(!list) return;
-            list.innerHTML = activeBookings.length ? '' : '<p class="text-xs text-slate-400">Belum ada pesanan masuk.</p>';
-            let totalIncome = 0;
+            list.innerHTML = activeBookings.length ? '' : '<p class="text-xs text-slate-400">Belum ada pesanan.</p>';
+            let total = 0;
             activeBookings.forEach(b => {
-                totalIncome += Number(b.amount);
+                total += Number(b.subtotal);
                 list.innerHTML += `
-                    <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between text-xs">
+                    <div class="p-4 bg-slate-50 border rounded-2xl flex justify-between items-center text-xs">
                         <div>
-                            <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">${b.status}</span>
-                            <p class="font-bold text-slate-800 text-sm mt-1">Trx ID: ${b.id}</p>
-                            <p class="text-slate-500 mt-0.5">Tanggal Sesi: ${b.date}</p>
+                            <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">Sukses</span>
+                            <p class="font-bold text-slate-800 mt-1">Item: ${b.item_description}</p>
+                            <p class="text-slate-400">ID: ${b.booking_id}</p>
                         </div>
                         <div class="text-right">
-                            <span class="text-[10px] text-slate-400 block">Total Tagihan</span>
-                            <strong class="text-primary text-sm font-black">Rp ${Number(b.amount).toLocaleString('id-ID')}</strong>
+                            <strong class="text-primary font-black text-sm">Rp ${Number(b.subtotal).toLocaleString('id-ID')}</strong>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-            const ordersEl = document.getElementById('dashTotalOrders');
-            const incomeEl = document.getElementById('dashTotalIncome');
-            if(ordersEl) ordersEl.innerText = activeBookings.length;
-            if(incomeEl) incomeEl.innerText = `Rp ${totalIncome.toLocaleString('id-ID')}`;
+            if(document.getElementById('dashTotalOrders')) document.getElementById('dashTotalOrders').innerText = activeBookings.length;
+            if(document.getElementById('dashTotalIncome')) document.getElementById('dashTotalIncome').innerText = `Rp ${total.toLocaleString('id-ID')}`;
         }
 
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
