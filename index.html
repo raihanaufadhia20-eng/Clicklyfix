@@ -76,11 +76,12 @@
                 </div>
             </a>
 
-            <nav class="hidden md:flex items-center gap-8 font-medium text-slate-600 text-sm">
+            <nav class="hidden md:flex items-center gap-7 font-medium text-slate-600 text-sm">
                 <button onclick="switchPage('home')" id="nav-home" class="hover:text-primary transition-colors font-bold text-primary">Beranda</button>
                 <button onclick="switchPage('marketplace')" id="nav-marketplace" class="hover:text-primary transition-colors">Cari Fotografer</button>
                 <button onclick="switchPage('rental')" id="nav-rental" class="hover:text-primary transition-colors">Sewa Alat</button>
                 <button onclick="switchPage('howitworks')" id="nav-howitworks" class="hover:text-primary transition-colors">Cara Kerja</button>
+                <button onclick="switchPage('faq')" id="nav-faq" class="hover:text-primary transition-colors">FAQ</button>
             </nav>
 
             <div id="navAuthSection" class="flex items-center gap-3">
@@ -246,6 +247,50 @@
                         <h3 class="font-space font-bold text-slate-800 text-lg mb-2">Sesi Selesai!</h3>
                         <p class="text-sm text-slate-500 font-medium">Gunakan fitur Chat, dapatkan hasil, dan berikan Rating!</p>
                     </div>
+                </div>
+
+                <div class="mt-14">
+                    <button onclick="switchPage('faq')" class="inline-flex items-center gap-2 px-7 py-3.5 bg-white border-2 border-slate-200 hover:border-primary text-slate-800 hover:text-primary font-bold text-sm rounded-2xl shadow-sm transition-all">
+                        <i data-lucide="help-circle" class="w-4 h-4 text-primary"></i> Punya Pertanyaan? Cek Halaman FAQ
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: FAQ (PERTANYAAN UMUM) -->
+        <div id="view-faq" class="page-view py-14">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <span class="text-primary font-bold text-sm tracking-wider uppercase">Pusat Bantuan</span>
+                    <h2 class="text-3xl sm:text-4xl font-space font-bold text-slate-900 mt-2">Pertanyaan yang Sering Diajukan (FAQ)</h2>
+                    <p class="text-sm text-slate-500 font-medium mt-2 max-w-xl mx-auto">Semua informasi seputar pemesanan fotografer, keamanan pembayaran Escrow, dan penyewaan kamera di Clickly.</p>
+                </div>
+
+                <!-- Filter Kategori FAQ -->
+                <div class="flex flex-wrap justify-center gap-2 mb-8" id="faqCategoryTabs">
+                    <button onclick="filterFaqCategory('all', this)" class="faq-tab-btn px-5 py-2.5 rounded-full text-xs font-bold gradient-brand text-white shadow-md transition-all">Semua Topik</button>
+                    <button onclick="filterFaqCategory('booking', this)" class="faq-tab-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-primary transition-all">Booking & Escrow</button>
+                    <button onclick="filterFaqCategory('rental', this)" class="faq-tab-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-primary transition-all">Sewa Alat</button>
+                    <button onclick="filterFaqCategory('photographer', this)" class="faq-tab-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-primary transition-all">Mitra Fotografer</button>
+                </div>
+
+                <!-- Daftar Accordion FAQ -->
+                <div id="faqAccordionContainer" class="space-y-4"></div>
+
+                <!-- Banner Bantuan Bawah -->
+                <div class="mt-12 bg-white rounded-[32px] p-8 border border-slate-100 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-4 text-center sm:text-left">
+                        <div class="w-14 h-14 rounded-2xl bg-sky-50 text-secondary flex items-center justify-center shrink-0 mx-auto sm:mx-0">
+                            <i data-lucide="sparkles" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-space font-bold text-lg text-slate-900">Siap mengabadikan momen terbaikmu?</h3>
+                            <p class="text-xs text-slate-500 font-medium mt-1">Bandingkan hingga 3 fotografer sekaligus dan booking dalam hitungan detik.</p>
+                        </div>
+                    </div>
+                    <button onclick="switchPage('marketplace')" class="px-7 py-3.5 gradient-brand text-white font-bold text-xs rounded-2xl shadow-lg hover:scale-[1.02] transition-all shrink-0">
+                        Cari Fotografer Sekarang
+                    </button>
                 </div>
             </div>
         </div>
@@ -544,7 +589,7 @@
         function switchPage(pageId) {
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
             document.getElementById('view-' + pageId).classList.add('active');
-            ['home', 'marketplace', 'rental', 'howitworks', 'dashboard'].forEach(id => {
+            ['home', 'marketplace', 'rental', 'howitworks', 'faq', 'dashboard'].forEach(id => {
                 const btn = document.getElementById('nav-' + id);
                 if(btn) btn.className = id === pageId ? "hover:text-primary transition-colors font-bold text-primary" : "hover:text-primary transition-colors";
             });
@@ -563,6 +608,44 @@
         let allMessages = JSON.parse(localStorage.getItem('clickly_messages')) || [];
         let activeChatPartner = { id: 'all', name: 'Klien Clickly' };
 
+        const faqData = [
+            {
+                category: 'booking',
+                question: 'Bagaimana cara kerja sistem pembayaran Escrow di Clickly?',
+                answer: 'Saat kamu melakukan pembayaran booking melalui Virtual Account atau QRIS, dana akan disimpan dengan aman di sistem Clickly Escrow. Dana baru akan diteruskan ke fotografer setelah sesi pemotretan selesai dan hasil foto diterima dengan baik.'
+            },
+            {
+                category: 'booking',
+                question: 'Kenapa fitur Chat langsung baru bisa dipakai setelah booking?',
+                answer: 'Untuk menjaga keamanan transaksi, privasi kontak, serta mencegah spam di platform, ruang chat langsung terbuka otomatis begitu kamu menyelesaikan konfirmasi pembayaran Escrow untuk fotografer tersebut.'
+            },
+            {
+                category: 'booking',
+                question: 'Apakah jadwal sesi foto bisa di-reschedule atau dibatalkan?',
+                answer: 'Kamu bisa mengajukan perubahan jadwal (reschedule) secara gratis maksimal H-2 sebelum sesi pemotretan melalui ruang chat dengan fotografer. Pembatalan yang dilakukan sebelum H-3 mendapatkan pengembalian dana (refund) 100%.'
+            },
+            {
+                category: 'rental',
+                question: 'Apa saja syarat untuk menyewa kamera, lensa, atau lighting?',
+                answer: 'Cukup pilih peralatan yang dibutuhkan di menu Sewa Alat, tentukan tanggal mulai dan selesai sewa, lalu selesaikan pembayaran. Saat pengambilan barang, wajib menunjukkan kartu identitas asli (KTP/KTM) yang masih berlaku sebagai verifikasi.'
+            },
+            {
+                category: 'rental',
+                question: 'Bagaimana perhitungan tarif sewa alat per hari?',
+                answer: 'Tarif sewa dihitung berdasarkan jumlah hari pemakaian dari tanggal mulai hingga tanggal pengembalian. Sistem akan menghitung total biaya secara otomatis sebelum kamu memilih metode pembayaran.'
+            },
+            {
+                category: 'photographer',
+                question: 'Bagaimana cara bergabung menjadi mitra Fotografer di Clickly?',
+                answer: 'Klik tombol "Daftar Sekarang" di pojok kanan atas, pilih tab "Fotografer", lalu lengkapi nama studio/talent, kategori spesialisasi, kota domisili, tarif dasar, serta tautan portofolio kamu.'
+            },
+            {
+                category: 'photographer',
+                question: 'Berapa lama waktu pengerjaan editing foto hingga dikirim ke klien?',
+                answer: 'Estimasi pengerjaan editing foto berkisar antara 2 hingga 5 hari kerja setelah sesi pemotretan berlangsung, tergantung jumlah foto dan paket yang dipilih oleh klien.'
+            }
+        ];
+
         const dummyPhotographers = [
             { id: 'd1', name: 'Aldo Studio', category: 'Pernikahan', location: 'Jabodetabek', price: 1500000, rating: 4.9, reviewscount: 124, coverurl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80', bio: 'Spesialis foto pernikahan dan pre-wedding dengan gaya sinematik.' },
             { id: 'd2', name: 'Budi Portrait', category: 'Wisuda', location: 'Bandung', price: 800000, rating: 4.8, reviewscount: 85, coverurl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80', bio: 'Mengabadikan momen wisuda dengan hasil yang cerah dan natural.' },
@@ -578,6 +661,7 @@
         ];
 
         document.addEventListener('DOMContentLoaded', async () => {
+            renderFaqList('all');
             lucide.createIcons();
             await loadPhotographersFromDB();
             await loadEquipmentsFromDB();
@@ -587,6 +671,58 @@
             setupRealtimeChat();
             updateUserUIState();
         });
+
+        // ==========================================
+        // FAQ ACCORDION & FILTER LOGIC
+        // ==========================================
+        function renderFaqList(categoryFilter = 'all') {
+            const container = document.getElementById('faqAccordionContainer');
+            if (!container) return;
+
+            const filtered = categoryFilter === 'all'
+                ? faqData
+                : faqData.filter(item => item.category === categoryFilter);
+
+            container.innerHTML = filtered.map((item, idx) => `
+                <div class="bg-white rounded-[24px] border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
+                    <button type="button" onclick="toggleFaqItem(${idx})" class="w-full px-6 py-5 text-left flex items-center justify-between gap-4">
+                        <span class="font-space font-bold text-slate-900 text-base sm:text-lg">${item.question}</span>
+                        <span id="faqIcon-${idx}" class="w-9 h-9 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center shrink-0 transition-transform duration-300">
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </span>
+                    </button>
+                    <div id="faqAnswer-${idx}" class="${idx === 0 ? '' : 'hidden'} px-6 pb-6 pt-1 text-sm text-slate-600 font-medium leading-relaxed border-t border-slate-50">
+                        ${item.answer}
+                    </div>
+                </div>
+            `).join('');
+
+            const firstIcon = document.getElementById('faqIcon-0');
+            if (firstIcon) firstIcon.style.transform = 'rotate(180deg)';
+            lucide.createIcons();
+        }
+
+        function toggleFaqItem(idx) {
+            const answerEl = document.getElementById(`faqAnswer-${idx}`);
+            const iconEl = document.getElementById(`faqIcon-${idx}`);
+            if (!answerEl) return;
+
+            const isHidden = answerEl.classList.contains('hidden');
+            answerEl.classList.toggle('hidden');
+            if (iconEl) {
+                iconEl.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        }
+
+        function filterFaqCategory(category, btnEl) {
+            document.querySelectorAll('.faq-tab-btn').forEach(btn => {
+                btn.className = 'faq-tab-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-primary transition-all';
+            });
+            if (btnEl) {
+                btnEl.className = 'faq-tab-btn px-5 py-2.5 rounded-full text-xs font-bold gradient-brand text-white shadow-md transition-all';
+            }
+            renderFaqList(category);
+        }
 
         async function loadPhotographersFromDB() {
             try {
