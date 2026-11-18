@@ -45,7 +45,6 @@
         .page-view { display: none; animation: fadeIn 0.3s ease-in-out; }
         .page-view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        /* Custom scrollbar to keep it clean */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
@@ -109,7 +108,6 @@
                             Tinggalkan drama respon lambat dan harga tidak pasti. Temukan, bandingkan, dan booking fotografer profesional dengan harga transparan dan pembayaran aman.
                         </p>
                         
-                        <!-- Trust Badges Bar -->
                         <div class="flex flex-wrap gap-4 pt-2">
                             <div class="flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-full shadow-sm border border-slate-100"><i data-lucide="tag" class="w-3.5 h-3.5 text-primary"></i> Harga Transparan</div>
                             <div class="flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-white px-3 py-1.5 rounded-full shadow-sm border border-slate-100"><i data-lucide="lock" class="w-3.5 h-3.5 text-primary"></i> Escrow Payment</div>
@@ -159,10 +157,9 @@
             </div>
         </div>
 
-        <!-- TAB 2: MARKETPLACE FOTOGRAFER (DENGAN FILTER & DUMMY DATA) -->
+        <!-- TAB 2: MARKETPLACE FOTOGRAFER -->
         <div id="view-marketplace" class="page-view py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Advanced Filter Bar -->
                 <div class="p-6 bg-white rounded-[32px] shadow-xl border border-slate-100 mb-10">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200/80">
@@ -200,7 +197,6 @@
                         <button onclick="clearComparison()" class="p-2 text-slate-400 hover:text-rose-500 bg-slate-50 rounded-full"><i data-lucide="x" class="w-4 h-4"></i></button>
                     </div>
                 </div>
-                <!-- Tempat Munculnya Grid Data -->
                 <div id="photographerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
         </div>
@@ -254,7 +250,7 @@
             </div>
         </div>
 
-        <!-- TAB 6: DASHBOARD (TETAP SAMA SEPERTI SEBELUMNYA) -->
+        <!-- TAB 6: DASHBOARD -->
         <div id="view-dashboard" class="page-view py-12 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
@@ -294,7 +290,6 @@
                             </div>
                         </div>
 
-                        <!-- Analitik Figma Layout -->
                         <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
                             <div class="flex justify-between items-center mb-8">
                                 <div class="flex items-center gap-3">
@@ -316,7 +311,6 @@
                             </div>
                         </div>
 
-                        <!-- Booking List -->
                         <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
                             <h3 class="font-space font-bold text-xl mb-6 text-slate-800 flex items-center gap-2">
                                 <i data-lucide="calendar-check" class="text-primary w-5 h-5"></i> Booking Mendatang / Riwayat
@@ -372,7 +366,7 @@
                     </div>
                 </div>
 
-                <!-- FORM EDIT PROFIL TERSIMPAN -->
+                <!-- FORM EDIT PROFIL -->
                 <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm mt-8">
                     <h3 class="font-space font-bold text-xl text-slate-900 mb-6 flex items-center gap-2">
                         <i data-lucide="user-pen" class="w-5 h-5 text-secondary"></i> Pengaturan Profil Akun
@@ -432,14 +426,12 @@
 
     </main>
 
-    <!-- ALL MODALS SET WITH MAX-HEIGHT TO PREVENT CLIPPING -->
-
-    <!-- MODAL AUTH -->
+    <!-- MODAL AUTH (DENGAN VALIDASI DAFTAR SEBELUM MASUK) -->
     <div id="authModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <!-- Added max-h-[90vh] overflow-y-auto to prevent clipping -->
         <div class="bg-white rounded-[32px] max-w-md w-full p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('authModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
-            <h3 id="authTitle" class="text-3xl font-space font-bold text-center mb-6 text-slate-900">Masuk ke Clickly</h3>
+            <h3 id="authTitle" class="text-3xl font-space font-bold text-center mb-2 text-slate-900">Masuk ke Clickly</h3>
+            <p id="authSubtitle" class="text-xs text-center text-slate-500 font-medium mb-6">Gunakan email yang sudah terdaftar untuk masuk</p>
             
             <div id="roleSelectorContainer" class="grid grid-cols-2 p-1.5 bg-slate-100 rounded-2xl mb-6">
                 <button type="button" id="roleUserBtn" onclick="switchRole('user')" class="py-2.5 text-sm font-bold rounded-[14px] bg-white text-slate-800 shadow-sm">User / Klien</button>
@@ -450,24 +442,24 @@
                 <input type="hidden" id="selectedRole" value="user">
                 <input type="hidden" id="authMode" value="login">
 
-                <div id="registerFieldsOnly" class="space-y-4">
+                <div id="registerFieldsOnly" class="hidden space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap</label>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap *</label>
                         <input type="text" id="regFullName" placeholder="Nama Anda" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1">Nomor Telepon</label>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Nomor Telepon *</label>
                         <input type="text" id="regPhone" placeholder="08xxxxxxxxxx" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">Email</label>
-                    <input type="email" id="authEmail" required class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Email *</label>
+                    <input type="email" id="authEmail" required placeholder="nama@email.com" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">Password</label>
-                    <input type="password" required class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Password *</label>
+                    <input type="password" id="authPassword" required placeholder="••••••••" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
                 </div>
                 
                 <div id="photographerFields" class="hidden space-y-4 border-t border-slate-100 pt-4">
@@ -486,15 +478,14 @@
                     <input type="url" id="photoCoverUrl" placeholder="URL Foto Sampul (Avatar)" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm">
                 </div>
 
-                <button type="submit" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg mt-2">Lanjutkan</button>
+                <button type="submit" id="authSubmitBtn" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg mt-2">Masuk</button>
             </form>
-            <button onclick="toggleAuthMode()" class="w-full text-center mt-6 text-sm text-slate-500 font-bold hover:text-primary">Belum punya akun? Daftar di sini</button>
+            <button type="button" id="authToggleBtn" onclick="toggleAuthMode()" class="w-full text-center mt-6 text-sm text-slate-500 font-bold hover:text-primary">Belum punya akun? Daftar di sini</button>
         </div>
     </div>
 
     <!-- MODAL COMPARE -->
     <div id="compareModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <!-- Max height added -->
         <div class="bg-white rounded-[32px] max-w-4xl w-full p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('compareModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
             <h3 class="text-2xl font-space font-bold text-slate-900 mb-6">Matriks Perbandingan</h3>
@@ -504,7 +495,6 @@
 
     <!-- MODAL DETAIL / BOOKING FOTOGRAFER -->
     <div id="detailModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <!-- MAX HEIGHT & SCROLL ADDED HERE TO PREVENT CLIPPING -->
         <div class="bg-white rounded-[32px] max-w-6xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('detailModal')" class="absolute top-6 right-6 text-slate-400 z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
             <div id="detailModalContent" class="grid md:grid-cols-12 gap-10"></div>
@@ -513,7 +503,6 @@
 
     <!-- MODAL SEWA ALAT -->
     <div id="rentalModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <!-- Max height added -->
         <div class="bg-white rounded-[32px] max-w-lg w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('rentalModal')" class="absolute top-6 right-6 text-slate-400 z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
             <div id="rentalModalContent"></div>
@@ -522,7 +511,6 @@
 
     <!-- MODAL CHAT ROOM -->
     <div id="chatModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <!-- Max height added -->
         <div class="bg-white rounded-[32px] max-w-lg w-full p-6 shadow-2xl relative flex flex-col h-[500px] max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('chatModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
             <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
@@ -544,7 +532,6 @@
 
     <!-- MODAL RATING -->
     <div id="ratingModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <!-- Max height added -->
         <div class="bg-white rounded-[32px] max-w-md w-full p-8 shadow-2xl relative text-center space-y-4 max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('ratingModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
             <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-500 mx-auto flex items-center justify-center mb-4"><i data-lucide="star" class="w-8 h-8 fill-amber-500"></i></div>
@@ -586,7 +573,6 @@
         let currentUser = JSON.parse(localStorage.getItem('clickly_user')) || null;
         let activeBookings = JSON.parse(localStorage.getItem('clickly_bookings')) || [];
 
-        // DUMMY DATA AGAR FILTER TIDAK KOSONG DAN WEB TERLIHAT BAGUS
         const dummyPhotographers = [
             { id: 'd1', name: 'Aldo Studio', category: 'Pernikahan', location: 'Jabodetabek', price: 1500000, rating: 4.9, reviewscount: 124, coverurl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80', bio: 'Spesialis foto pernikahan dan pre-wedding dengan gaya sinematik.' },
             { id: 'd2', name: 'Budi Portrait', category: 'Wisuda', location: 'Bandung', price: 800000, rating: 4.8, reviewscount: 85, coverurl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80', bio: 'Mengabadikan momen wisuda dengan hasil yang cerah dan natural.' },
@@ -616,12 +602,11 @@
                     if (!error && data && data.length > 0) {
                         currentPhotographers = data;
                         renderPhotographerGrid(currentPhotographers);
-                        return; // Berhasil ambil DB
+                        return;
                     }
                 }
             } catch(e) { console.log(e); }
             
-            // JIKA DATABASE KOSONG / ERROR, GUNAKAN DUMMY DATA AGAR FILTER BERJALAN
             currentPhotographers = [...dummyPhotographers];
             renderPhotographerGrid(currentPhotographers);
         }
@@ -661,7 +646,6 @@
 
             dataList.forEach(p => {
                 const isChecked = selectedForCompare.includes(p.id);
-                // Fallback Image
                 const safeCover = p.coverurl && p.coverurl.trim() !== '' ? p.coverurl : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80';
                 
                 grid.innerHTML += `
@@ -723,7 +707,6 @@
             renderEquipmentGrid(filtered);
         }
 
-        // FILTER MARKETPLACE (DIPERBAIKI)
         function applyMarketplaceFilter() {
             const cat = document.getElementById('filterCategory').value;
             const loc = document.getElementById('filterLocation').value;
@@ -738,7 +721,6 @@
             renderPhotographerGrid(filtered);
         }
 
-        // RENTAL VALIDATION & PAYMENT
         let activeRentalItem = null;
         function openRentalModal(id) {
             const eq = currentEquipments.find(item => item.id == id);
@@ -873,17 +855,14 @@
             openModal('compareModal');
         }
 
-        // FIGMA SPEC: DETAIL & BOOKING PAGE (Gambar yang Tadi Potong Diperbaiki)
         function openDetailModal(id) {
             const p = currentPhotographers.find(i => i.id == id);
             if(!p) return;
             
-            // Fallback Image
             const safeCover = p.coverurl && p.coverurl.trim() !== '' ? p.coverurl : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80';
 
             document.getElementById('detailModalContent').innerHTML = `
                 <div class="md:col-span-7 space-y-6">
-                    <!-- Added a reliable fallback cover image -->
                     <img src="${safeCover}" class="w-full h-80 object-cover rounded-[32px] shadow-lg border border-slate-100">
                     <div>
                         <div class="flex items-center gap-2 mb-2">
@@ -896,7 +875,6 @@
                         </p>
                     </div>
                     
-                    <!-- Stats Badges -->
                     <div class="flex gap-4 border-y border-slate-100 py-4 my-6">
                         <div class="text-center px-4 border-r border-slate-100">
                             <p class="font-space font-bold text-xl text-slate-900 flex justify-center items-center gap-1">${p.rating || 5.0} <i data-lucide="star" class="w-4 h-4 fill-amber-500 text-amber-500"></i></p>
@@ -917,7 +895,6 @@
                         <p class="text-sm text-slate-600 font-medium leading-relaxed">${p.bio || 'Fotografer profesional terverifikasi dengan pengalaman lebih dari 5 tahun di bidangnya. Siap mengabadikan momen terbaik Anda dengan hasil editing premium dan gaya sinematik yang khas.'}</p>
                     </div>
 
-                    <!-- Dummy Portfolio Grid -->
                     <div>
                         <h3 class="font-space font-bold text-lg mb-3 mt-6">Portofolio Klien</h3>
                         <div class="grid grid-cols-2 gap-4">
@@ -927,11 +904,9 @@
                     </div>
                 </div>
                 
-                <!-- RIGHT COLUMN (PACKAGES & BOOKING) -->
                 <div class="md:col-span-5 bg-white p-6 sm:p-8 rounded-[32px] border border-slate-100 shadow-2xl h-fit space-y-6">
                     <h3 class="font-space font-bold text-slate-900 text-xl text-center">Pilih Paket Sesi Foto</h3>
                     
-                    <!-- Packages Selector -->
                     <div class="space-y-3">
                         <div class="p-4 border-2 border-primary bg-orange-50 rounded-[20px] cursor-pointer relative overflow-hidden">
                             <span class="absolute top-0 right-0 bg-primary text-white text-[9px] font-bold px-2 py-1 rounded-bl-lg">TERPOPULER</span>
@@ -958,7 +933,7 @@
 
                     <button onclick="startCheckout('${p.id}', ${p.price}, '${p.name}')" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg hover:shadow-primary/40 hover:-translate-y-1 transition-all text-sm">Booking Sekarang</button>
                     
-                    <button class="w-full py-3 bg-white border-2 border-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all text-sm flex items-center justify-center gap-2">
+                    <button onclick="openChatRoom('${p.name}', '${p.id}')" class="w-full py-3 bg-white border-2 border-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all text-sm flex items-center justify-center gap-2">
                         <i data-lucide="message-circle" class="w-4 h-4"></i> Tanya Dulu (Chat)
                     </button>
                 </div>`;
@@ -1070,19 +1045,45 @@
             closeModal('ratingModal');
         }
 
+        // ==========================================
+        // AUTH & VALIDASI DAFTAR SEBELUM LOGIN
+        // ==========================================
         function openAuthModal(mode) {
             document.getElementById('authMode').value = mode;
-            document.getElementById('authTitle').innerText = mode === 'login' ? 'Masuk ke Clickly' : 'Daftar Akun Baru';
+            const isRegister = mode === 'register';
+
+            document.getElementById('authTitle').innerText = isRegister ? 'Daftar Akun Baru' : 'Masuk ke Clickly';
+            document.getElementById('authSubtitle').innerText = isRegister 
+                ? 'Lengkapi data diri di bawah untuk membuat akun Clickly' 
+                : 'Masukkan email yang sudah terdaftar untuk masuk';
+            document.getElementById('authSubmitBtn').innerText = isRegister ? 'Daftar Sekarang' : 'Masuk';
+            document.getElementById('authToggleBtn').innerText = isRegister 
+                ? 'Sudah punya akun? Masuk di sini' 
+                : 'Belum punya akun? Daftar di sini';
+
             const regFields = document.getElementById('registerFieldsOnly');
-            if(regFields) regFields.style.display = mode === 'register' ? 'block' : 'none';
+            if(regFields) regFields.style.display = isRegister ? 'block' : 'none';
+
+            // Sinkronkan tampilan field tambahan fotografer
+            const currentRole = document.getElementById('selectedRole').value;
+            switchRole(currentRole);
+
             openModal('authModal');
         }
 
         function switchRole(role) {
             document.getElementById('selectedRole').value = role;
-            document.getElementById('roleUserBtn').className = role === 'user' ? "py-2.5 text-sm font-bold rounded-[14px] bg-white text-slate-800 shadow-sm transition-all" : "py-2.5 text-sm font-bold rounded-[14px] text-slate-500 transition-all";
-            document.getElementById('rolePhotoBtn').className = role === 'photographer' ? "py-2.5 text-sm font-bold rounded-[14px] bg-white text-slate-800 shadow-sm transition-all" : "py-2.5 text-sm font-bold rounded-[14px] text-slate-500 transition-all";
-            document.getElementById('photographerFields').style.display = role === 'photographer' ? 'block' : 'none';
+            const isRegister = document.getElementById('authMode').value === 'register';
+
+            document.getElementById('roleUserBtn').className = role === 'user' 
+                ? "py-2.5 text-sm font-bold rounded-[14px] bg-white text-slate-800 shadow-sm transition-all" 
+                : "py-2.5 text-sm font-bold rounded-[14px] text-slate-500 transition-all";
+            document.getElementById('rolePhotoBtn').className = role === 'photographer' 
+                ? "py-2.5 text-sm font-bold rounded-[14px] bg-white text-slate-800 shadow-sm transition-all" 
+                : "py-2.5 text-sm font-bold rounded-[14px] text-slate-500 transition-all";
+            
+            // Field detail fotografer hanya tampil saat mode Daftar (Register)
+            document.getElementById('photographerFields').style.display = (role === 'photographer' && isRegister) ? 'block' : 'none';
         }
 
         function toggleAuthMode() {
@@ -1092,32 +1093,124 @@
 
         async function handleAuthSubmit(e) {
             e.preventDefault();
-            const email = document.getElementById('authEmail').value;
+            const email = document.getElementById('authEmail').value.trim().toLowerCase();
+            const password = document.getElementById('authPassword').value;
             const role = document.getElementById('selectedRole').value;
-            const userId = String(Date.now());
             const mode = document.getElementById('authMode').value;
 
-            let fullName = email.split('@')[0];
-            let phone = '08123456789';
+            let localUsers = JSON.parse(localStorage.getItem('clickly_registered_users')) || [];
 
-            if (mode === 'register') {
-                fullName = document.getElementById('regFullName').value || fullName;
-                phone = document.getElementById('regPhone').value || phone;
+            // ------------------------------------------
+            // MODE MASUK (LOGIN): WAJIB SUDAH TERDAFTAR
+            // ------------------------------------------
+            if (mode === 'login') {
+                let matchedUser = null;
+
+                // 1. Cek ke database Supabase terlebih dahulu
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient
+                        .from('users')
+                        .select('*')
+                        .ilike('email', email);
+                    if (!error && data && data.length > 0) {
+                        matchedUser = data[0];
+                    }
+                }
+
+                // 2. Cek ke localStorage sebagai cadangan
+                if (!matchedUser) {
+                    matchedUser = localUsers.find(u => u.email.toLowerCase() === email) || null;
+                }
+
+                // Jika akun TIDAK ditemukan -> Tolak login & arahkan ke Daftar
+                if (!matchedUser) {
+                    alert('Akun belum terdaftar! Silakan daftar (Register) terlebih dahulu sebelum masuk.');
+                    openAuthModal('register');
+                    return;
+                }
+
+                // Validasi kesesuaian Role (Klien vs Fotografer)
+                if (matchedUser.role && matchedUser.role !== role) {
+                    const roleLabel = matchedUser.role === 'photographer' ? 'Fotografer' : 'User / Klien';
+                    alert(`Email ini terdaftar sebagai "${roleLabel}". Silakan pilih tab ${roleLabel} di atas untuk masuk.`);
+                    switchRole(matchedUser.role);
+                    return;
+                }
+
+                // Validasi password jika tersimpan secara lokal
+                const localAccount = localUsers.find(u => u.email.toLowerCase() === email);
+                if (localAccount && localAccount.password && localAccount.password !== password) {
+                    alert('Password salah! Silakan periksa kembali password Anda.');
+                    return;
+                }
+
+                // Lolos validasi -> Masuk ke akun
+                currentUser = {
+                    id: matchedUser.id,
+                    email: matchedUser.email,
+                    role: matchedUser.role || role,
+                    full_name: matchedUser.full_name,
+                    phone_number: matchedUser.phone_number
+                };
+
+                localStorage.setItem('clickly_user', JSON.stringify(currentUser));
+                closeModal('authModal');
+                updateUserUIState();
+                alert(`Selamat datang kembali, ${currentUser.full_name}!`);
+                switchPage('dashboard');
+                return;
             }
 
-            currentUser = { id: userId, email, role, full_name: fullName, phone_number: phone };
+            // ------------------------------------------
+            // MODE DAFTAR (REGISTER): SIMPAN AKUN BARU
+            // ------------------------------------------
+            const fullName = document.getElementById('regFullName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+
+            if (!fullName || !phone) {
+                alert('Harap lengkapi Nama Lengkap dan Nomor Telepon untuk mendaftar!');
+                return;
+            }
+
+            // Cek apakah email sudah pernah didaftarkan sebelumnya
+            let alreadyExists = false;
+            if (supabaseClient) {
+                const { data } = await supabaseClient
+                    .from('users')
+                    .select('id')
+                    .ilike('email', email);
+                if (data && data.length > 0) alreadyExists = true;
+            }
+            if (!alreadyExists && localUsers.some(u => u.email.toLowerCase() === email)) {
+                alreadyExists = true;
+            }
+
+            if (alreadyExists) {
+                alert('Email ini sudah terdaftar! Silakan langsung Masuk (Login).');
+                openAuthModal('login');
+                return;
+            }
+
+            const userId = String(Date.now());
+            const newUserRecord = {
+                id: userId,
+                email: email,
+                role: role,
+                full_name: fullName,
+                phone_number: phone
+            };
 
             if (supabaseClient) {
-                await supabaseClient.from('users').upsert([currentUser]);
-                if (role === 'photographer' && mode === 'register') {
+                await supabaseClient.from('users').insert([newUserRecord]);
+                if (role === 'photographer') {
                     const newPhoto = {
                         id: userId,
-                        name: document.getElementById('photoName').value || fullName,
+                        name: document.getElementById('photoName').value.trim() || fullName,
                         category: document.getElementById('photoCategory').value,
                         location: document.getElementById('photoLocation').value,
                         price: Number(document.getElementById('photoPrice').value) || 500000,
-                        coverurl: document.getElementById('photoCoverUrl').value || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
-                        portfoliourl: document.getElementById('photoPortfolioUrl').value || '#',
+                        coverurl: document.getElementById('photoCoverUrl').value.trim() || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
+                        portfoliourl: document.getElementById('photoPortfolioUrl').value.trim() || '#',
                         rating: 5.0,
                         reviewscount: 1,
                         bio: 'Fotografer profesional terverifikasi'
@@ -1128,10 +1221,15 @@
                 }
             }
 
+            // Simpan ke daftar akun lokal sebagai cadangan
+            localUsers.push({ ...newUserRecord, password: password });
+            localStorage.setItem('clickly_registered_users', JSON.stringify(localUsers));
+
+            currentUser = newUserRecord;
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
             closeModal('authModal');
             updateUserUIState();
-            alert('Autentikasi Berhasil!');
+            alert('Pendaftaran Berhasil! Akun Anda telah aktif.');
             switchPage('dashboard');
         }
 
@@ -1157,6 +1255,15 @@
                     };
                     await supabaseClient.from('photographer').update(updatedPhoto).eq('id', currentUser.id);
                 }
+            }
+
+            // Sinkronkan juga ke daftar akun lokal
+            let localUsers = JSON.parse(localStorage.getItem('clickly_registered_users')) || [];
+            const idx = localUsers.findIndex(u => u.id === currentUser.id);
+            if (idx !== -1) {
+                localUsers[idx].full_name = currentUser.full_name;
+                localUsers[idx].phone_number = currentUser.phone_number;
+                localStorage.setItem('clickly_registered_users', JSON.stringify(localUsers));
             }
 
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
