@@ -260,6 +260,7 @@
                     </div>
                 </div>
 
+                <!-- STAT CARDS & ANALITIK (Hanya tampil jika role = photographer) -->
                 <div id="photographerDashboardLayout" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <!-- KIRI -->
                     <div class="lg:col-span-8 space-y-8">
@@ -310,45 +311,19 @@
                                 <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[95%] flex items-end justify-center pb-2 text-[10px] text-white font-bold hover:opacity-80 transition-opacity cursor-pointer">Des</div>
                             </div>
                         </div>
-
-                        <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
-                            <h3 class="font-space font-bold text-xl mb-6 text-slate-800 flex items-center gap-2">
-                                <i data-lucide="calendar-check" class="text-primary w-5 h-5"></i> Booking Mendatang / Riwayat
-                            </h3>
-                            <div id="dashboardOrdersList" class="space-y-4"></div>
-                        </div>
                     </div>
 
-                    <!-- KANAN -->
+                    <!-- KANAN: PESAN TERBARU REALTIME & QUICK ACTIONS -->
                     <div class="lg:col-span-4 space-y-8">
                         <div class="bg-white rounded-[32px] p-6 border border-slate-100 shadow-sm space-y-4">
                             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                                 <h3 class="font-space font-bold text-slate-900 text-lg">Pesan Terbaru</h3>
-                                <span class="bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full">5</span>
+                                <span id="unreadMessagesBadge" class="bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full">0</span>
                             </div>
 
-                            <div class="space-y-4 cursor-pointer hover:bg-slate-50 p-3 rounded-[20px] transition-all" onclick="openChatRoom('Sarah Wijaya')">
-                                <div class="flex items-start gap-3">
-                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 rounded-full object-cover">
-                                    <div class="flex-1 pt-1">
-                                        <div class="flex justify-between items-center"><span class="font-bold text-sm text-slate-900">Sarah Wijaya</span><span class="text-[10px] text-primary font-bold">5m</span></div>
-                                        <p class="text-xs text-slate-500 font-medium truncate mt-1">Apakah bisa custom paket?</p>
-                                    </div>
-                                    <span class="w-2.5 h-2.5 rounded-full bg-primary mt-2"></span>
-                                </div>
-                            </div>
-                            
-                            <div class="space-y-4 cursor-pointer hover:bg-slate-50 p-3 rounded-[20px] transition-all" onclick="openChatRoom('Budi Pratama')">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-500">B</div>
-                                    <div class="flex-1 pt-1">
-                                        <div class="flex justify-between items-center"><span class="font-bold text-sm text-slate-900">Budi Pratama</span><span class="text-[10px] text-slate-400">1h</span></div>
-                                        <p class="text-xs text-slate-500 font-medium truncate mt-1">Terima kasih untuk foto kemarin!</p>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="recentMessagesList" class="space-y-3"></div>
 
-                            <button onclick="openChatRoom('Klien Clickly')" class="w-full py-3.5 text-center text-xs font-bold text-primary bg-orange-50 border border-orange-100 hover:bg-orange-100 rounded-2xl transition-all mt-2">Lihat Semua Pesan</button>
+                            <button onclick="openChatRoom('Klien Clickly', 'all')" class="w-full py-3.5 text-center text-xs font-bold text-primary bg-orange-50 border border-orange-100 hover:bg-orange-100 rounded-2xl transition-all mt-2">Lihat Semua Pesan</button>
                         </div>
 
                         <div class="bg-white rounded-[32px] p-6 border border-slate-100 shadow-sm space-y-3">
@@ -364,6 +339,14 @@
                             </button>
                         </div>
                     </div>
+                </div>
+
+                <!-- RIWAYAT BOOKING / PESANAN (Tampil untuk Klien & Fotografer) -->
+                <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+                    <h3 class="font-space font-bold text-xl mb-6 text-slate-800 flex items-center gap-2">
+                        <i data-lucide="calendar-check" class="text-primary w-5 h-5"></i> Booking Mendatang / Riwayat
+                    </h3>
+                    <div id="dashboardOrdersList" class="space-y-4"></div>
                 </div>
 
                 <!-- FORM EDIT PROFIL -->
@@ -524,7 +507,7 @@
                 <div class="bg-white p-3.5 rounded-2xl rounded-tl-sm shadow-sm border border-slate-100 max-w-[80%]">Halo! Saya ingin mendiskusikan jadwal sesi foto.</div>
             </div>
             <div class="flex gap-2">
-                <input type="text" id="chatInputText" placeholder="Ketik pesan..." class="flex-1 px-5 py-3.5 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                <input type="text" id="chatInputText" onkeydown="if(event.key==='Enter') sendChatMessage()" placeholder="Ketik pesan..." class="flex-1 px-5 py-3.5 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-secondary">
                 <button onclick="sendChatMessage()" class="px-6 py-3.5 gradient-brand text-white font-bold rounded-2xl shadow-md"><i data-lucide="send" class="w-4 h-4"></i></button>
             </div>
         </div>
@@ -572,6 +555,8 @@
         let selectedForCompare = [];
         let currentUser = JSON.parse(localStorage.getItem('clickly_user')) || null;
         let activeBookings = JSON.parse(localStorage.getItem('clickly_bookings')) || [];
+        let allMessages = JSON.parse(localStorage.getItem('clickly_messages')) || [];
+        let activeChatPartner = { id: 'all', name: 'Klien Clickly' };
 
         const dummyPhotographers = [
             { id: 'd1', name: 'Aldo Studio', category: 'Pernikahan', location: 'Jabodetabek', price: 1500000, rating: 4.9, reviewscount: 124, coverurl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80', bio: 'Spesialis foto pernikahan dan pre-wedding dengan gaya sinematik.' },
@@ -592,6 +577,8 @@
             await loadPhotographersFromDB();
             await loadEquipmentsFromDB();
             await loadBookingsFromDB();
+            await loadMessagesFromDB();
+            setupRealtimeChat();
             updateUserUIState();
         });
 
@@ -630,9 +617,103 @@
         async function loadBookingsFromDB() {
             if (supabaseClient) {
                 const { data } = await supabaseClient.from('order_detail').select('*');
-                if (data) activeBookings = data;
+                if (data && data.length > 0) {
+                    activeBookings = data;
+                    localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
+                }
             }
             renderDashboardOrders();
+        }
+
+        // ==========================================
+        // REALTIME CHAT & PESAN TERBARU
+        // ==========================================
+        async function loadMessagesFromDB() {
+            try {
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient
+                        .from('messages')
+                        .select('*')
+                        .order('created_at', { ascending: true });
+                    if (!error && data) {
+                        allMessages = data;
+                        localStorage.setItem('clickly_messages', JSON.stringify(allMessages));
+                    }
+                }
+            } catch (e) { console.log(e); }
+            renderRecentMessages();
+        }
+
+        function setupRealtimeChat() {
+            if (supabaseClient) {
+                supabaseClient
+                    .channel('public:messages')
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+                        const exists = allMessages.some(m => m.id === payload.new.id);
+                        if (!exists) {
+                            allMessages.push(payload.new);
+                            localStorage.setItem('clickly_messages', JSON.stringify(allMessages));
+                            renderRecentMessages();
+                            if (!document.getElementById('chatModal').classList.contains('hidden')) {
+                                renderChatBubbles();
+                            }
+                        }
+                    })
+                    .subscribe();
+            }
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'clickly_messages') {
+                    allMessages = JSON.parse(e.newValue) || [];
+                    renderRecentMessages();
+                    if (!document.getElementById('chatModal').classList.contains('hidden')) {
+                        renderChatBubbles();
+                    }
+                }
+            });
+        }
+
+        function renderRecentMessages() {
+            const container = document.getElementById('recentMessagesList');
+            const badge = document.getElementById('unreadMessagesBadge');
+            if (!container) return;
+
+            const myId = currentUser ? String(currentUser.id) : '';
+            const incoming = allMessages.filter(m => m.sender_id !== myId);
+
+            if (badge) {
+                const unreadCount = incoming.filter(m => !m.is_read).length;
+                badge.innerText = unreadCount;
+            }
+
+            if (incoming.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4 font-medium">Belum ada pesan masuk dari klien.</p>`;
+                return;
+            }
+
+            const latestBySender = {};
+            incoming.forEach(m => {
+                latestBySender[m.sender_name] = m;
+            });
+
+            const threads = Object.values(latestBySender).reverse();
+            container.innerHTML = threads.map(m => `
+                <div class="cursor-pointer hover:bg-slate-50 p-3 rounded-[20px] transition-all border border-transparent hover:border-slate-100" onclick="openChatRoom('${m.sender_name}', '${m.sender_id}')">
+                    <div class="flex items-start gap-3">
+                        <div class="w-11 h-11 rounded-full gradient-brand text-white flex items-center justify-center font-space font-bold text-base shrink-0">
+                            ${m.sender_name.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="flex-1 min-w-0 pt-0.5">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-slate-900 truncate">${m.sender_name}</span>
+                                <span class="text-[10px] ${!m.is_read ? 'text-primary font-bold' : 'text-slate-400'}">Baru</span>
+                            </div>
+                            <p class="text-xs text-slate-500 font-medium truncate mt-1">${m.message_text}</p>
+                        </div>
+                        ${!m.is_read ? '<span class="w-2.5 h-2.5 rounded-full bg-primary mt-2 shrink-0"></span>' : ''}
+                    </div>
+                </div>
+            `).join('');
         }
 
         function renderPhotographerGrid(dataList) {
@@ -824,6 +905,7 @@
 
             if (supabaseClient) await supabaseClient.from('equipments_rental').insert([record]);
             activeBookings.push({ id: record.id, booking_id: record.id, item_description: `Sewa: ${activeRentalItem.name} (${diffDays} Hari)`, quantity: diffDays, subtotal: totalAmount });
+            localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
             alert('Pembayaran Sewa Alat Berhasil!');
             closeModal('rentalModal');
             renderDashboardOrders();
@@ -945,7 +1027,14 @@
         function startCheckout(id, amount, name) {
             const date = document.getElementById('bookingDate').value;
             if (!date) return alert('Pilih tanggal sesi foto terlebih dahulu!');
-            currentPayingOrder = { id: 'CLK-' + Math.floor(100000 + Math.random() * 900000), booking_id: 'CLK-' + Math.floor(100000 + Math.random() * 900000), item_description: name, quantity: 1, subtotal: Number(amount) };
+            currentPayingOrder = {
+                id: 'CLK-' + Math.floor(100000 + Math.random() * 900000),
+                booking_id: 'CLK-' + Math.floor(100000 + Math.random() * 900000),
+                photographer_id: String(id),
+                item_description: name,
+                quantity: 1,
+                subtotal: Number(amount)
+            };
             
             document.getElementById('detailModalContent').innerHTML = `
                 <div class="md:col-span-12 text-center space-y-6">
@@ -977,9 +1066,10 @@
             
             if (supabaseClient) await supabaseClient.from('order_detail').insert([currentPayingOrder]);
             activeBookings.push(currentPayingOrder);
+            localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
             
             let bookedList = JSON.parse(localStorage.getItem('clickly_booked_photographers')) || [];
-            if(!bookedList.includes(photographerId)) bookedList.push(photographerId);
+            if(!bookedList.includes(String(photographerId))) bookedList.push(String(photographerId));
             localStorage.setItem('clickly_booked_photographers', JSON.stringify(bookedList));
 
             alert('Pembayaran Booking Berhasil! Escrow diaktifkan, Anda kini bisa berinteraksi di ruang chat.');
@@ -988,27 +1078,92 @@
             switchPage('dashboard');
         }
 
-        // CHAT ROOM
-        function openChatRoom(targetName, photographerId = null) {
-            if (currentUser && currentUser.role === 'user' && photographerId) {
+        // ==========================================
+        // FUNGSI RUANG CHAT (REALTIME + SUPABASE)
+        // ==========================================
+        async function openChatRoom(targetName, targetId = 'all') {
+            if (currentUser && currentUser.role === 'user' && targetId && targetId !== 'all') {
                 let bookedList = JSON.parse(localStorage.getItem('clickly_booked_photographers')) || [];
-                if (!bookedList.includes(photographerId)) {
+                if (!bookedList.includes(String(targetId))) {
                     alert('Validasi Keamanan: Anda harus melakukan booking dan pembayaran Escrow terlebih dahulu sebelum dapat mengirim pesan langsung ke fotografer ini!');
                     return;
                 }
             }
+
+            activeChatPartner = { id: String(targetId), name: targetName };
             document.getElementById('chatTargetName').innerText = targetName;
-            document.getElementById('chatAvatarLetter').innerText = targetName.charAt(0);
+            document.getElementById('chatAvatarLetter').innerText = targetName.charAt(0).toUpperCase();
+
+            allMessages.forEach(m => {
+                if (m.sender_name === targetName) m.is_read = true;
+            });
+            localStorage.setItem('clickly_messages', JSON.stringify(allMessages));
+            if (supabaseClient) {
+                await supabaseClient.from('messages').update({ is_read: true }).eq('sender_name', targetName);
+            }
+
+            renderRecentMessages();
+            renderChatBubbles();
             openModal('chatModal');
         }
 
-        function sendChatMessage() {
-            const text = document.getElementById('chatInputText').value;
-            if(!text) return;
+        function renderChatBubbles() {
             const box = document.getElementById('chatMessagesBox');
-            box.innerHTML += `<div class="bg-primary/10 border border-primary/20 text-slate-900 p-3.5 rounded-[20px] rounded-tr-sm shadow-sm ml-auto max-w-[80%] text-right font-medium">${text}</div>`;
-            document.getElementById('chatInputText').value = '';
+            if (!box) return;
+
+            const myId = currentUser ? String(currentUser.id) : 'guest';
+            const thread = allMessages.filter(m =>
+                activeChatPartner.id === 'all' ||
+                m.sender_name === activeChatPartner.name ||
+                m.receiver_name === activeChatPartner.name ||
+                (activeChatPartner.id && (m.sender_id === activeChatPartner.id || m.receiver_id === activeChatPartner.id))
+            );
+
+            if (thread.length === 0) {
+                box.innerHTML = `<div class="bg-white p-3.5 rounded-2xl rounded-tl-sm shadow-sm border border-slate-100 max-w-[80%] text-slate-600">Halo! Silakan mulai obrolan terkait jadwal atau detail sesi foto.</div>`;
+                return;
+            }
+
+            box.innerHTML = thread.map(m => {
+                const isMe = m.sender_id === myId;
+                if (isMe) {
+                    return `<div class="bg-primary/10 border border-primary/20 text-slate-900 p-3.5 rounded-[20px] rounded-tr-sm shadow-sm ml-auto max-w-[80%] text-right font-medium">${m.message_text}</div>`;
+                } else {
+                    return `
+                        <div class="bg-white p-3.5 rounded-2xl rounded-tl-sm shadow-sm border border-slate-100 max-w-[80%]">
+                            <span class="text-[10px] font-bold text-primary block mb-1">${m.sender_name}</span>
+                            <p class="text-slate-800">${m.message_text}</p>
+                        </div>`;
+                }
+            }).join('');
             box.scrollTop = box.scrollHeight;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInputText');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const newMsg = {
+                id: 'MSG-' + Date.now(),
+                sender_id: currentUser ? String(currentUser.id) : 'guest',
+                sender_name: currentUser ? currentUser.full_name : 'Klien Clickly',
+                receiver_id: activeChatPartner.id,
+                receiver_name: activeChatPartner.name,
+                message_text: text,
+                is_read: false,
+                created_at: new Date().toISOString()
+            };
+
+            allMessages.push(newMsg);
+            localStorage.setItem('clickly_messages', JSON.stringify(allMessages));
+            input.value = '';
+            renderChatBubbles();
+            renderRecentMessages();
+
+            if (supabaseClient) {
+                await supabaseClient.from('messages').insert([newMsg]);
+            }
         }
 
         // RATING SYSTEM
@@ -1064,7 +1219,6 @@
             const regFields = document.getElementById('registerFieldsOnly');
             if(regFields) regFields.style.display = isRegister ? 'block' : 'none';
 
-            // Sinkronkan tampilan field tambahan fotografer
             const currentRole = document.getElementById('selectedRole').value;
             switchRole(currentRole);
 
@@ -1082,7 +1236,6 @@
                 ? "py-2.5 text-sm font-bold rounded-[14px] bg-white text-slate-800 shadow-sm transition-all" 
                 : "py-2.5 text-sm font-bold rounded-[14px] text-slate-500 transition-all";
             
-            // Field detail fotografer hanya tampil saat mode Daftar (Register)
             document.getElementById('photographerFields').style.display = (role === 'photographer' && isRegister) ? 'block' : 'none';
         }
 
@@ -1100,13 +1253,9 @@
 
             let localUsers = JSON.parse(localStorage.getItem('clickly_registered_users')) || [];
 
-            // ------------------------------------------
-            // MODE MASUK (LOGIN): WAJIB SUDAH TERDAFTAR
-            // ------------------------------------------
             if (mode === 'login') {
                 let matchedUser = null;
 
-                // 1. Cek ke database Supabase terlebih dahulu
                 if (supabaseClient) {
                     const { data, error } = await supabaseClient
                         .from('users')
@@ -1117,19 +1266,16 @@
                     }
                 }
 
-                // 2. Cek ke localStorage sebagai cadangan
                 if (!matchedUser) {
                     matchedUser = localUsers.find(u => u.email.toLowerCase() === email) || null;
                 }
 
-                // Jika akun TIDAK ditemukan -> Tolak login & arahkan ke Daftar
                 if (!matchedUser) {
                     alert('Akun belum terdaftar! Silakan daftar (Register) terlebih dahulu sebelum masuk.');
                     openAuthModal('register');
                     return;
                 }
 
-                // Validasi kesesuaian Role (Klien vs Fotografer)
                 if (matchedUser.role && matchedUser.role !== role) {
                     const roleLabel = matchedUser.role === 'photographer' ? 'Fotografer' : 'User / Klien';
                     alert(`Email ini terdaftar sebagai "${roleLabel}". Silakan pilih tab ${roleLabel} di atas untuk masuk.`);
@@ -1137,14 +1283,12 @@
                     return;
                 }
 
-                // Validasi password jika tersimpan secara lokal
                 const localAccount = localUsers.find(u => u.email.toLowerCase() === email);
                 if (localAccount && localAccount.password && localAccount.password !== password) {
                     alert('Password salah! Silakan periksa kembali password Anda.');
                     return;
                 }
 
-                // Lolos validasi -> Masuk ke akun
                 currentUser = {
                     id: matchedUser.id,
                     email: matchedUser.email,
@@ -1156,14 +1300,12 @@
                 localStorage.setItem('clickly_user', JSON.stringify(currentUser));
                 closeModal('authModal');
                 updateUserUIState();
+                renderRecentMessages();
                 alert(`Selamat datang kembali, ${currentUser.full_name}!`);
                 switchPage('dashboard');
                 return;
             }
 
-            // ------------------------------------------
-            // MODE DAFTAR (REGISTER): SIMPAN AKUN BARU
-            // ------------------------------------------
             const fullName = document.getElementById('regFullName').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
 
@@ -1172,7 +1314,6 @@
                 return;
             }
 
-            // Cek apakah email sudah pernah didaftarkan sebelumnya
             let alreadyExists = false;
             if (supabaseClient) {
                 const { data } = await supabaseClient
@@ -1221,7 +1362,6 @@
                 }
             }
 
-            // Simpan ke daftar akun lokal sebagai cadangan
             localUsers.push({ ...newUserRecord, password: password });
             localStorage.setItem('clickly_registered_users', JSON.stringify(localUsers));
 
@@ -1229,6 +1369,7 @@
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
             closeModal('authModal');
             updateUserUIState();
+            renderRecentMessages();
             alert('Pendaftaran Berhasil! Akun Anda telah aktif.');
             switchPage('dashboard');
         }
@@ -1257,7 +1398,6 @@
                 }
             }
 
-            // Sinkronkan juga ke daftar akun lokal
             let localUsers = JSON.parse(localStorage.getItem('clickly_registered_users')) || [];
             const idx = localUsers.findIndex(u => u.id === currentUser.id);
             if (idx !== -1) {
