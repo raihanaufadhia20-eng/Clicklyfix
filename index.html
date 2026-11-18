@@ -41,7 +41,7 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .bg-glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); }
+        .bg-glass { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); }
         .page-view { display: none; animation: fadeIn 0.3s ease-in-out; }
         .page-view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -49,13 +49,13 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-orange-200">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-orange-200 flex flex-col min-h-screen">
 
     <!-- NAVBAR -->
     <header class="sticky top-0 z-40 bg-glass border-b border-slate-200/80 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="#" onclick="switchPage('home')" class="flex items-center gap-3 group">
-                <div class="w-12 h-12 rounded-[20px] bg-white shadow-md border border-slate-100 flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform">
+                <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-[20px] bg-white shadow-md border border-slate-100 flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform">
                     <svg viewBox="0 0 200 200" class="w-full h-full">
                         <defs>
                             <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -69,13 +69,14 @@
                     </svg>
                 </div>
                 <div class="flex flex-col">
-                    <span class="text-2xl font-space font-bold tracking-tight flex items-center">
+                    <span class="text-xl sm:text-2xl font-space font-bold tracking-tight flex items-center">
                         <span class="text-[#4fc3f7]">CLIC</span><span class="text-[#ff7b54]">KLY</span>
                     </span>
                     <span class="text-[9px] font-bold text-slate-400 tracking-wider uppercase -mt-1">Sekali Klik Beres</span>
                 </div>
             </a>
 
+            <!-- Desktop Menu -->
             <nav class="hidden md:flex items-center gap-7 font-medium text-slate-600 text-sm">
                 <button onclick="switchPage('home')" id="nav-home" class="hover:text-primary transition-colors font-bold text-primary">Beranda</button>
                 <button onclick="switchPage('marketplace')" id="nav-marketplace" class="hover:text-primary transition-colors">Cari Fotografer</button>
@@ -84,14 +85,30 @@
                 <button onclick="switchPage('faq')" id="nav-faq" class="hover:text-primary transition-colors">FAQ</button>
             </nav>
 
-            <div id="navAuthSection" class="flex items-center gap-3">
-                <button onclick="openAuthModal('login')" class="px-5 py-2.5 rounded-full text-slate-700 font-semibold text-sm hover:bg-slate-100 transition-all">Masuk</button>
-                <button onclick="openAuthModal('register')" class="px-6 py-2.5 rounded-full gradient-brand text-white font-semibold text-sm shadow-lg hover:scale-[1.02] transition-all">Daftar Sekarang</button>
+            <!-- Auth & Mobile Menu Trigger -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div id="navAuthSection" class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="openAuthModal('login')" class="px-4 sm:px-5 py-2.5 rounded-full text-slate-700 font-semibold text-xs sm:text-sm hover:bg-slate-100 transition-all">Masuk</button>
+                    <button onclick="openAuthModal('register')" class="px-4 sm:px-6 py-2.5 rounded-full gradient-brand text-white font-semibold text-xs sm:text-sm shadow-lg hover:scale-[1.02] transition-all">Daftar</button>
+                </div>
+                <button type="button" onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 rounded-2xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors" aria-label="Buka Menu">
+                    <i data-lucide="menu" id="mobileMenuIcon" class="w-5 h-5"></i>
+                </button>
             </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileNavMenu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-5 space-y-2 shadow-lg">
+            <button onclick="switchPage('home'); closeMobileMenu()" id="mnav-home" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-primary bg-orange-50/70">Beranda</button>
+            <button onclick="switchPage('marketplace'); closeMobileMenu()" id="mnav-marketplace" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">Cari Fotografer</button>
+            <button onclick="switchPage('rental'); closeMobileMenu()" id="mnav-rental" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">Sewa Alat</button>
+            <button onclick="switchPage('howitworks'); closeMobileMenu()" id="mnav-howitworks" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">Cara Kerja</button>
+            <button onclick="switchPage('faq'); closeMobileMenu()" id="mnav-faq" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">FAQ</button>
+            <button onclick="switchPage('dashboard'); closeMobileMenu()" id="mnav-dashboard" class="hidden w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">Dashboard Saya</button>
         </div>
     </header>
 
-    <main class="min-h-[80vh]">
+    <main class="flex-1">
 
         <!-- TAB 1: BERANDA -->
         <div id="view-home" class="page-view active py-12">
@@ -266,7 +283,6 @@
                     <p class="text-sm text-slate-500 font-medium mt-2 max-w-xl mx-auto">Semua informasi seputar pemesanan fotografer, keamanan pembayaran Escrow, dan penyewaan kamera di Clickly.</p>
                 </div>
 
-                <!-- Filter Kategori FAQ -->
                 <div class="flex flex-wrap justify-center gap-2 mb-8" id="faqCategoryTabs">
                     <button onclick="filterFaqCategory('all', this)" class="faq-tab-btn px-5 py-2.5 rounded-full text-xs font-bold gradient-brand text-white shadow-md transition-all">Semua Topik</button>
                     <button onclick="filterFaqCategory('booking', this)" class="faq-tab-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-primary transition-all">Booking & Escrow</button>
@@ -274,10 +290,8 @@
                     <button onclick="filterFaqCategory('photographer', this)" class="faq-tab-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-primary transition-all">Mitra Fotografer</button>
                 </div>
 
-                <!-- Daftar Accordion FAQ -->
                 <div id="faqAccordionContainer" class="space-y-4"></div>
 
-                <!-- Banner Bantuan Bawah -->
                 <div class="mt-12 bg-white rounded-[32px] p-8 border border-slate-100 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
                     <div class="flex items-center gap-4 text-center sm:text-left">
                         <div class="w-14 h-14 rounded-2xl bg-sky-50 text-secondary flex items-center justify-center shrink-0 mx-auto sm:mx-0">
@@ -301,7 +315,7 @@
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
                     <div>
                         <h2 id="dashTitleMain" class="text-3xl font-space font-bold text-slate-900">Dashboard Fotografer</h2>
-                        <p class="text-sm font-medium text-slate-500 mt-1">Kelola bisnis fotografi Anda dalam satu tempat</p>
+                        <p id="dashSubtitleMain" class="text-sm font-medium text-slate-500 mt-1">Kelola bisnis fotografi Anda dalam satu tempat</p>
                     </div>
                 </div>
 
@@ -325,14 +339,14 @@
                             <div class="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm relative">
                                 <span class="text-primary font-bold text-[10px] absolute top-5 right-5">Excellent</span>
                                 <i data-lucide="star" class="w-6 h-6 text-amber-400 mb-3 fill-amber-400"></i>
-                                <h3 class="text-2xl font-space font-bold text-slate-900">4.9</h3>
+                                <h3 class="text-2xl font-space font-bold text-slate-900" id="dashMyRating">5.0</h3>
                                 <p class="text-xs text-slate-500 mt-1 font-medium">Rating Rata-rata</p>
                             </div>
                             <div class="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm relative">
-                                <span class="text-secondary font-bold text-[10px] absolute top-5 right-5">+5 baru</span>
-                                <i data-lucide="users" class="w-6 h-6 text-secondary mb-3"></i>
-                                <h3 class="text-2xl font-space font-bold text-slate-900">1,247</h3>
-                                <p class="text-xs text-slate-500 mt-1 font-medium">Total Klien</p>
+                                <span class="text-secondary font-bold text-[10px] absolute top-5 right-5">Ulasan</span>
+                                <i data-lucide="message-square-heart" class="w-6 h-6 text-secondary mb-3"></i>
+                                <h3 class="text-2xl font-space font-bold text-slate-900" id="dashMyReviewCount">0</h3>
+                                <p class="text-xs text-slate-500 mt-1 font-medium">Total Ulasan Klien</p>
                             </div>
                         </div>
 
@@ -373,13 +387,13 @@
 
                         <div class="bg-white rounded-[32px] p-6 border border-slate-100 shadow-sm space-y-3">
                             <h3 class="font-space font-bold text-slate-900 text-lg mb-4">Quick Actions</h3>
-                            <button onclick="switchPage('marketplace')" class="w-full py-3.5 px-4 gradient-brand text-white font-bold text-sm rounded-[20px] shadow-md hover:opacity-90 flex items-center justify-center gap-2">
+                            <button onclick="jumpToProfileField('editPortfolioUrl')" class="w-full py-3.5 px-4 gradient-brand text-white font-bold text-sm rounded-[20px] shadow-md hover:opacity-90 flex items-center justify-center gap-2 transition-all">
                                 <i data-lucide="upload" class="w-4 h-4"></i> Upload Portfolio
                             </button>
-                            <button onclick="switchPage('dashboard')" class="w-full py-3.5 px-4 bg-white border-2 border-slate-100 text-slate-700 font-bold text-sm rounded-[20px] hover:bg-slate-50 flex items-center justify-center gap-2">
+                            <button onclick="jumpToProfileField('editPrice')" class="w-full py-3.5 px-4 bg-white border-2 border-slate-100 text-slate-700 font-bold text-sm rounded-[20px] hover:bg-slate-50 flex items-center justify-center gap-2 transition-all">
                                 <i data-lucide="dollar-sign" class="w-4 h-4 text-slate-600"></i> Atur Harga
                             </button>
-                            <button onclick="switchPage('dashboard')" class="w-full py-3.5 px-4 bg-white border-2 border-slate-100 text-slate-700 font-bold text-sm rounded-[20px] hover:bg-slate-50 flex items-center justify-center gap-2">
+                            <button onclick="openScheduleModal()" class="w-full py-3.5 px-4 bg-white border-2 border-slate-100 text-slate-700 font-bold text-sm rounded-[20px] hover:bg-slate-50 flex items-center justify-center gap-2 transition-all">
                                 <i data-lucide="calendar" class="w-4 h-4 text-slate-600"></i> Kelola Jadwal
                             </button>
                         </div>
@@ -400,7 +414,7 @@
                 </div>
 
                 <!-- FORM EDIT PROFIL -->
-                <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm mt-8">
+                <div id="profileSettingsSection" class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm mt-8">
                     <h3 class="font-space font-bold text-xl text-slate-900 mb-6 flex items-center gap-2">
                         <i data-lucide="user-pen" class="w-5 h-5 text-secondary"></i> Pengaturan Profil Akun
                     </h3>
@@ -434,7 +448,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600 mb-2">Tarif Dasar (Rp)</label>
-                                    <input type="number" id="editPrice" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                                    <input type="number" id="editPrice" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary transition-all">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600 mb-2">URL Foto Sampul</label>
@@ -443,7 +457,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-2">URL Link Portofolio</label>
-                                <input type="url" id="editPortfolioUrl" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                                <input type="url" id="editPortfolioUrl" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary transition-all">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-2">Biografi Singkat</label>
@@ -459,7 +473,57 @@
 
     </main>
 
-    <!-- MODAL AUTH (DENGAN VALIDASI DAFTAR SEBELUM MASUK) -->
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200/80 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center p-1.5">
+                            <svg viewBox="0 0 200 200" class="w-full h-full">
+                                <path d="M 40 80 Q 40 60 60 60 L 80 60 L 90 45 Q 95 40 105 40 L 125 40 Q 135 40 140 45 L 150 60 L 170 60 Q 190 60 190 80 L 190 140 Q 190 160 170 160 L 60 160 Q 40 160 40 140 Z" fill="none" stroke="#ff7b54" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="110" cy="110" r="32" fill="none" stroke="#4fc3f7" stroke-width="14"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-space font-bold tracking-tight">
+                            <span class="text-[#4fc3f7]">CLIC</span><span class="text-[#ff7b54]">KLY</span>
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 font-medium leading-relaxed max-w-sm">
+                        Platform marketplace terintegrasi untuk booking fotografer terverifikasi dan penyewaan peralatan fotografi profesional dengan sistem pembayaran Escrow yang aman.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-space font-bold text-slate-900 text-sm mb-4">Navigasi</h4>
+                    <ul class="space-y-2.5 text-xs font-medium text-slate-500">
+                        <li><button onclick="switchPage('home')" class="hover:text-primary transition-colors">Beranda</button></li>
+                        <li><button onclick="switchPage('marketplace')" class="hover:text-primary transition-colors">Cari Fotografer</button></li>
+                        <li><button onclick="switchPage('rental')" class="hover:text-primary transition-colors">Sewa Alat</button></li>
+                        <li><button onclick="switchPage('howitworks')" class="hover:text-primary transition-colors">Cara Kerja</button></li>
+                        <li><button onclick="switchPage('faq')" class="hover:text-primary transition-colors">FAQ</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-space font-bold text-slate-900 text-sm mb-4">Kategori Populer</h4>
+                    <ul class="space-y-2.5 text-xs font-medium text-slate-500">
+                        <li>Foto Wisuda & Graduation</li>
+                        <li>Pernikahan & Pre-Wedding</li>
+                        <li>Foto Produk UMKM</li>
+                        <li>Liputan Event & Konser</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-100 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium">
+                <p>&copy; 2026 Clickly Indonesia. Sekali Klik Beres.</p>
+                <div class="flex items-center gap-4">
+                    <span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i> Escrow Protected</span>
+                    <span class="flex items-center gap-1"><i data-lucide="badge-check" class="w-3.5 h-3.5 text-secondary"></i> Verified Talents</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL AUTH -->
     <div id="authModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-[32px] max-w-md w-full p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('authModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -567,11 +631,11 @@
     <div id="ratingModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-[32px] max-w-md w-full p-8 shadow-2xl relative text-center space-y-4 max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('ratingModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
-            <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-500 mx-auto flex items-center justify-center mb-4"><i data-lucide="star" class="w-8 h-8 fill-amber-500"></i></div>
+            <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-500 mx-auto flex items-center justify-center mb-2"><i data-lucide="star" class="w-8 h-8 fill-amber-500"></i></div>
             <h3 class="text-2xl font-space font-bold text-slate-900">Beri Rating & Ulasan</h3>
-            <p class="text-sm font-medium text-slate-500">Bagaimana pengalaman sesi foto bersama fotografer ini?</p>
+            <p class="text-sm font-medium text-slate-500">Bagaimana pengalaman sesi foto bersama <strong id="ratingTargetName" class="text-slate-800">fotografer ini</strong>?</p>
             <input type="hidden" id="ratingPhotographerId">
-            <div class="flex justify-center gap-2 py-4">
+            <div class="flex justify-center gap-2 py-2">
                 <button type="button" onclick="setRatingStars(1)" class="text-4xl text-amber-400 star-btn hover:scale-110 transition-transform">★</button>
                 <button type="button" onclick="setRatingStars(2)" class="text-4xl text-amber-400 star-btn hover:scale-110 transition-transform">★</button>
                 <button type="button" onclick="setRatingStars(3)" class="text-4xl text-amber-400 star-btn hover:scale-110 transition-transform">★</button>
@@ -579,21 +643,60 @@
                 <button type="button" onclick="setRatingStars(5)" class="text-4xl text-amber-400 star-btn hover:scale-110 transition-transform">★</button>
             </div>
             <input type="hidden" id="selectedStarCount" value="5">
-            <textarea id="ratingCommentText" rows="3" placeholder="Tulis ulasan jujur kamu di sini..." class="w-full p-4 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-primary"></textarea>
-            <button onclick="submitReviewToDB()" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg mt-2">Kirim Ulasan</button>
+            <textarea id="ratingCommentText" rows="3" placeholder="Tulis ulasan jujur kamu di sini (misal: hasil fotonya tajam, tepat waktu, ramah)..." class="w-full p-4 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-primary"></textarea>
+            <button onclick="submitReviewToDB()" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg mt-2 hover:-translate-y-0.5 transition-all">Kirim Ulasan</button>
+        </div>
+    </div>
+
+    <!-- MODAL KELOLA JADWAL (FOTOGRAFER) -->
+    <div id="scheduleModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-[32px] max-w-md w-full p-8 shadow-2xl relative space-y-5">
+            <button onclick="closeModal('scheduleModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <div>
+                <h3 class="text-2xl font-space font-bold text-slate-900">Kelola Jadwal Libur</h3>
+                <p class="text-xs font-medium text-slate-500 mt-1">Tandai tanggal tidak tersedia agar klien tidak bisa booking di hari tersebut.</p>
+            </div>
+            <div class="flex gap-2">
+                <input type="date" id="blockDateInput" class="flex-1 px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-primary">
+                <button type="button" onclick="addBlockedDate()" class="px-5 py-3 gradient-brand text-white font-bold text-xs rounded-2xl shadow-md">Blokir</button>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-slate-600 mb-2">Daftar Tanggal Libur / Penuh:</p>
+                <div id="blockedDatesList" class="space-y-2 max-h-48 overflow-y-auto"></div>
+            </div>
         </div>
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
         function switchPage(pageId) {
+            if (pageId === 'dashboard' && !currentUser) {
+                openAuthModal('login');
+                return;
+            }
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-            document.getElementById('view-' + pageId).classList.add('active');
+            const targetView = document.getElementById('view-' + pageId);
+            if (targetView) targetView.classList.add('active');
+
             ['home', 'marketplace', 'rental', 'howitworks', 'faq', 'dashboard'].forEach(id => {
                 const btn = document.getElementById('nav-' + id);
-                if(btn) btn.className = id === pageId ? "hover:text-primary transition-colors font-bold text-primary" : "hover:text-primary transition-colors";
+                if (btn) btn.className = id === pageId ? "hover:text-primary transition-colors font-bold text-primary" : "hover:text-primary transition-colors";
+                const mbtn = document.getElementById('mnav-' + id);
+                if (mbtn) mbtn.className = id === pageId
+                    ? "w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-primary bg-orange-50/70"
+                    : "w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50";
             });
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileNavMenu');
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileNavMenu');
+            if (menu) menu.classList.add('hidden');
         }
 
         const SUPABASE_URL = 'https://jwjzbqisesreuyotnjxu.supabase.co';
@@ -606,7 +709,10 @@
         let currentUser = JSON.parse(localStorage.getItem('clickly_user')) || null;
         let activeBookings = JSON.parse(localStorage.getItem('clickly_bookings')) || [];
         let allMessages = JSON.parse(localStorage.getItem('clickly_messages')) || [];
+        let allReviews = JSON.parse(localStorage.getItem('clickly_reviews')) || [];
+        let blockedDatesMap = JSON.parse(localStorage.getItem('clickly_blocked_dates')) || {};
         let activeChatPartner = { id: 'all', name: 'Klien Clickly' };
+        let selectedPhotoPackage = { type: 'basic', name: 'Paket Basic', price: 0 };
 
         const faqData = [
             {
@@ -622,7 +728,7 @@
             {
                 category: 'booking',
                 question: 'Apakah jadwal sesi foto bisa di-reschedule atau dibatalkan?',
-                answer: 'Kamu bisa mengajukan perubahan jadwal (reschedule) secara gratis maksimal H-2 sebelum sesi pemotretan melalui ruang chat dengan fotografer. Pembatalan yang dilakukan sebelum H-3 mendapatkan pengembalian dana (refund) 100%.'
+                answer: 'Kamu bisa mengajukan perubahan jadwal secara gratis maksimal H-2 sebelum sesi pemotretan melalui ruang chat dengan fotografer. Pembatalan yang dilakukan sebelum H-3 mendapatkan pengembalian dana 100%.'
             },
             {
                 category: 'rental',
@@ -637,7 +743,7 @@
             {
                 category: 'photographer',
                 question: 'Bagaimana cara bergabung menjadi mitra Fotografer di Clickly?',
-                answer: 'Klik tombol "Daftar Sekarang" di pojok kanan atas, pilih tab "Fotografer", lalu lengkapi nama studio/talent, kategori spesialisasi, kota domisili, tarif dasar, serta tautan portofolio kamu.'
+                answer: 'Klik tombol "Daftar" di pojok kanan atas, pilih tab "Fotografer", lalu lengkapi nama studio/talent, kategori spesialisasi, kota domisili, tarif dasar, serta tautan portofolio kamu.'
             },
             {
                 category: 'photographer',
@@ -667,8 +773,10 @@
             await loadEquipmentsFromDB();
             await loadBookingsFromDB();
             await loadMessagesFromDB();
+            await loadReviewsFromDB();
             setupRealtimeOrders();
             setupRealtimeChat();
+            setupRealtimeReviews();
             updateUserUIState();
         });
 
@@ -767,6 +875,39 @@
                 }
             } catch(e) { console.log(e); }
             renderDashboardOrders();
+        }
+
+        // ==========================================
+        // LOAD & REALTIME REVIEWS
+        // ==========================================
+        async function loadReviewsFromDB() {
+            try {
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient
+                        .from('reviewers')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    if (!error && data) {
+                        allReviews = data;
+                        localStorage.setItem('clickly_reviews', JSON.stringify(allReviews));
+                    }
+                }
+            } catch (e) { console.log(e); }
+        }
+
+        function setupRealtimeReviews() {
+            if (supabaseClient) {
+                supabaseClient
+                    .channel('public:reviewers')
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reviewers' }, payload => {
+                        const exists = allReviews.some(r => r.id === payload.new.id);
+                        if (!exists) {
+                            allReviews.unshift(payload.new);
+                            localStorage.setItem('clickly_reviews', JSON.stringify(allReviews));
+                        }
+                    })
+                    .subscribe();
+            }
         }
 
         // ==========================================
@@ -875,11 +1016,13 @@
             });
 
             const threads = Object.values(latestBySender).reverse();
-            container.innerHTML = threads.map(m => `
-                <div class="cursor-pointer hover:bg-slate-50 p-3 rounded-[20px] transition-all border border-transparent hover:border-slate-100" onclick="openChatRoom('${m.sender_name}', '${m.sender_id}')">
+            container.innerHTML = threads.map(m => {
+                const safeName = (m.sender_name || 'Klien').replace(/'/g, "\\'");
+                return `
+                <div class="cursor-pointer hover:bg-slate-50 p-3 rounded-[20px] transition-all border border-transparent hover:border-slate-100" onclick="openChatRoom('${safeName}', '${m.sender_id}')">
                     <div class="flex items-start gap-3">
                         <div class="w-11 h-11 rounded-full gradient-brand text-white flex items-center justify-center font-space font-bold text-base shrink-0">
-                            ${m.sender_name.charAt(0).toUpperCase()}
+                            ${(m.sender_name || 'K').charAt(0).toUpperCase()}
                         </div>
                         <div class="flex-1 min-w-0 pt-0.5">
                             <div class="flex justify-between items-center">
@@ -890,8 +1033,8 @@
                         </div>
                         ${!m.is_read ? '<span class="w-2.5 h-2.5 rounded-full bg-primary mt-2 shrink-0"></span>' : ''}
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         function renderPhotographerGrid(dataList) {
@@ -920,7 +1063,7 @@
                             <div>
                                 <div class="flex justify-between items-center mb-3">
                                     <span class="text-xs font-medium text-slate-500 flex items-center gap-1"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> ${p.location}</span>
-                                    <span class="text-amber-500 font-bold text-xs flex items-center gap-1"><i data-lucide="star" class="w-3.5 h-3.5 fill-amber-500"></i> ${p.rating || 5.0} (${p.reviewscount || 1})</span>
+                                    <span class="text-amber-500 font-bold text-xs flex items-center gap-1"><i data-lucide="star" class="w-3.5 h-3.5 fill-amber-500"></i> ${Number(p.rating || 5.0).toFixed(1)} (${p.reviewscount || 1})</span>
                                 </div>
                                 <h3 class="font-space font-bold text-xl text-slate-900 flex items-center gap-2">${p.name} <i data-lucide="badge-check" class="w-4 h-4 text-secondary"></i></h3>
                             </div>
@@ -1071,11 +1214,12 @@
             const diffDays = Math.max(1, Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24)) + 1);
             const totalAmount = diffDays * activeRentalItem.price;
             const clientLabel = currentUser ? currentUser.full_name : 'Klien Clickly';
+            const uid = currentUser ? String(currentUser.id) : 'guest';
 
             const record = {
                 id: 'RNT-' + Math.floor(100000 + Math.random() * 900000),
                 equipment_id: String(activeRentalItem.id),
-                user_id: currentUser ? currentUser.id : 'guest',
+                user_id: uid,
                 rental_start_date: start,
                 rental_end_date: end,
                 total_price: totalAmount,
@@ -1085,6 +1229,7 @@
             const orderSummary = {
                 id: record.id,
                 booking_id: record.id,
+                user_id: uid,
                 item_description: `Sewa: ${activeRentalItem.name} (${diffDays} Hari) - ${clientLabel}`,
                 quantity: diffDays,
                 subtotal: totalAmount
@@ -1092,14 +1237,24 @@
 
             if (supabaseClient) {
                 await supabaseClient.from('equipments_rental').insert([record]);
-                await supabaseClient.from('order_detail').insert([orderSummary]);
+                const { error } = await supabaseClient.from('order_detail').insert([orderSummary]);
+                if (error) {
+                    const fallbackOrder = {
+                        id: orderSummary.id,
+                        booking_id: orderSummary.booking_id,
+                        item_description: orderSummary.item_description,
+                        quantity: orderSummary.quantity,
+                        subtotal: orderSummary.subtotal
+                    };
+                    await supabaseClient.from('order_detail').insert([fallbackOrder]);
+                }
             }
             activeBookings.push(orderSummary);
             localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
             alert('Pembayaran Sewa Alat Berhasil!');
             closeModal('rentalModal');
             renderDashboardOrders();
-            switchPage('dashboard');
+            if (currentUser) switchPage('dashboard');
         }
 
         function toggleCompare(id) {
@@ -1117,7 +1272,7 @@
                 <table class="w-full text-left border-collapse min-w-[600px] text-sm font-medium">
                     <thead><tr class="border-b border-slate-200"><th class="p-4 text-slate-500">Spesifikasi</th>${list.map(p => `<th class="p-4 font-space font-bold text-lg text-slate-900">${p.name}</th>`).join('')}</tr></thead>
                     <tbody class="divide-y divide-slate-100">
-                        <tr><td class="p-4 text-slate-500">Rating</td>${list.map(p => `<td class="p-4 font-bold text-amber-500"><i data-lucide="star" class="w-3.5 h-3.5 inline fill-amber-500"></i> ${p.rating || 5.0}</td>`).join('')}</tr>
+                        <tr><td class="p-4 text-slate-500">Rating</td>${list.map(p => `<td class="p-4 font-bold text-amber-500"><i data-lucide="star" class="w-3.5 h-3.5 inline fill-amber-500"></i> ${Number(p.rating || 5.0).toFixed(1)}</td>`).join('')}</tr>
                         <tr><td class="p-4 text-slate-500">Tarif Dasar</td>${list.map(p => `<td class="p-4 font-space font-bold text-primary text-base">Rp ${Number(p.price).toLocaleString('id-ID')}</td>`).join('')}</tr>
                         <tr><td class="p-4 text-slate-500">Portofolio</td>${list.map(p => `<td class="p-4"><a href="${p.portfoliourl || '#'}" target="_blank" class="text-secondary font-bold underline bg-sky-50 px-2 py-1 rounded-md">Lihat Link</a></td>`).join('')}</tr>
                         <tr><td class="p-4"></td>${list.map(p => `<td class="p-4"><button onclick="openDetailModal('${p.id}')" class="w-full py-2.5 gradient-brand text-white font-bold rounded-xl shadow-md hover:scale-105 transition-transform">Pilih</button></td>`).join('')}</tr>
@@ -1127,11 +1282,56 @@
             openModal('compareModal');
         }
 
+        // ==========================================
+        // DETAIL FOTOGRAFER, PAKET & ULASAN KLIEN
+        // ==========================================
+        function selectPhotoPackage(type, price) {
+            selectedPhotoPackage = {
+                type: type,
+                name: type === 'standard' ? 'Paket Standard' : 'Paket Basic',
+                price: Number(price)
+            };
+
+            const basicCard = document.getElementById('pkgCardBasic');
+            const stdCard = document.getElementById('pkgCardStandard');
+            const priceLabel = document.getElementById('checkoutBtnPriceLabel');
+
+            if (basicCard && stdCard) {
+                if (type === 'basic') {
+                    basicCard.className = 'p-4 border-2 border-primary bg-orange-50 rounded-[20px] cursor-pointer relative overflow-hidden transition-all';
+                    stdCard.className = 'p-4 border border-slate-200 hover:border-secondary rounded-[20px] cursor-pointer opacity-80 hover:opacity-100 transition-all';
+                } else {
+                    basicCard.className = 'p-4 border border-slate-200 hover:border-primary rounded-[20px] cursor-pointer opacity-80 hover:opacity-100 transition-all';
+                    stdCard.className = 'p-4 border-2 border-secondary bg-sky-50/70 rounded-[20px] cursor-pointer relative overflow-hidden transition-all';
+                }
+            }
+            if (priceLabel) {
+                priceLabel.innerText = `(Rp ${Number(price).toLocaleString('id-ID')})`;
+            }
+        }
+
         function openDetailModal(id) {
             const p = currentPhotographers.find(i => i.id == id);
             if(!p) return;
-            
+
+            selectedPhotoPackage = { type: 'basic', name: 'Paket Basic', price: Number(p.price) };
             const safeCover = p.coverurl && p.coverurl.trim() !== '' ? p.coverurl : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80';
+            const safeName = (p.name || 'Fotografer').replace(/'/g, "\\'");
+
+            const photoReviews = allReviews.filter(r => String(r.photographer_id) === String(p.id));
+            const reviewsHtml = photoReviews.length > 0
+                ? photoReviews.map(r => {
+                    const stars = '★'.repeat(Number(r.rating || 5)) + '☆'.repeat(5 - Number(r.rating || 5));
+                    return `
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-xs text-slate-900">${r.client_name || 'Klien Clickly'}</span>
+                                <span class="text-amber-400 text-xs tracking-wider">${stars}</span>
+                            </div>
+                            <p class="text-xs text-slate-600 font-medium leading-relaxed">${r.comment || 'Sesi foto berjalan lancar dan hasilnya memuaskan!'}</p>
+                        </div>`;
+                }).join('')
+                : `<p class="text-xs text-slate-400 font-medium bg-slate-50 p-4 rounded-2xl text-center">Belum ada ulasan tertulis. Jadilah klien pertama yang memberi ulasan setelah sesi foto!</p>`;
 
             document.getElementById('detailModalContent').innerHTML = `
                 <div class="md:col-span-7 space-y-6">
@@ -1149,11 +1349,11 @@
                     
                     <div class="flex gap-4 border-y border-slate-100 py-4 my-6">
                         <div class="text-center px-4 border-r border-slate-100">
-                            <p class="font-space font-bold text-xl text-slate-900 flex justify-center items-center gap-1">${p.rating || 5.0} <i data-lucide="star" class="w-4 h-4 fill-amber-500 text-amber-500"></i></p>
+                            <p class="font-space font-bold text-xl text-slate-900 flex justify-center items-center gap-1">${Number(p.rating || 5.0).toFixed(1)} <i data-lucide="star" class="w-4 h-4 fill-amber-500 text-amber-500"></i></p>
                             <p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Rating</p>
                         </div>
                         <div class="text-center px-4 border-r border-slate-100">
-                            <p class="font-space font-bold text-xl text-slate-900">${p.reviewscount || 24}</p>
+                            <p class="font-space font-bold text-xl text-slate-900">${p.reviewscount || 1}</p>
                             <p class="text-[10px] uppercase font-bold text-slate-400 mt-1">Reviews</p>
                         </div>
                         <div class="text-center px-4">
@@ -1174,19 +1374,32 @@
                             <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=300&q=80" class="rounded-[20px] shadow-sm h-32 w-full object-cover">
                         </div>
                     </div>
+
+                    <!-- ULASAN & RATING KLIEN -->
+                    <div class="pt-4 border-t border-slate-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-space font-bold text-lg text-slate-900">Ulasan Klien (${photoReviews.length})</h3>
+                            <button type="button" onclick="openRatingModal('${p.id}')" class="px-4 py-2 bg-amber-50 hover:bg-amber-500 text-amber-600 hover:text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors">
+                                <i data-lucide="star" class="w-3.5 h-3.5"></i> Beri Ulasan
+                            </button>
+                        </div>
+                        <div class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                            ${reviewsHtml}
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="md:col-span-5 bg-white p-6 sm:p-8 rounded-[32px] border border-slate-100 shadow-2xl h-fit space-y-6">
                     <h3 class="font-space font-bold text-slate-900 text-xl text-center">Pilih Paket Sesi Foto</h3>
                     
                     <div class="space-y-3">
-                        <div class="p-4 border-2 border-primary bg-orange-50 rounded-[20px] cursor-pointer relative overflow-hidden">
+                        <div id="pkgCardBasic" onclick="selectPhotoPackage('basic', ${Number(p.price)})" class="p-4 border-2 border-primary bg-orange-50 rounded-[20px] cursor-pointer relative overflow-hidden transition-all">
                             <span class="absolute top-0 right-0 bg-primary text-white text-[9px] font-bold px-2 py-1 rounded-bl-lg">TERPOPULER</span>
                             <h4 class="font-bold text-slate-900 mb-1">Paket Basic</h4>
                             <p class="text-xs font-medium text-slate-600 mb-2">1 Jam Sesi • 50 Edited Photos</p>
                             <p class="font-space font-bold text-primary text-lg">Rp ${Number(p.price).toLocaleString('id-ID')}</p>
                         </div>
-                        <div class="p-4 border border-slate-200 hover:border-secondary rounded-[20px] cursor-pointer opacity-70 hover:opacity-100 transition-all">
+                        <div id="pkgCardStandard" onclick="selectPhotoPackage('standard', ${Number(p.price) * 2})" class="p-4 border border-slate-200 hover:border-secondary rounded-[20px] cursor-pointer opacity-80 hover:opacity-100 transition-all">
                             <h4 class="font-bold text-slate-900 mb-1">Paket Standard</h4>
                             <p class="text-xs font-medium text-slate-600 mb-2">3 Jam Sesi • 100 Edited Photos</p>
                             <p class="font-space font-bold text-secondary text-lg">Rp ${(Number(p.price)*2).toLocaleString('id-ID')}</p>
@@ -1199,13 +1412,15 @@
                     </div>
                     
                     <div class="bg-slate-50 p-3 rounded-xl flex items-start gap-2 border border-slate-100 text-xs text-slate-600 font-medium">
-                        <i data-lucide="lock" class="w-4 h-4 text-emerald-500 mt-0.5"></i>
+                        <i data-lucide="lock" class="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"></i>
                         <p>Pembayaran dilindungi oleh <strong>Clickly Escrow</strong>. Uang diteruskan setelah sesi selesai.</p>
                     </div>
 
-                    <button onclick="startCheckout('${p.id}', ${p.price}, '${p.name}')" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg hover:shadow-primary/40 hover:-translate-y-1 transition-all text-sm">Booking Sekarang</button>
+                    <button onclick="startCheckout('${p.id}', '${safeName}')" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg hover:shadow-primary/40 hover:-translate-y-1 transition-all text-sm">
+                        Booking Sekarang <span id="checkoutBtnPriceLabel">(Rp ${Number(p.price).toLocaleString('id-ID')})</span>
+                    </button>
                     
-                    <button onclick="openChatRoom('${p.name}', '${p.id}')" class="w-full py-3 bg-white border-2 border-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all text-sm flex items-center justify-center gap-2">
+                    <button onclick="openChatRoom('${safeName}', '${p.id}')" class="w-full py-3 bg-white border-2 border-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all text-sm flex items-center justify-center gap-2">
                         <i data-lucide="message-circle" class="w-4 h-4"></i> Tanya Dulu (Chat)
                     </button>
                 </div>`;
@@ -1214,15 +1429,27 @@
         }
 
         let currentPayingOrder = null;
-        function startCheckout(id, amount, name) {
+        function startCheckout(id, name) {
             const date = document.getElementById('bookingDate').value;
             if (!date) return alert('Pilih tanggal sesi foto terlebih dahulu!');
+
+            const blockedForPhoto = blockedDatesMap[String(id)] || [];
+            if (blockedForPhoto.includes(date)) {
+                return alert('Maaf, tanggal tersebut sudah penuh atau ditandai libur oleh fotografer. Silakan pilih tanggal lain!');
+            }
+
+            const amount = selectedPhotoPackage.price || 0;
+            const pkgLabel = selectedPhotoPackage.name || 'Paket Basic';
             const clientLabel = currentUser ? currentUser.full_name : 'Klien Clickly';
+            const uid = currentUser ? String(currentUser.id) : 'guest';
+            const trxId = 'CLK-' + Math.floor(100000 + Math.random() * 900000);
+
             currentPayingOrder = {
-                id: 'CLK-' + Math.floor(100000 + Math.random() * 900000),
-                booking_id: 'CLK-' + Math.floor(100000 + Math.random() * 900000),
+                id: trxId,
+                booking_id: trxId,
+                user_id: uid,
                 photographer_id: String(id),
-                item_description: `${name} (${date}) - ${clientLabel}`,
+                item_description: `${name} - ${pkgLabel} (${date}) - ${clientLabel}`,
                 quantity: 1,
                 subtotal: Number(amount)
             };
@@ -1231,7 +1458,7 @@
                 <div class="md:col-span-12 text-center space-y-6">
                     <div class="w-16 h-16 bg-sky-50 text-secondary mx-auto rounded-[20px] flex items-center justify-center mb-2 shadow-sm"><i data-lucide="credit-card" class="w-8 h-8"></i></div>
                     <h3 class="text-2xl font-space font-bold text-slate-900">Pembayaran Booking</h3>
-                    <p class="text-sm font-medium text-slate-500">Fotografer: <strong>${name}</strong> | Total: <strong class="text-primary">Rp ${Number(amount).toLocaleString('id-ID')}</strong></p>
+                    <p class="text-sm font-medium text-slate-500">Fotografer: <strong>${name}</strong> (${pkgLabel}) | Total: <strong class="text-primary">Rp ${Number(amount).toLocaleString('id-ID')}</strong></p>
                     
                     <select id="bookingPaymentMethod" class="w-full max-w-md mx-auto px-5 py-4 rounded-[20px] border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:border-secondary block">
                         <option value="">-- Pilih Metode Pembayaran --</option>
@@ -1245,7 +1472,7 @@
                         <img id="bookingQrImage" src="" class="w-48 h-48 mx-auto object-contain rounded-xl bg-white p-2 shadow-sm">
                     </div>
 
-                    <button onclick="confirmBookingPayment('${id}', '${name}')" class="w-full max-w-md py-4 bg-emerald-500 text-white font-bold rounded-2xl mx-auto block shadow-lg hover:bg-emerald-600 transition-colors mt-6">Konfirmasi Pembayaran Lunas</button>
+                    <button onclick="confirmBookingPayment('${id}', '${name.replace(/'/g, "\\'")}')" class="w-full max-w-md py-4 bg-emerald-500 text-white font-bold rounded-2xl mx-auto block shadow-lg hover:bg-emerald-600 transition-colors mt-6">Konfirmasi Pembayaran Lunas</button>
                 </div>
             `;
             lucide.createIcons();
@@ -1261,6 +1488,7 @@
                     const fallbackOrder = {
                         id: currentPayingOrder.id,
                         booking_id: currentPayingOrder.booking_id,
+                        photographer_id: currentPayingOrder.photographer_id,
                         item_description: currentPayingOrder.item_description,
                         quantity: currentPayingOrder.quantity,
                         subtotal: currentPayingOrder.subtotal
@@ -1275,10 +1503,10 @@
             if(!bookedList.includes(String(photographerId))) bookedList.push(String(photographerId));
             localStorage.setItem('clickly_booked_photographers', JSON.stringify(bookedList));
 
-            alert('Pembayaran Booking Berhasil! Escrow diaktifkan, Anda kini bisa berinteraksi di ruang chat.');
+            alert('Pembayaran Booking Berhasil! Escrow diaktifkan, kamu sekarang bisa chat dan kasih rating ke fotografer.');
             closeModal('detailModal');
             renderDashboardOrders();
-            switchPage('dashboard');
+            if (currentUser) switchPage('dashboard');
         }
 
         // ==========================================
@@ -1287,8 +1515,12 @@
         async function openChatRoom(targetName, targetId = 'all') {
             if (currentUser && currentUser.role === 'user' && targetId && targetId !== 'all') {
                 let bookedList = JSON.parse(localStorage.getItem('clickly_booked_photographers')) || [];
-                if (!bookedList.includes(String(targetId))) {
-                    alert('Validasi Keamanan: Anda harus melakukan booking dan pembayaran Escrow terlebih dahulu sebelum dapat mengirim pesan langsung ke fotografer ini!');
+                const hasBookingRecord = activeBookings.some(b =>
+                    String(b.photographer_id) === String(targetId) &&
+                    (!b.user_id || String(b.user_id) === String(currentUser.id))
+                );
+                if (!bookedList.includes(String(targetId)) && !hasBookingRecord) {
+                    alert('Validasi Keamanan: Kamu harus melakukan booking dan pembayaran Escrow terlebih dahulu sebelum mengirim pesan langsung ke fotografer ini!');
                     return;
                 }
             }
@@ -1369,9 +1601,32 @@
             }
         }
 
-        // RATING SYSTEM
+        // ==========================================
+        // RATING & ULASAN KLIEN KE FOTOGRAFER
+        // ==========================================
         function openRatingModal(photographerId) {
+            if (currentUser && currentUser.role === 'photographer') {
+                alert('Akun fotografer tidak dapat memberikan rating ke sesama fotografer.');
+                return;
+            }
+
+            if (currentUser && currentUser.role === 'user') {
+                const bookedList = JSON.parse(localStorage.getItem('clickly_booked_photographers')) || [];
+                const hasBooked = bookedList.includes(String(photographerId)) || activeBookings.some(b =>
+                    String(b.photographer_id) === String(photographerId) &&
+                    (!b.user_id || String(b.user_id) === String(currentUser.id))
+                );
+                if (!hasBooked) {
+                    alert('Kamu perlu menyelesaikan booking fotografer ini terlebih dahulu sebelum memberikan rating dan ulasan!');
+                    return;
+                }
+            }
+
+            const targetPhoto = currentPhotographers.find(p => String(p.id) === String(photographerId));
             document.getElementById('ratingPhotographerId').value = photographerId;
+            document.getElementById('ratingTargetName').innerText = targetPhoto ? targetPhoto.name : 'fotografer ini';
+            document.getElementById('ratingCommentText').value = '';
+            setRatingStars(5);
             openModal('ratingModal');
         }
 
@@ -1384,23 +1639,119 @@
         }
 
         async function submitReviewToDB() {
-            const photographerId = document.getElementById('ratingPhotographerId').value;
+            const photographerId = String(document.getElementById('ratingPhotographerId').value);
             const rating = Number(document.getElementById('selectedStarCount').value);
-            const comment = document.getElementById('ratingCommentText').value;
+            const comment = document.getElementById('ratingCommentText').value.trim();
+
+            if (!comment) {
+                alert('Tulis sedikit ulasan kamu dulu sebelum mengirim ya!');
+                return;
+            }
 
             const reviewRecord = {
                 id: 'REV-' + Math.floor(100000 + Math.random() * 900000),
-                photographer_id: String(photographerId),
+                photographer_id: photographerId,
                 client_name: currentUser ? currentUser.full_name : 'Klien Clickly',
                 rating: rating,
-                comment: comment
+                comment: comment,
+                created_at: new Date().toISOString()
             };
+
+            allReviews.unshift(reviewRecord);
+            localStorage.setItem('clickly_reviews', JSON.stringify(allReviews));
 
             if (supabaseClient) {
                 await supabaseClient.from('reviewers').insert([reviewRecord]);
             }
-            alert('Terima kasih! Ulasan dan rating Anda berhasil disimpan ke database dan akan membantu visibilitas talent.');
+
+            // Recalculate rating rata-rata & jumlah ulasan fotografer
+            const photoIdx = currentPhotographers.findIndex(p => String(p.id) === photographerId);
+            if (photoIdx !== -1) {
+                const p = currentPhotographers[photoIdx];
+                const oldCount = Number(p.reviewscount || 1);
+                const oldRating = Number(p.rating || 5.0);
+                const newCount = oldCount + 1;
+                const newAvgRating = Number((((oldRating * oldCount) + rating) / newCount).toFixed(1));
+
+                currentPhotographers[photoIdx].rating = newAvgRating;
+                currentPhotographers[photoIdx].reviewscount = newCount;
+                renderPhotographerGrid(currentPhotographers);
+
+                if (supabaseClient) {
+                    await supabaseClient
+                        .from('photographer')
+                        .update({ rating: newAvgRating, reviewscount: newCount })
+                        .eq('id', photographerId);
+                }
+            }
+
+            alert('Terima kasih! Rating dan ulasan kamu berhasil dikirim dan langsung memperbarui skor fotografer.');
             closeModal('ratingModal');
+
+            if (!document.getElementById('detailModal').classList.contains('hidden')) {
+                openDetailModal(photographerId);
+            }
+        }
+
+        // ==========================================
+        // QUICK ACTIONS & KELOLA JADWAL FOTOGRAFER
+        // ==========================================
+        function jumpToProfileField(fieldId) {
+            const section = document.getElementById('profileSettingsSection');
+            const input = document.getElementById(fieldId);
+            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (input) {
+                setTimeout(() => {
+                    input.focus();
+                    input.classList.add('ring-2', 'ring-primary');
+                    setTimeout(() => input.classList.remove('ring-2', 'ring-primary'), 2000);
+                }, 400);
+            }
+        }
+
+        function openScheduleModal() {
+            renderBlockedDates();
+            openModal('scheduleModal');
+        }
+
+        function renderBlockedDates() {
+            const listEl = document.getElementById('blockedDatesList');
+            if (!listEl || !currentUser) return;
+            const myDates = blockedDatesMap[String(currentUser.id)] || [];
+
+            if (myDates.length === 0) {
+                listEl.innerHTML = `<p class="text-xs text-slate-400 text-center py-4 bg-slate-50 rounded-2xl">Belum ada tanggal libur yang diblokir.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = myDates.map(d => `
+                <div class="flex items-center justify-between px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-100 text-xs font-bold text-slate-700">
+                    <span>${d}</span>
+                    <button type="button" onclick="removeBlockedDate('${d}')" class="text-rose-500 hover:underline">Hapus</button>
+                </div>
+            `).join('');
+        }
+
+        function addBlockedDate() {
+            if (!currentUser) return;
+            const dateVal = document.getElementById('blockDateInput').value;
+            if (!dateVal) return alert('Pilih tanggal terlebih dahulu!');
+            const uid = String(currentUser.id);
+            if (!blockedDatesMap[uid]) blockedDatesMap[uid] = [];
+            if (!blockedDatesMap[uid].includes(dateVal)) {
+                blockedDatesMap[uid].push(dateVal);
+                localStorage.setItem('clickly_blocked_dates', JSON.stringify(blockedDatesMap));
+            }
+            document.getElementById('blockDateInput').value = '';
+            renderBlockedDates();
+        }
+
+        function removeBlockedDate(dateVal) {
+            if (!currentUser) return;
+            const uid = String(currentUser.id);
+            blockedDatesMap[uid] = (blockedDatesMap[uid] || []).filter(d => d !== dateVal);
+            localStorage.setItem('clickly_blocked_dates', JSON.stringify(blockedDatesMap));
+            renderBlockedDates();
         }
 
         // ==========================================
@@ -1504,6 +1855,7 @@
                 closeModal('authModal');
                 updateUserUIState();
                 renderRecentMessages();
+                renderDashboardOrders();
                 alert(`Selamat datang kembali, ${currentUser.full_name}!`);
                 switchPage('dashboard');
                 return;
@@ -1573,6 +1925,7 @@
             closeModal('authModal');
             updateUserUIState();
             renderRecentMessages();
+            renderDashboardOrders();
             alert('Pendaftaran Berhasil! Akun Anda telah aktif.');
             switchPage('dashboard');
         }
@@ -1611,8 +1964,8 @@
 
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
             alert('Profil Berhasil Diperbarui!');
+            await loadPhotographersFromDB();
             updateUserUIState();
-            loadPhotographersFromDB();
         }
 
         function updateUserUIState() {
@@ -1621,22 +1974,25 @@
                 if(navAuth) {
                     let avatarUrl = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=150&q=80';
                     if (currentUser.role === 'photographer') {
-                        const pData = currentPhotographers.find(p => p.id == currentUser.id);
+                        const pData = currentPhotographers.find(p => String(p.id) === String(currentUser.id));
                         if (pData && pData.coverurl) avatarUrl = pData.coverurl;
                     }
 
                     navAuth.innerHTML = `
-                        <div class="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-1.5 rounded-full transition-colors" onclick="switchPage('dashboard')">
-                            <img src="${avatarUrl}" class="w-10 h-10 rounded-full object-cover border-2 border-primary shadow-sm">
+                        <div class="flex items-center gap-2.5 cursor-pointer hover:bg-slate-50 p-1.5 rounded-full transition-colors" onclick="switchPage('dashboard')">
+                            <img src="${avatarUrl}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-primary shadow-sm">
                             <div class="hidden sm:block text-left pr-2">
                                 <span class="text-xs font-bold block text-slate-900">${currentUser.full_name || currentUser.email}</span>
                                 <span class="text-[10px] text-primary uppercase font-bold">${currentUser.role}</span>
                             </div>
                         </div>
-                        <button onclick="localStorage.removeItem('clickly_user'); location.reload()" class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:text-rose-500 hover:bg-rose-50 transition-colors"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+                        <button onclick="localStorage.removeItem('clickly_user'); location.reload()" title="Keluar" class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:text-rose-500 hover:bg-rose-50 transition-colors"><i data-lucide="log-out" class="w-4 h-4"></i></button>
                     `;
                     lucide.createIcons();
                 }
+
+                const mobileDashBtn = document.getElementById('mnav-dashboard');
+                if (mobileDashBtn) mobileDashBtn.classList.remove('hidden');
 
                 document.getElementById('editFullName').value = currentUser.full_name || '';
                 document.getElementById('editPhone').value = currentUser.phone_number || '';
@@ -1644,10 +2000,13 @@
                 const isPhoto = currentUser.role === 'photographer';
                 document.getElementById('photographerDashboardLayout').style.display = isPhoto ? 'grid' : 'none';
                 document.getElementById('editPhotographerExtra').style.display = isPhoto ? 'block' : 'none';
-                document.getElementById('dashTitleMain').innerText = isPhoto ? 'Dashboard Fotografer' : 'Dashboard Klien (Aktivitas Booking & Chat)';
+                document.getElementById('dashTitleMain').innerText = isPhoto ? 'Dashboard Fotografer' : 'Dashboard Klien';
+                document.getElementById('dashSubtitleMain').innerText = isPhoto
+                    ? 'Kelola bisnis fotografi, jadwal, dan ulasan klien dalam satu tempat'
+                    : 'Pantau riwayat booking, chat fotografer, dan berikan rating sesi foto';
 
                 if (isPhoto) {
-                    const pData = currentPhotographers.find(p => p.id == currentUser.id) || currentPhotographers[0];
+                    const pData = currentPhotographers.find(p => String(p.id) === String(currentUser.id));
                     if (pData) {
                         document.getElementById('editCategory').value = pData.category || 'Wisuda';
                         document.getElementById('editLocation').value = pData.location || 'Jabodetabek';
@@ -1655,6 +2014,8 @@
                         document.getElementById('editCoverUrl').value = pData.coverurl || '';
                         document.getElementById('editPortfolioUrl').value = pData.portfoliourl || '';
                         document.getElementById('editBio').value = pData.bio || '';
+                        if (document.getElementById('dashMyRating')) document.getElementById('dashMyRating').innerText = Number(pData.rating || 5.0).toFixed(1);
+                        if (document.getElementById('dashMyReviewCount')) document.getElementById('dashMyReviewCount').innerText = pData.reviewscount || 0;
                     }
                 }
             }
@@ -1663,12 +2024,42 @@
         function renderDashboardOrders() {
             const list = document.getElementById('dashboardOrdersList');
             if(!list) return;
-            list.innerHTML = activeBookings.length ? '' : '<div class="text-center p-8 border-2 border-dashed border-slate-200 rounded-[20px]"><i data-lucide="calendar-x" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i><p class="text-sm font-medium text-slate-500">Belum ada pesanan aktif.</p></div>';
+
+            let filteredBookings = [...activeBookings];
+            if (currentUser) {
+                const uid = String(currentUser.id);
+                const uname = (currentUser.full_name || '').toLowerCase();
+                if (currentUser.role === 'photographer') {
+                    filteredBookings = activeBookings.filter(b =>
+                        String(b.photographer_id) === uid ||
+                        (uname && (b.item_description || '').toLowerCase().startsWith(uname))
+                    );
+                } else {
+                    filteredBookings = activeBookings.filter(b =>
+                        String(b.user_id) === uid ||
+                        (!b.user_id && uname && (b.item_description || '').toLowerCase().includes(uname))
+                    );
+                }
+            }
+
+            list.innerHTML = filteredBookings.length
+                ? ''
+                : '<div class="text-center p-8 border-2 border-dashed border-slate-200 rounded-[20px]"><i data-lucide="calendar-x" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i><p class="text-sm font-medium text-slate-500">Belum ada pesanan aktif.</p></div>';
+
             let total = 0;
-            activeBookings.forEach(b => {
+            filteredBookings.forEach(b => {
                 total += Number(b.subtotal || 0);
             });
-            [...activeBookings].reverse().forEach(b => {
+
+            const isClient = !currentUser || currentUser.role === 'user';
+
+            [...filteredBookings].reverse().forEach(b => {
+                const safeDesc = (b.item_description || 'Pesanan Clickly').replace(/'/g, "\\'");
+                const isPhotographerOrder = Boolean(b.photographer_id);
+                const ratingBtnHtml = (isClient && isPhotographerOrder)
+                    ? `<button onclick="openRatingModal('${b.photographer_id}')" class="flex-1 sm:flex-none px-4 py-2 bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors"><i data-lucide="star" class="w-4 h-4"></i> Rating</button>`
+                    : '';
+
                 list.innerHTML += `
                     <div class="p-5 bg-white shadow-sm border border-slate-100 rounded-[24px] flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm gap-4 hover:shadow-md transition-shadow">
                         <div>
@@ -1679,14 +2070,14 @@
                         <div class="flex flex-col sm:items-end gap-3 w-full sm:w-auto">
                             <strong class="font-space font-bold text-primary text-lg">Rp ${Number(b.subtotal).toLocaleString('id-ID')}</strong>
                             <div class="flex gap-2 w-full sm:w-auto">
-                                <button onclick="openChatRoom('${b.item_description}', '${b.photographer_id || '1'}')" class="flex-1 sm:flex-none px-4 py-2 bg-secondary/10 text-secondary hover:bg-secondary hover:text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors"><i data-lucide="message-square" class="w-4 h-4"></i> Chat</button>
-                                <button onclick="openRatingModal('${b.photographer_id || '1'}')" class="flex-1 sm:flex-none px-4 py-2 bg-amber-50 text-amber-500 hover:bg-amber-500 hover:text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors"><i data-lucide="star" class="w-4 h-4"></i> Rating</button>
+                                <button onclick="openChatRoom('${safeDesc}', '${b.photographer_id || 'all'}')" class="flex-1 sm:flex-none px-4 py-2 bg-secondary/10 text-secondary hover:bg-secondary hover:text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors"><i data-lucide="message-square" class="w-4 h-4"></i> Chat</button>
+                                ${ratingBtnHtml}
                             </div>
                         </div>
                     </div>`;
             });
             lucide.createIcons();
-            if(document.getElementById('dashTotalOrders')) document.getElementById('dashTotalOrders').innerText = activeBookings.length;
+            if(document.getElementById('dashTotalOrders')) document.getElementById('dashTotalOrders').innerText = filteredBookings.length;
             if(document.getElementById('dashTotalIncome')) document.getElementById('dashTotalIncome').innerText = `Rp ${total.toLocaleString('id-ID')}`;
         }
 
