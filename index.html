@@ -341,11 +341,16 @@
                     </div>
                 </div>
 
-                <!-- RIWAYAT BOOKING / PESANAN (Tampil untuk Klien & Fotografer) -->
+                <!-- RIWAYAT BOOKING / PESANAN REALTIME -->
                 <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
-                    <h3 class="font-space font-bold text-xl mb-6 text-slate-800 flex items-center gap-2">
-                        <i data-lucide="calendar-check" class="text-primary w-5 h-5"></i> Booking Mendatang / Riwayat
-                    </h3>
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-space font-bold text-xl text-slate-800 flex items-center gap-2">
+                            <i data-lucide="calendar-check" class="text-primary w-5 h-5"></i> Booking Mendatang / Riwayat
+                        </h3>
+                        <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Sync
+                        </span>
+                    </div>
                     <div id="dashboardOrdersList" class="space-y-4"></div>
                 </div>
 
@@ -578,6 +583,7 @@
             await loadEquipmentsFromDB();
             await loadBookingsFromDB();
             await loadMessagesFromDB();
+            setupRealtimeOrders();
             setupRealtimeChat();
             updateUserUIState();
         });
@@ -615,14 +621,50 @@
         }
 
         async function loadBookingsFromDB() {
-            if (supabaseClient) {
-                const { data } = await supabaseClient.from('order_detail').select('*');
-                if (data && data.length > 0) {
-                    activeBookings = data;
-                    localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
+            try {
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient.from('order_detail').select('*');
+                    if (!error && data) {
+                        activeBookings = data;
+                        localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
+                    }
                 }
-            }
+            } catch(e) { console.log(e); }
             renderDashboardOrders();
+        }
+
+        // ==========================================
+        // REALTIME BOOKING / ORDER LISTENER
+        // ==========================================
+        function setupRealtimeOrders() {
+            if (supabaseClient) {
+                supabaseClient
+                    .channel('public:order_detail')
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'order_detail' }, payload => {
+                        const exists = activeBookings.some(b => b.id === payload.new.id);
+                        if (!exists) {
+                            activeBookings.push(payload.new);
+                            localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
+                            renderDashboardOrders();
+                        }
+                    })
+                    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'order_detail' }, payload => {
+                        const idx = activeBookings.findIndex(b => b.id === payload.new.id);
+                        if (idx !== -1) {
+                            activeBookings[idx] = payload.new;
+                            localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
+                            renderDashboardOrders();
+                        }
+                    })
+                    .subscribe();
+            }
+
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'clickly_bookings') {
+                    activeBookings = JSON.parse(e.newValue) || [];
+                    renderDashboardOrders();
+                }
+            });
         }
 
         // ==========================================
@@ -892,6 +934,7 @@
 
             const diffDays = Math.max(1, Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24)) + 1);
             const totalAmount = diffDays * activeRentalItem.price;
+            const clientLabel = currentUser ? currentUser.full_name : 'Klien Clickly';
 
             const record = {
                 id: 'RNT-' + Math.floor(100000 + Math.random() * 900000),
@@ -903,8 +946,19 @@
                 status: 'Lunas (' + method + ')'
             };
 
-            if (supabaseClient) await supabaseClient.from('equipments_rental').insert([record]);
-            activeBookings.push({ id: record.id, booking_id: record.id, item_description: `Sewa: ${activeRentalItem.name} (${diffDays} Hari)`, quantity: diffDays, subtotal: totalAmount });
+            const orderSummary = {
+                id: record.id,
+                booking_id: record.id,
+                item_description: `Sewa: ${activeRentalItem.name} (${diffDays} Hari) - ${clientLabel}`,
+                quantity: diffDays,
+                subtotal: totalAmount
+            };
+
+            if (supabaseClient) {
+                await supabaseClient.from('equipments_rental').insert([record]);
+                await supabaseClient.from('order_detail').insert([orderSummary]);
+            }
+            activeBookings.push(orderSummary);
             localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
             alert('Pembayaran Sewa Alat Berhasil!');
             closeModal('rentalModal');
@@ -1027,11 +1081,12 @@
         function startCheckout(id, amount, name) {
             const date = document.getElementById('bookingDate').value;
             if (!date) return alert('Pilih tanggal sesi foto terlebih dahulu!');
+            const clientLabel = currentUser ? currentUser.full_name : 'Klien Clickly';
             currentPayingOrder = {
                 id: 'CLK-' + Math.floor(100000 + Math.random() * 900000),
                 booking_id: 'CLK-' + Math.floor(100000 + Math.random() * 900000),
                 photographer_id: String(id),
-                item_description: name,
+                item_description: `${name} (${date}) - ${clientLabel}`,
                 quantity: 1,
                 subtotal: Number(amount)
             };
@@ -1064,7 +1119,19 @@
             const method = document.getElementById('bookingPaymentMethod').value;
             if(!method) return alert('Pilih metode pembayaran dulu!');
             
-            if (supabaseClient) await supabaseClient.from('order_detail').insert([currentPayingOrder]);
+            if (supabaseClient) {
+                const { error } = await supabaseClient.from('order_detail').insert([currentPayingOrder]);
+                if (error) {
+                    const fallbackOrder = {
+                        id: currentPayingOrder.id,
+                        booking_id: currentPayingOrder.booking_id,
+                        item_description: currentPayingOrder.item_description,
+                        quantity: currentPayingOrder.quantity,
+                        subtotal: currentPayingOrder.subtotal
+                    };
+                    await supabaseClient.from('order_detail').insert([fallbackOrder]);
+                }
+            }
             activeBookings.push(currentPayingOrder);
             localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
             
@@ -1463,7 +1530,9 @@
             list.innerHTML = activeBookings.length ? '' : '<div class="text-center p-8 border-2 border-dashed border-slate-200 rounded-[20px]"><i data-lucide="calendar-x" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i><p class="text-sm font-medium text-slate-500">Belum ada pesanan aktif.</p></div>';
             let total = 0;
             activeBookings.forEach(b => {
-                total += Number(b.subtotal);
+                total += Number(b.subtotal || 0);
+            });
+            [...activeBookings].reverse().forEach(b => {
                 list.innerHTML += `
                     <div class="p-5 bg-white shadow-sm border border-slate-100 rounded-[24px] flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm gap-4 hover:shadow-md transition-shadow">
                         <div>
