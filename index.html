@@ -42,19 +42,24 @@
             -webkit-text-fill-color: transparent;
         }
         .bg-glass { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); }
-        .page-view { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .page-view { display: none; animation: fadeIn 0.25s ease-in-out; }
         .page-view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        .toast-enter { animation: slideInRight 0.3s ease-out forwards; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-orange-200 flex flex-col min-h-screen">
 
-    <!-- NAVBAR -->
+    <!-- FLOATING REALTIME TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- NAVBAR (ADAPTIF: MODE KLIEN VS MODE MITRA FOTOGRAFER) -->
     <header class="sticky top-0 z-40 bg-glass border-b border-slate-200/80 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="#" onclick="switchPage('home')" class="flex items-center gap-3 group">
+            <a href="#" onclick="handleBrandLogoClick(event)" class="flex items-center gap-3 group">
                 <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-[20px] bg-white shadow-md border border-slate-100 flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform">
                     <svg viewBox="0 0 200 200" class="w-full h-full">
                         <defs>
@@ -72,17 +77,29 @@
                     <span class="text-xl sm:text-2xl font-space font-bold tracking-tight flex items-center">
                         <span class="text-[#4fc3f7]">CLIC</span><span class="text-[#ff7b54]">KLY</span>
                     </span>
-                    <span class="text-[9px] font-bold text-slate-400 tracking-wider uppercase -mt-1">Sekali Klik Beres</span>
+                    <span id="brandRoleSubtitle" class="text-[9px] font-bold text-slate-400 tracking-wider uppercase -mt-1">Sekali Klik Beres</span>
                 </div>
             </a>
 
-            <!-- Desktop Menu -->
-            <nav class="hidden md:flex items-center gap-7 font-medium text-slate-600 text-sm">
+            <!-- Desktop Menu: Klien / Publik -->
+            <nav id="desktopNavClient" class="hidden md:flex items-center gap-7 font-medium text-slate-600 text-sm">
                 <button onclick="switchPage('home')" id="nav-home" class="hover:text-primary transition-colors font-bold text-primary">Beranda</button>
                 <button onclick="switchPage('marketplace')" id="nav-marketplace" class="hover:text-primary transition-colors">Cari Fotografer</button>
                 <button onclick="switchPage('rental')" id="nav-rental" class="hover:text-primary transition-colors">Sewa Alat</button>
                 <button onclick="switchPage('howitworks')" id="nav-howitworks" class="hover:text-primary transition-colors">Cara Kerja</button>
                 <button onclick="switchPage('faq')" id="nav-faq" class="hover:text-primary transition-colors">FAQ</button>
+                <button onclick="switchPage('dashboard')" id="nav-dashboard" class="hidden hover:text-primary transition-colors">Pesanan Saya</button>
+            </nav>
+
+            <!-- Desktop Menu: Khusus Mitra Fotografer -->
+            <nav id="desktopNavPhotographer" class="hidden items-center gap-6 font-medium text-slate-600 text-sm">
+                <button onclick="openPhotographerSection('overview')" id="pnav-overview" class="hover:text-primary transition-colors font-bold text-primary">Dashboard Bisnis</button>
+                <button onclick="openPhotographerSection('orders')" id="pnav-orders" class="hover:text-primary transition-colors flex items-center gap-1.5">
+                    Order & Progres <span id="navPendingOrderBadge" class="hidden bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
+                </button>
+                <button onclick="openPhotographerSection('catalog')" id="pnav-catalog" class="hover:text-primary transition-colors">Paket & Portofolio</button>
+                <button onclick="openPhotographerSection('schedule')" id="pnav-schedule" class="hover:text-primary transition-colors">Jadwal</button>
+                <button onclick="switchPage('rental')" id="pnav-rental" class="hover:text-primary transition-colors">Sewa Alat</button>
             </nav>
 
             <!-- Auth & Mobile Menu Trigger -->
@@ -92,25 +109,18 @@
                     <button onclick="openAuthModal('register')" class="px-4 sm:px-6 py-2.5 rounded-full gradient-brand text-white font-semibold text-xs sm:text-sm shadow-lg hover:scale-[1.02] transition-all">Daftar</button>
                 </div>
                 <button type="button" onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 rounded-2xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors" aria-label="Buka Menu">
-                    <i data-lucide="menu" id="mobileMenuIcon" class="w-5 h-5"></i>
+                    <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobileNavMenu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-5 space-y-2 shadow-lg">
-            <button onclick="switchPage('home'); closeMobileMenu()" id="mnav-home" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-primary bg-orange-50/70">Beranda</button>
-            <button onclick="switchPage('marketplace'); closeMobileMenu()" id="mnav-marketplace" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">Cari Fotografer</button>
-            <button onclick="switchPage('rental'); closeMobileMenu()" id="mnav-rental" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">Sewa Alat</button>
-            <button onclick="switchPage('howitworks'); closeMobileMenu()" id="mnav-howitworks" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">Cara Kerja</button>
-            <button onclick="switchPage('faq'); closeMobileMenu()" id="mnav-faq" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">FAQ</button>
-            <button onclick="switchPage('dashboard'); closeMobileMenu()" id="mnav-dashboard" class="hidden w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50">Dashboard Saya</button>
-        </div>
+        <!-- Mobile Menu Dropdown (Dinamis mengikuti role) -->
+        <div id="mobileNavMenu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-5 space-y-2 shadow-lg"></div>
     </header>
 
     <main class="flex-1">
 
-        <!-- TAB 1: BERANDA -->
+        <!-- TAB 1: BERANDA (PUBLIK & KLIEN) -->
         <div id="view-home" class="page-view active py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid lg:grid-cols-12 gap-12 items-center mb-16">
@@ -206,7 +216,12 @@
 
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                     <div>
-                        <span class="text-primary font-bold text-sm tracking-wider uppercase">Talent Terbaik</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-primary font-bold text-sm tracking-wider uppercase">Talent Terbaik</span>
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Live Katalog
+                            </span>
+                        </div>
                         <h2 class="text-3xl font-space font-bold text-slate-900 mt-1">Pilih & Bandingkan Fotografer</h2>
                     </div>
                     <div id="compareBar" class="hidden items-center gap-3 bg-white shadow-xl border border-slate-100 p-3 rounded-[20px]">
@@ -225,6 +240,7 @@
                 <div class="mb-10 text-center">
                     <span class="text-secondary font-bold text-sm tracking-wider uppercase">Layanan Tambahan</span>
                     <h2 class="text-3xl font-space font-bold text-slate-900 mt-1">Sewa Alat Fotografi Profesional</h2>
+                    <p class="text-xs text-slate-500 font-medium mt-1">Tersedia untuk klien maupun mitra fotografer yang butuh perlengkapan tambahan</p>
                 </div>
                 <div class="max-w-2xl mx-auto mb-12 relative">
                     <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
@@ -262,7 +278,7 @@
                         <div class="w-14 h-14 gradient-brand text-white rounded-[20px] flex items-center justify-center font-space font-bold text-2xl absolute -top-7 left-1/2 -translate-x-1/2 shadow-lg">4</div>
                         <i data-lucide="camera" class="w-10 h-10 text-secondary mx-auto mt-8 mb-4"></i>
                         <h3 class="font-space font-bold text-slate-800 text-lg mb-2">Sesi Selesai!</h3>
-                        <p class="text-sm text-slate-500 font-medium">Gunakan fitur Chat, dapatkan hasil, dan berikan Rating!</p>
+                        <p class="text-sm text-slate-500 font-medium">Pantau progres foto, cairkan Escrow, dan berikan Rating!</p>
                     </div>
                 </div>
 
@@ -274,7 +290,7 @@
             </div>
         </div>
 
-        <!-- TAB 5: FAQ (PERTANYAAN UMUM) -->
+        <!-- TAB 5: FAQ -->
         <div id="view-faq" class="page-view py-14">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-10">
@@ -291,183 +307,329 @@
                 </div>
 
                 <div id="faqAccordionContainer" class="space-y-4"></div>
-
-                <div class="mt-12 bg-white rounded-[32px] p-8 border border-slate-100 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
-                    <div class="flex items-center gap-4 text-center sm:text-left">
-                        <div class="w-14 h-14 rounded-2xl bg-sky-50 text-secondary flex items-center justify-center shrink-0 mx-auto sm:mx-0">
-                            <i data-lucide="sparkles" class="w-7 h-7"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-space font-bold text-lg text-slate-900">Siap mengabadikan momen terbaikmu?</h3>
-                            <p class="text-xs text-slate-500 font-medium mt-1">Bandingkan hingga 3 fotografer sekaligus dan booking dalam hitungan detik.</p>
-                        </div>
-                    </div>
-                    <button onclick="switchPage('marketplace')" class="px-7 py-3.5 gradient-brand text-white font-bold text-xs rounded-2xl shadow-lg hover:scale-[1.02] transition-all shrink-0">
-                        Cari Fotografer Sekarang
-                    </button>
-                </div>
             </div>
         </div>
 
-        <!-- TAB 6: DASHBOARD -->
-        <div id="view-dashboard" class="page-view py-12 bg-slate-50">
+        <!-- TAB 6: DASHBOARD (TERPISAH TOTAL: WORKSPACE FOTOGRAFER VS PESANAN KLIEN) -->
+        <div id="view-dashboard" class="page-view py-10 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
-                    <div>
-                        <h2 id="dashTitleMain" class="text-3xl font-space font-bold text-slate-900">Dashboard Fotografer</h2>
-                        <p id="dashSubtitleMain" class="text-sm font-medium text-slate-500 mt-1">Kelola bisnis fotografi Anda dalam satu tempat</p>
-                    </div>
-                </div>
 
-                <!-- STAT CARDS & ANALITIK (Hanya tampil jika role = photographer) -->
-                <div id="photographerDashboardLayout" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <!-- KIRI -->
-                    <div class="lg:col-span-8 space-y-8">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                            <div class="gradient-brand rounded-[24px] p-6 text-white shadow-xl relative overflow-hidden">
-                                <span class="bg-white/20 px-2.5 py-1 rounded-full text-[10px] font-bold absolute top-4 right-4">+12%</span>
-                                <i data-lucide="dollar-sign" class="w-6 h-6 opacity-80 mb-3"></i>
-                                <h3 class="text-2xl font-space font-bold" id="dashTotalIncome">Rp 0</h3>
-                                <p class="text-xs text-white/90 mt-1 font-medium">Pendapatan Bulan Ini</p>
-                            </div>
-                            <div class="bg-secondary rounded-[24px] p-6 text-white shadow-xl relative overflow-hidden">
-                                <span class="bg-white/20 px-2.5 py-1 rounded-full text-[10px] font-bold absolute top-4 right-4">Aktif</span>
-                                <i data-lucide="calendar" class="w-6 h-6 opacity-80 mb-3"></i>
-                                <h3 class="text-2xl font-space font-bold" id="dashTotalOrders">0</h3>
-                                <p class="text-xs text-white/90 mt-1 font-medium">Booking Mendatang</p>
-                            </div>
-                            <div class="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm relative">
-                                <span class="text-primary font-bold text-[10px] absolute top-5 right-5">Excellent</span>
-                                <i data-lucide="star" class="w-6 h-6 text-amber-400 mb-3 fill-amber-400"></i>
-                                <h3 class="text-2xl font-space font-bold text-slate-900" id="dashMyRating">5.0</h3>
-                                <p class="text-xs text-slate-500 mt-1 font-medium">Rating Rata-rata</p>
-                            </div>
-                            <div class="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm relative">
-                                <span class="text-secondary font-bold text-[10px] absolute top-5 right-5">Ulasan</span>
-                                <i data-lucide="message-square-heart" class="w-6 h-6 text-secondary mb-3"></i>
-                                <h3 class="text-2xl font-space font-bold text-slate-900" id="dashMyReviewCount">0</h3>
-                                <p class="text-xs text-slate-500 mt-1 font-medium">Total Ulasan Klien</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
-                            <div class="flex justify-between items-center mb-8">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-2xl bg-sky-50 text-secondary flex items-center justify-center"><i data-lucide="bar-chart-3" class="w-5 h-5"></i></div>
-                                    <h3 class="font-space font-bold text-slate-900 text-xl">Analitik Pendapatan</h3>
+                <!-- =========================================================
+                     A. WORKSPACE KHUSUS MITRA FOTOGRAFER
+                ========================================================= -->
+                <div id="photographerWorkspace" class="hidden space-y-8">
+                    <!-- Header Workspace Mitra -->
+                    <div class="bg-white rounded-[32px] p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                        <div class="flex items-center gap-4">
+                            <img id="photoWorkspaceAvatar" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=150&q=80" class="w-16 h-16 rounded-2xl object-cover border-2 border-primary shadow-md">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-orange-50 text-primary border border-orange-100">Mitra Terverifikasi</span>
+                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Realtime Sync
+                                    </span>
                                 </div>
-                                <select class="text-xs border border-slate-200 rounded-xl px-4 py-2 bg-slate-50 font-bold text-slate-600 focus:outline-none focus:border-secondary">
-                                    <option>6 Bulan Terakhir</option>
-                                    <option>1 Tahun Terakhir</option>
-                                </select>
+                                <h2 id="photoWorkspaceTitle" class="text-2xl sm:text-3xl font-space font-bold text-slate-900 mt-1">Studio Fotografer</h2>
+                                <p id="photoWorkspaceMeta" class="text-xs font-medium text-slate-500 mt-0.5">Kategori • Lokasi</p>
                             </div>
-                            <div class="grid grid-cols-6 gap-4 h-48 items-end pt-6 px-2 border-b border-slate-100">
-                                <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[45%] flex items-end justify-center pb-2 text-[10px] text-white font-bold hover:opacity-80 transition-opacity cursor-pointer">Jul</div>
-                                <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[65%] flex items-end justify-center pb-2 text-[10px] text-white font-bold hover:opacity-80 transition-opacity cursor-pointer">Agu</div>
-                                <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[55%] flex items-end justify-center pb-2 text-[10px] text-white font-bold hover:opacity-80 transition-opacity cursor-pointer">Sep</div>
-                                <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[80%] flex items-end justify-center pb-2 text-[10px] text-white font-bold hover:opacity-80 transition-opacity cursor-pointer">Okt</div>
-                                <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[85%] flex items-end justify-center pb-2 text-[10px] text-white font-bold hover:opacity-80 transition-opacity cursor-pointer">Nov</div>
-                                <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[95%] flex items-end justify-center pb-2 text-[10px] text-white font-bold hover:opacity-80 transition-opacity cursor-pointer">Des</div>
+                        </div>
+
+                        <!-- Sub-Tab Navigasi Workspace Fotografer -->
+                        <div class="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl">
+                            <button onclick="openPhotographerSection('overview')" id="ptab-overview" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-slate-900 shadow-sm transition-all">Ringkasan & Escrow</button>
+                            <button onclick="openPhotographerSection('orders')" id="ptab-orders" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 transition-all">Order & Progres</button>
+                            <button onclick="openPhotographerSection('catalog')" id="ptab-catalog" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 transition-all">Paket & Portofolio</button>
+                            <button onclick="openPhotographerSection('schedule')" id="ptab-schedule" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 transition-all">Jadwal Libur</button>
+                        </div>
+                    </div>
+
+                    <!-- SUB-VIEW 1: RINGKASAN BISNIS & DOMPET ESCROW -->
+                    <div id="psec-overview" class="space-y-8">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                            <!-- Saldo Siap Tarik -->
+                            <div class="gradient-brand rounded-[28px] p-6 text-white shadow-xl relative overflow-hidden flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <i data-lucide="wallet" class="w-6 h-6 opacity-90"></i>
+                                        <span class="bg-white/20 px-2.5 py-1 rounded-full text-[10px] font-bold">Siap Tarik</span>
+                                    </div>
+                                    <h3 class="text-2xl font-space font-bold" id="dashClearedBalance">Rp 0</h3>
+                                    <p class="text-xs text-white/90 mt-1 font-medium">Saldo Escrow Cair</p>
+                                </div>
+                                <button onclick="withdrawEscrowFunds()" class="mt-4 w-full py-2 bg-white text-primary font-bold text-xs rounded-xl shadow-sm hover:bg-slate-50 transition-colors">
+                                    Tarik Saldo ke Bank
+                                </button>
+                            </div>
+
+                            <!-- Dana Tertahan di Escrow -->
+                            <div class="bg-slate-900 rounded-[28px] p-6 text-white shadow-xl relative overflow-hidden flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <i data-lucide="lock" class="w-6 h-6 text-secondary"></i>
+                                        <span class="bg-white/10 text-secondary px-2.5 py-1 rounded-full text-[10px] font-bold">Escrow Aktif</span>
+                                    </div>
+                                    <h3 class="text-2xl font-space font-bold" id="dashHeldEscrow">Rp 0</h3>
+                                    <p class="text-xs text-slate-400 mt-1 font-medium">Dana Tertahan (Sesi Berjalan)</p>
+                                </div>
+                                <p class="mt-4 text-[10px] text-slate-400">Otomatis cair setelah klien konfirmasi selesai</p>
+                            </div>
+
+                            <!-- Booking Berjalan -->
+                            <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="w-10 h-10 rounded-2xl bg-sky-50 text-secondary flex items-center justify-center"><i data-lucide="calendar-check" class="w-5 h-5"></i></div>
+                                        <span class="text-secondary font-bold text-[10px] bg-sky-50 px-2.5 py-1 rounded-full">Live</span>
+                                    </div>
+                                    <h3 class="text-2xl font-space font-bold text-slate-900" id="dashTotalOrders">0</h3>
+                                    <p class="text-xs text-slate-500 mt-1 font-medium">Total Booking Masuk</p>
+                                </div>
+                                <button onclick="openPhotographerSection('orders')" class="mt-4 text-left text-xs font-bold text-secondary hover:underline">Kelola Progres Order &rarr;</button>
+                            </div>
+
+                            <!-- Rating & Ulasan -->
+                            <div class="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center"><i data-lucide="star" class="w-5 h-5 fill-amber-400"></i></div>
+                                        <span class="text-amber-600 font-bold text-[10px] bg-amber-50 px-2.5 py-1 rounded-full"><span id="dashMyReviewCount">0</span> Ulasan</span>
+                                    </div>
+                                    <h3 class="text-2xl font-space font-bold text-slate-900" id="dashMyRating">5.0</h3>
+                                    <p class="text-xs text-slate-500 mt-1 font-medium">Skor Reputasi Klien</p>
+                                </div>
+                                <button onclick="previewMyPublicProfile()" class="mt-4 text-left text-xs font-bold text-primary hover:underline">Preview Profil Publik &rarr;</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                            <!-- Kiri: Analitik & Ulasan Klien Terbaru -->
+                            <div class="lg:col-span-7 space-y-8">
+                                <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-2xl bg-sky-50 text-secondary flex items-center justify-center"><i data-lucide="bar-chart-3" class="w-5 h-5"></i></div>
+                                            <h3 class="font-space font-bold text-slate-900 text-xl">Performa Booking 6 Bulan</h3>
+                                        </div>
+                                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">+18% Bulan Ini</span>
+                                    </div>
+                                    <div class="grid grid-cols-6 gap-4 h-44 items-end pt-4 px-2 border-b border-slate-100">
+                                        <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[45%] flex items-end justify-center pb-2 text-[10px] text-white font-bold">Jul</div>
+                                        <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[65%] flex items-end justify-center pb-2 text-[10px] text-white font-bold">Agu</div>
+                                        <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[55%] flex items-end justify-center pb-2 text-[10px] text-white font-bold">Sep</div>
+                                        <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[80%] flex items-end justify-center pb-2 text-[10px] text-white font-bold">Okt</div>
+                                        <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[85%] flex items-end justify-center pb-2 text-[10px] text-white font-bold">Nov</div>
+                                        <div class="bg-gradient-to-t from-primary to-secondary rounded-t-xl h-[95%] flex items-end justify-center pb-2 text-[10px] text-white font-bold">Des</div>
+                                    </div>
+                                </div>
+
+                                <!-- Ulasan Klien Masuk -->
+                                <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
+                                    <h3 class="font-space font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
+                                        <i data-lucide="message-square-heart" class="w-5 h-5 text-primary"></i> Ulasan Klien Terbaru
+                                    </h3>
+                                    <div id="photoDashboardReviewsList" class="space-y-3"></div>
+                                </div>
+                            </div>
+
+                            <!-- Kanan: Inbox Chat Klien Realtime -->
+                            <div class="lg:col-span-5 space-y-6">
+                                <div class="bg-white rounded-[32px] p-6 border border-slate-100 shadow-sm space-y-4">
+                                    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                                        <h3 class="font-space font-bold text-slate-900 text-lg">Inbox Chat Klien</h3>
+                                        <span id="unreadMessagesBadge" class="bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full">0</span>
+                                    </div>
+                                    <div id="recentMessagesList" class="space-y-3 max-h-80 overflow-y-auto"></div>
+                                    <button onclick="openChatRoom('Semua Klien', 'all')" class="w-full py-3.5 text-center text-xs font-bold text-primary bg-orange-50 border border-orange-100 hover:bg-orange-100 rounded-2xl transition-all">Buka Ruang Chat</button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- KANAN: PESAN TERBARU REALTIME & QUICK ACTIONS -->
-                    <div class="lg:col-span-4 space-y-8">
-                        <div class="bg-white rounded-[32px] p-6 border border-slate-100 shadow-sm space-y-4">
-                            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                                <h3 class="font-space font-bold text-slate-900 text-lg">Pesan Terbaru</h3>
-                                <span id="unreadMessagesBadge" class="bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full">0</span>
+                    <!-- SUB-VIEW 2: MANAJEMEN ORDER & UPDATE PROGRES REALTIME -->
+                    <div id="psec-orders" class="hidden space-y-6">
+                        <div class="bg-white rounded-[32px] p-6 sm:p-8 border border-slate-100 shadow-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                <div>
+                                    <h3 class="font-space font-bold text-xl text-slate-900">Kelola Order & Progres Pengerjaan</h3>
+                                    <p class="text-xs font-medium text-slate-500 mt-1">Setiap perubahan status otomatis terkirim ke dashboard klien secara realtime.</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="filterPhotoOrders('all', this)" class="porder-filter-btn px-4 py-2 rounded-xl text-xs font-bold gradient-brand text-white">Semua</button>
+                                    <button onclick="filterPhotoOrders('active', this)" class="porder-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600">Berjalan (Escrow)</button>
+                                    <button onclick="filterPhotoOrders('done', this)" class="porder-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600">Selesai</button>
+                                </div>
+                            </div>
+                            <div id="photographerOrdersList" class="space-y-4"></div>
+                        </div>
+                    </div>
+
+                    <!-- SUB-VIEW 3: PAKET FOTO & PORTOFOLIO -->
+                    <div id="psec-catalog" class="hidden">
+                        <div class="bg-white rounded-[32px] p-6 sm:p-8 border border-slate-100 shadow-sm">
+                            <div class="mb-6">
+                                <h3 class="font-space font-bold text-xl text-slate-900">Pengaturan Paket Sesi & Portofolio</h3>
+                                <p class="text-xs font-medium text-slate-500 mt-1">Perubahan harga dan portofolio langsung tampil live di halaman Cari Fotografer.</p>
+                            </div>
+                            <form onsubmit="handleUpdatePhotographerCatalog(event)" class="space-y-6 max-w-3xl">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">Nama Studio / Talent</label>
+                                        <input type="text" id="editPhotoStudioName" required class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm font-semibold focus:outline-none focus:border-secondary">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">Nomor WhatsApp / Telepon</label>
+                                        <input type="text" id="editPhotoPhone" required class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">Spesialisasi Kategori</label>
+                                        <select id="editCategory" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm font-semibold focus:outline-none focus:border-secondary">
+                                            <option value="Wisuda">Wisuda</option><option value="Pernikahan">Pernikahan</option><option value="Produk UMKM">Produk UMKM</option><option value="Event">Event</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">Kota Domisili</label>
+                                        <select id="editLocation" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm font-semibold focus:outline-none focus:border-secondary">
+                                            <option value="Jabodetabek">Jabodetabek</option><option value="Bandung">Bandung</option><option value="Surabaya">Surabaya</option><option value="Yogyakarta">Yogyakarta</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Pengaturan 2 Paket Foto -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-slate-100">
+                                    <div class="p-5 rounded-[24px] bg-orange-50/60 border border-orange-100 space-y-3">
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-primary bg-white px-3 py-1 rounded-full">Paket 1 (Basic)</span>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1">Harga Paket Basic (Rp)</label>
+                                            <input type="number" id="editPrice" required class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-bold focus:outline-none focus:border-primary">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1">Benefit Paket Basic</label>
+                                            <input type="text" id="editBasicDesc" placeholder="1 Jam Sesi • 50 Edited Photos" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-xs font-medium focus:outline-none focus:border-primary">
+                                        </div>
+                                    </div>
+
+                                    <div class="p-5 rounded-[24px] bg-sky-50/60 border border-sky-100 space-y-3">
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-secondary bg-white px-3 py-1 rounded-full">Paket 2 (Standard)</span>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1">Harga Paket Standard (Rp)</label>
+                                            <input type="number" id="editStdPrice" required class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm font-bold focus:outline-none focus:border-secondary">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1">Benefit Paket Standard</label>
+                                            <input type="text" id="editStdDesc" placeholder="3 Jam Sesi • 100 Edited Photos + Raw" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-xs font-medium focus:outline-none focus:border-secondary">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">URL Foto Sampul Utama</label>
+                                        <input type="url" id="editCoverUrl" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-2">URL Link Portofolio (Drive / Web / IG)</label>
+                                        <input type="url" id="editPortfolioUrl" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-2">Biografi & Gaya Fotografi</label>
+                                    <textarea id="editBio" rows="3" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary"></textarea>
+                                </div>
+
+                                <button type="submit" class="px-8 py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg hover:-translate-y-0.5 transition-all">
+                                    Simpan & Sinkronkan ke Katalog Live
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- SUB-VIEW 4: KALENDER KETERSEDIAAN & ANTI-DOUBLE BOOKING -->
+                    <div id="psec-schedule" class="hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                            <div class="lg:col-span-5 bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm space-y-5 h-fit">
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-primary bg-orange-50 px-3 py-1 rounded-full">Anti-Double Booking</span>
+                                    <h3 class="font-space font-bold text-xl text-slate-900 mt-3">Blokir Tanggal Libur</h3>
+                                    <p class="text-xs font-medium text-slate-500 mt-1">Tanggal yang diblokir otomatis terkunci di kalender booking klien secara realtime.</p>
+                                </div>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Pilih Tanggal</label>
+                                        <input type="date" id="blockDateInput" class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-primary">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Keterangan (Opsional)</label>
+                                        <input type="text" id="blockReasonInput" placeholder="Contoh: Libur / Job Luar Kota" class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-primary">
+                                    </div>
+                                    <button type="button" onclick="addBlockedDate()" class="w-full py-3.5 gradient-brand text-white font-bold text-xs rounded-2xl shadow-md hover:opacity-95 transition-all">
+                                        Kunci Tanggal Ini
+                                    </button>
+                                </div>
                             </div>
 
-                            <div id="recentMessagesList" class="space-y-3"></div>
-
-                            <button onclick="openChatRoom('Klien Clickly', 'all')" class="w-full py-3.5 text-center text-xs font-bold text-primary bg-orange-50 border border-orange-100 hover:bg-orange-100 rounded-2xl transition-all mt-2">Lihat Semua Pesan</button>
-                        </div>
-
-                        <div class="bg-white rounded-[32px] p-6 border border-slate-100 shadow-sm space-y-3">
-                            <h3 class="font-space font-bold text-slate-900 text-lg mb-4">Quick Actions</h3>
-                            <button onclick="jumpToProfileField('editPortfolioUrl')" class="w-full py-3.5 px-4 gradient-brand text-white font-bold text-sm rounded-[20px] shadow-md hover:opacity-90 flex items-center justify-center gap-2 transition-all">
-                                <i data-lucide="upload" class="w-4 h-4"></i> Upload Portfolio
-                            </button>
-                            <button onclick="jumpToProfileField('editPrice')" class="w-full py-3.5 px-4 bg-white border-2 border-slate-100 text-slate-700 font-bold text-sm rounded-[20px] hover:bg-slate-50 flex items-center justify-center gap-2 transition-all">
-                                <i data-lucide="dollar-sign" class="w-4 h-4 text-slate-600"></i> Atur Harga
-                            </button>
-                            <button onclick="openScheduleModal()" class="w-full py-3.5 px-4 bg-white border-2 border-slate-100 text-slate-700 font-bold text-sm rounded-[20px] hover:bg-slate-50 flex items-center justify-center gap-2 transition-all">
-                                <i data-lucide="calendar" class="w-4 h-4 text-slate-600"></i> Kelola Jadwal
-                            </button>
+                            <div class="lg:col-span-7 bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm space-y-6">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-space font-bold text-xl text-slate-900">Daftar Tanggal Tidak Tersedia</h3>
+                                    <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Live Sync</span>
+                                </div>
+                                <div id="photographerScheduleOverviewList" class="space-y-3"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- RIWAYAT BOOKING / PESANAN REALTIME -->
-                <div class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="font-space font-bold text-xl text-slate-800 flex items-center gap-2">
-                            <i data-lucide="calendar-check" class="text-primary w-5 h-5"></i> Booking Mendatang / Riwayat
+                <!-- =========================================================
+                     B. DASHBOARD KHUSUS KLIEN (AKTIVITAS BOOKING, ESCROW & PROFIL)
+                ========================================================= -->
+                <div id="clientWorkspace" class="space-y-8">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
+                        <div>
+                            <h2 class="text-3xl font-space font-bold text-slate-900">Pesanan & Aktivitas Saya</h2>
+                            <p class="text-sm font-medium text-slate-500 mt-1">Pantau progres editing foto secara realtime, konfirmasi hasil, dan beri ulasan</p>
+                        </div>
+                        <button onclick="switchPage('marketplace')" class="px-6 py-3 gradient-brand text-white font-bold text-xs rounded-2xl shadow-md flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Booking Fotografer Baru
+                        </button>
+                    </div>
+
+                    <!-- RIWAYAT BOOKING & LIVE PROGRESS STEPPER -->
+                    <div class="bg-white rounded-[32px] p-6 sm:p-8 border border-slate-100 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-space font-bold text-xl text-slate-800 flex items-center gap-2">
+                                <i data-lucide="calendar-check" class="text-primary w-5 h-5"></i> Riwayat Booking & Progres Sesi
+                            </h3>
+                            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Sync
+                            </span>
+                        </div>
+                        <div id="clientOrdersList" class="space-y-5"></div>
+                    </div>
+
+                    <!-- PENGATURAN PROFIL KLIEN -->
+                    <div class="bg-white rounded-[32px] p-6 sm:p-8 border border-slate-100 shadow-sm">
+                        <h3 class="font-space font-bold text-xl text-slate-900 mb-6 flex items-center gap-2">
+                            <i data-lucide="user-pen" class="w-5 h-5 text-secondary"></i> Pengaturan Profil Klien
                         </h3>
-                        <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Live Sync
-                        </span>
+                        <form onsubmit="handleUpdateClientProfile(event)" class="space-y-5 max-w-2xl">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-2">Nama Lengkap</label>
+                                    <input type="text" id="editClientFullName" required class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-2">Nomor Telepon</label>
+                                    <input type="text" id="editClientPhone" required class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
+                                </div>
+                            </div>
+                            <button type="submit" class="px-8 py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg hover:-translate-y-0.5 transition-all">Simpan Perubahan Profil</button>
+                        </form>
                     </div>
-                    <div id="dashboardOrdersList" class="space-y-4"></div>
                 </div>
 
-                <!-- FORM EDIT PROFIL -->
-                <div id="profileSettingsSection" class="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm mt-8">
-                    <h3 class="font-space font-bold text-xl text-slate-900 mb-6 flex items-center gap-2">
-                        <i data-lucide="user-pen" class="w-5 h-5 text-secondary"></i> Pengaturan Profil Akun
-                    </h3>
-                    <form onsubmit="handleUpdateProfile(event)" class="space-y-5 max-w-2xl">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-2">Nama Lengkap</label>
-                                <input type="text" id="editFullName" required class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-2">Nomor Telepon</label>
-                                <input type="text" id="editPhone" required class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
-                            </div>
-                        </div>
-
-                        <div id="editPhotographerExtra" class="space-y-5 pt-6 border-t border-slate-100 hidden">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-600 mb-2">Kategori Layanan</label>
-                                    <select id="editCategory" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm font-medium focus:outline-none focus:border-secondary">
-                                        <option value="Wisuda">Wisuda</option><option value="Pernikahan">Pernikahan</option><option value="Produk UMKM">Produk UMKM</option><option value="Event">Event</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-600 mb-2">Lokasi</label>
-                                    <select id="editLocation" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm font-medium focus:outline-none focus:border-secondary">
-                                        <option value="Jabodetabek">Jabodetabek</option><option value="Bandung">Bandung</option><option value="Surabaya">Surabaya</option><option value="Yogyakarta">Yogyakarta</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-600 mb-2">Tarif Dasar (Rp)</label>
-                                    <input type="number" id="editPrice" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary transition-all">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-600 mb-2">URL Foto Sampul</label>
-                                    <input type="url" id="editCoverUrl" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-2">URL Link Portofolio</label>
-                                <input type="url" id="editPortfolioUrl" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary transition-all">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 mb-2">Biografi Singkat</label>
-                                <textarea id="editBio" rows="3" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary"></textarea>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="px-8 py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg hover:-translate-y-0.5 transition-all">Simpan Perubahan Profil</button>
-                    </form>
-                </div>
             </div>
         </div>
 
@@ -496,7 +658,6 @@
                 <div>
                     <h4 class="font-space font-bold text-slate-900 text-sm mb-4">Navigasi</h4>
                     <ul class="space-y-2.5 text-xs font-medium text-slate-500">
-                        <li><button onclick="switchPage('home')" class="hover:text-primary transition-colors">Beranda</button></li>
                         <li><button onclick="switchPage('marketplace')" class="hover:text-primary transition-colors">Cari Fotografer</button></li>
                         <li><button onclick="switchPage('rental')" class="hover:text-primary transition-colors">Sewa Alat</button></li>
                         <li><button onclick="switchPage('howitworks')" class="hover:text-primary transition-colors">Cara Kerja</button></li>
@@ -560,7 +721,7 @@
                 </div>
                 
                 <div id="photographerFields" class="hidden space-y-4 border-t border-slate-100 pt-4">
-                    <p class="text-xs font-bold text-primary uppercase">Detail Tambahan Fotografer</p>
+                    <p class="text-xs font-bold text-primary uppercase">Detail Tambahan Mitra Fotografer</p>
                     <input type="text" id="photoName" placeholder="Nama Studio / Talent" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm">
                     <div class="grid grid-cols-2 gap-3">
                         <select id="photoCategory" class="w-full px-4 py-3.5 rounded-[20px] border border-slate-200 text-xs font-semibold">
@@ -570,7 +731,7 @@
                             <option value="Jabodetabek">Jabodetabek</option><option value="Bandung">Bandung</option><option value="Surabaya">Surabaya</option><option value="Yogyakarta">Yogyakarta</option>
                         </select>
                     </div>
-                    <input type="number" id="photoPrice" placeholder="Tarif Dasar (Rp)" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm">
+                    <input type="number" id="photoPrice" placeholder="Tarif Dasar Paket Basic (Rp)" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm">
                     <input type="url" id="photoPortfolioUrl" placeholder="URL Link Portofolio" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm">
                     <input type="url" id="photoCoverUrl" placeholder="URL Foto Sampul (Avatar)" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm">
                 </div>
@@ -614,12 +775,10 @@
                 <div class="w-12 h-12 rounded-[16px] gradient-brand text-white font-space font-bold text-xl flex items-center justify-center shadow-md" id="chatAvatarLetter">C</div>
                 <div>
                     <h3 class="font-space font-bold text-slate-900 text-lg" id="chatTargetName">Ruang Pesan</h3>
-                    <span class="text-[11px] text-emerald-500 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">● Online</span>
+                    <span class="text-[11px] text-emerald-500 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">● Online Realtime</span>
                 </div>
             </div>
-            <div id="chatMessagesBox" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 my-4 rounded-3xl text-sm font-medium border border-slate-100">
-                <div class="bg-white p-3.5 rounded-2xl rounded-tl-sm shadow-sm border border-slate-100 max-w-[80%]">Halo! Saya ingin mendiskusikan jadwal sesi foto.</div>
-            </div>
+            <div id="chatMessagesBox" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 my-4 rounded-3xl text-sm font-medium border border-slate-100"></div>
             <div class="flex gap-2">
                 <input type="text" id="chatInputText" onkeydown="if(event.key==='Enter') sendChatMessage()" placeholder="Ketik pesan..." class="flex-1 px-5 py-3.5 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-secondary">
                 <button onclick="sendChatMessage()" class="px-6 py-3.5 gradient-brand text-white font-bold rounded-2xl shadow-md"><i data-lucide="send" class="w-4 h-4"></i></button>
@@ -643,62 +802,31 @@
                 <button type="button" onclick="setRatingStars(5)" class="text-4xl text-amber-400 star-btn hover:scale-110 transition-transform">★</button>
             </div>
             <input type="hidden" id="selectedStarCount" value="5">
-            <textarea id="ratingCommentText" rows="3" placeholder="Tulis ulasan jujur kamu di sini (misal: hasil fotonya tajam, tepat waktu, ramah)..." class="w-full p-4 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-primary"></textarea>
+            <textarea id="ratingCommentText" rows="3" placeholder="Tulis ulasan jujur kamu di sini..." class="w-full p-4 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-primary"></textarea>
             <button onclick="submitReviewToDB()" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg mt-2 hover:-translate-y-0.5 transition-all">Kirim Ulasan</button>
         </div>
     </div>
 
-    <!-- MODAL KELOLA JADWAL (FOTOGRAFER) -->
-    <div id="scheduleModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <!-- MODAL KIRIM HASIL FOTO (FOTOGRAFER) -->
+    <div id="deliverResultModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-[32px] max-w-md w-full p-8 shadow-2xl relative space-y-5">
-            <button onclick="closeModal('scheduleModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <button onclick="closeModal('deliverResultModal')" class="absolute top-6 right-6 text-slate-400"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <div class="w-14 h-14 rounded-2xl bg-sky-50 text-secondary flex items-center justify-center"><i data-lucide="folder-check" class="w-7 h-7"></i></div>
             <div>
-                <h3 class="text-2xl font-space font-bold text-slate-900">Kelola Jadwal Libur</h3>
-                <p class="text-xs font-medium text-slate-500 mt-1">Tandai tanggal tidak tersedia agar klien tidak bisa booking di hari tersebut.</p>
+                <h3 class="text-2xl font-space font-bold text-slate-900">Kirim Hasil Foto ke Klien</h3>
+                <p class="text-xs font-medium text-slate-500 mt-1">Masukkan link Google Drive / galeri hasil editing. Klien akan menerima notifikasi realtime untuk mengonfirmasi pencairan Escrow.</p>
             </div>
-            <div class="flex gap-2">
-                <input type="date" id="blockDateInput" class="flex-1 px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold focus:outline-none focus:border-primary">
-                <button type="button" onclick="addBlockedDate()" class="px-5 py-3 gradient-brand text-white font-bold text-xs rounded-2xl shadow-md">Blokir</button>
-            </div>
+            <input type="hidden" id="deliverOrderId">
             <div>
-                <p class="text-xs font-bold text-slate-600 mb-2">Daftar Tanggal Libur / Penuh:</p>
-                <div id="blockedDatesList" class="space-y-2 max-h-48 overflow-y-auto"></div>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">URL Link Hasil Foto *</label>
+                <input type="url" id="deliverResultUrlInput" placeholder="https://drive.google.com/..." class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-secondary">
             </div>
+            <button type="button" onclick="confirmDeliverPhotoResult()" class="w-full py-4 gradient-brand text-white font-bold text-sm rounded-2xl shadow-lg">Kirim Hasil & Minta Konfirmasi Klien</button>
         </div>
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        function switchPage(pageId) {
-            if (pageId === 'dashboard' && !currentUser) {
-                openAuthModal('login');
-                return;
-            }
-            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-            const targetView = document.getElementById('view-' + pageId);
-            if (targetView) targetView.classList.add('active');
-
-            ['home', 'marketplace', 'rental', 'howitworks', 'faq', 'dashboard'].forEach(id => {
-                const btn = document.getElementById('nav-' + id);
-                if (btn) btn.className = id === pageId ? "hover:text-primary transition-colors font-bold text-primary" : "hover:text-primary transition-colors";
-                const mbtn = document.getElementById('mnav-' + id);
-                if (mbtn) mbtn.className = id === pageId
-                    ? "w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-primary bg-orange-50/70"
-                    : "w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-slate-700 hover:bg-slate-50";
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileNavMenu');
-            if (menu) menu.classList.toggle('hidden');
-        }
-
-        function closeMobileMenu() {
-            const menu = document.getElementById('mobileNavMenu');
-            if (menu) menu.classList.add('hidden');
-        }
-
         const SUPABASE_URL = 'https://jwjzbqisesreuyotnjxu.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_BUXo9A8fhlN0e-RICss1MA_gBASimd0';
         let supabaseClient = typeof supabase !== 'undefined' ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -710,15 +838,26 @@
         let activeBookings = JSON.parse(localStorage.getItem('clickly_bookings')) || [];
         let allMessages = JSON.parse(localStorage.getItem('clickly_messages')) || [];
         let allReviews = JSON.parse(localStorage.getItem('clickly_reviews')) || [];
-        let blockedDatesMap = JSON.parse(localStorage.getItem('clickly_blocked_dates')) || {};
+        let dbBlockedSchedules = JSON.parse(localStorage.getItem('clickly_db_schedules')) || [];
         let activeChatPartner = { id: 'all', name: 'Klien Clickly' };
         let selectedPhotoPackage = { type: 'basic', name: 'Paket Basic', price: 0 };
+        let activeDetailPhotographerId = null;
+        let activePhotoSection = 'overview';
+        let photoOrderFilter = 'all';
+
+        const ORDER_STEPS = [
+            'Menunggu Konfirmasi',
+            'Jadwal Terkunci',
+            'Proses Editing',
+            'Hasil Foto Dikirim',
+            'Selesai'
+        ];
 
         const faqData = [
             {
                 category: 'booking',
                 question: 'Bagaimana cara kerja sistem pembayaran Escrow di Clickly?',
-                answer: 'Saat kamu melakukan pembayaran booking melalui Virtual Account atau QRIS, dana akan disimpan dengan aman di sistem Clickly Escrow. Dana baru akan diteruskan ke fotografer setelah sesi pemotretan selesai dan hasil foto diterima dengan baik.'
+                answer: 'Saat kamu melakukan pembayaran booking melalui Virtual Account atau QRIS, dana akan disimpan dengan aman di sistem Clickly Escrow. Dana baru akan cair ke saldo fotografer setelah hasil foto dikirim dan kamu klik tombol Konfirmasi Selesai.'
             },
             {
                 category: 'booking',
@@ -727,36 +866,26 @@
             },
             {
                 category: 'booking',
-                question: 'Apakah jadwal sesi foto bisa di-reschedule atau dibatalkan?',
-                answer: 'Kamu bisa mengajukan perubahan jadwal secara gratis maksimal H-2 sebelum sesi pemotretan melalui ruang chat dengan fotografer. Pembatalan yang dilakukan sebelum H-3 mendapatkan pengembalian dana 100%.'
+                question: 'Bagaimana sistem kalender anti-double booking bekerja?',
+                answer: 'Setiap tanggal yang sudah dibooking klien maupun tanggal libur yang dikunci oleh fotografer akan langsung tersinkronisasi secara realtime sehingga tidak bisa dipilih lagi oleh klien lain.'
             },
             {
                 category: 'rental',
                 question: 'Apa saja syarat untuk menyewa kamera, lensa, atau lighting?',
-                answer: 'Cukup pilih peralatan yang dibutuhkan di menu Sewa Alat, tentukan tanggal mulai dan selesai sewa, lalu selesaikan pembayaran. Saat pengambilan barang, wajib menunjukkan kartu identitas asli (KTP/KTM) yang masih berlaku sebagai verifikasi.'
-            },
-            {
-                category: 'rental',
-                question: 'Bagaimana perhitungan tarif sewa alat per hari?',
-                answer: 'Tarif sewa dihitung berdasarkan jumlah hari pemakaian dari tanggal mulai hingga tanggal pengembalian. Sistem akan menghitung total biaya secara otomatis sebelum kamu memilih metode pembayaran.'
+                answer: 'Cukup pilih peralatan yang dibutuhkan di menu Sewa Alat, tentukan tanggal mulai dan selesai sewa, lalu selesaikan pembayaran. Saat pengambilan barang, wajib menunjukkan kartu identitas asli (KTP/KTM) yang masih berlaku.'
             },
             {
                 category: 'photographer',
                 question: 'Bagaimana cara bergabung menjadi mitra Fotografer di Clickly?',
-                answer: 'Klik tombol "Daftar" di pojok kanan atas, pilih tab "Fotografer", lalu lengkapi nama studio/talent, kategori spesialisasi, kota domisili, tarif dasar, serta tautan portofolio kamu.'
-            },
-            {
-                category: 'photographer',
-                question: 'Berapa lama waktu pengerjaan editing foto hingga dikirim ke klien?',
-                answer: 'Estimasi pengerjaan editing foto berkisar antara 2 hingga 5 hari kerja setelah sesi pemotretan berlangsung, tergantung jumlah foto dan paket yang dipilih oleh klien.'
+                answer: 'Klik tombol "Daftar" di pojok kanan atas, pilih tab "Fotografer", lalu lengkapi nama studio/talent, kategori spesialisasi, kota domisili, tarif paket, serta tautan portofolio kamu.'
             }
         ];
 
         const dummyPhotographers = [
-            { id: 'd1', name: 'Aldo Studio', category: 'Pernikahan', location: 'Jabodetabek', price: 1500000, rating: 4.9, reviewscount: 124, coverurl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80', bio: 'Spesialis foto pernikahan dan pre-wedding dengan gaya sinematik.' },
-            { id: 'd2', name: 'Budi Portrait', category: 'Wisuda', location: 'Bandung', price: 800000, rating: 4.8, reviewscount: 85, coverurl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80', bio: 'Mengabadikan momen wisuda dengan hasil yang cerah dan natural.' },
-            { id: 'd3', name: 'Clara Product', category: 'Produk UMKM', location: 'Surabaya', price: 500000, rating: 5.0, reviewscount: 200, coverurl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80', bio: 'Membantu UMKM meningkatkan penjualan lewat foto produk profesional.' },
-            { id: 'd4', name: 'Danu Event', category: 'Event', location: 'Yogyakarta', price: 2000000, rating: 4.7, reviewscount: 45, coverurl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80', bio: 'Siap meliput berbagai event, konser, dan acara korporat besar.' }
+            { id: 'd1', name: 'Aldo Studio', category: 'Pernikahan', location: 'Jabodetabek', price: 1500000, std_price: 2800000, basic_desc: '2 Jam Sesi • 60 Edited Photos', std_desc: '5 Jam Sesi • 150 Edited Photos + Video Teaser', rating: 4.9, reviewscount: 124, coverurl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80', bio: 'Spesialis foto pernikahan dan pre-wedding dengan gaya sinematik.' },
+            { id: 'd2', name: 'Budi Portrait', category: 'Wisuda', location: 'Bandung', price: 800000, std_price: 1500000, basic_desc: '1 Jam Sesi • 50 Edited Photos', std_desc: '3 Jam Sesi • 100 Edited Photos + Foto Keluarga', rating: 4.8, reviewscount: 85, coverurl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80', bio: 'Mengabadikan momen wisuda dengan hasil yang cerah dan natural.' },
+            { id: 'd3', name: 'Clara Product', category: 'Produk UMKM', location: 'Surabaya', price: 500000, std_price: 950000, basic_desc: '10 Produk • White & Lifestyle Setup', std_desc: '25 Produk • Konsep Kreatif & Properti Studio', rating: 5.0, reviewscount: 200, coverurl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80', bio: 'Membantu UMKM meningkatkan penjualan lewat foto produk profesional.' },
+            { id: 'd4', name: 'Danu Event', category: 'Event', location: 'Yogyakarta', price: 2000000, std_price: 3800000, basic_desc: '3 Jam Liputan • 100 Edited Photos', std_desc: 'Full Day Event • 250 Edited Photos + Same Day Edit', rating: 4.7, reviewscount: 45, coverurl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80', bio: 'Siap meliput berbagai event, konser, dan acara korporat besar.' }
         ];
 
         const dummyEquipments = [
@@ -769,16 +898,180 @@
         document.addEventListener('DOMContentLoaded', async () => {
             renderFaqList('all');
             lucide.createIcons();
-            await loadPhotographersFromDB();
-            await loadEquipmentsFromDB();
-            await loadBookingsFromDB();
-            await loadMessagesFromDB();
-            await loadReviewsFromDB();
-            setupRealtimeOrders();
-            setupRealtimeChat();
-            setupRealtimeReviews();
+            await Promise.all([
+                loadPhotographersFromDB(),
+                loadEquipmentsFromDB(),
+                loadBookingsFromDB(),
+                loadMessagesFromDB(),
+                loadReviewsFromDB(),
+                loadSchedulesFromDB()
+            ]);
+            setupAllRealtimeSubscriptions();
             updateUserUIState();
+            if (currentUser && currentUser.role === 'photographer') {
+                switchPage('dashboard');
+            }
         });
+
+        // ==========================================
+        // POP-UP REALTIME TOAST NOTIFICATION
+        // ==========================================
+        function showRealtimeToast(title, message, iconName = 'bell', onClickAction = null) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toastId = 'toast-' + Date.now() + Math.floor(Math.random() * 1000);
+            const toastEl = document.createElement('div');
+            toastEl.id = toastId;
+            toastEl.className = 'toast-enter pointer-events-auto bg-white border border-slate-200/90 shadow-2xl rounded-2xl p-4 flex items-start gap-3.5 cursor-pointer hover:border-primary transition-all';
+            toastEl.innerHTML = `
+                <div class="w-10 h-10 rounded-xl gradient-brand text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <i data-lucide="${iconName}" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2">
+                        <p class="font-space font-bold text-xs text-slate-900 truncate">${title}</p>
+                        <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">LIVE</span>
+                    </div>
+                    <p class="text-xs text-slate-600 font-medium mt-0.5 line-clamp-2">${message}</p>
+                </div>
+                <button type="button" onclick="event.stopPropagation(); document.getElementById('${toastId}')?.remove()" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            `;
+
+            if (onClickAction) {
+                toastEl.addEventListener('click', () => {
+                    onClickAction();
+                    toastEl.remove();
+                });
+            }
+
+            container.appendChild(toastEl);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                if (document.getElementById(toastId)) {
+                    toastEl.style.opacity = '0';
+                    toastEl.style.transform = 'translateX(20px)';
+                    toastEl.style.transition = 'all 0.25s ease';
+                    setTimeout(() => toastEl.remove(), 250);
+                }
+            }, 6000);
+        }
+
+        // ==========================================
+        // NAVIGASI & PEMISAHAN ROLE (KLIEN VS FOTOGRAFER)
+        // ==========================================
+        function handleBrandLogoClick(e) {
+            e.preventDefault();
+            if (currentUser && currentUser.role === 'photographer') {
+                openPhotographerSection('overview');
+            } else {
+                switchPage('home');
+            }
+        }
+
+        function switchPage(pageId) {
+            if (pageId === 'dashboard' && !currentUser) {
+                openAuthModal('login');
+                return;
+            }
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            const targetView = document.getElementById('view-' + pageId);
+            if (targetView) targetView.classList.add('active');
+
+            ['home', 'marketplace', 'rental', 'howitworks', 'faq', 'dashboard'].forEach(id => {
+                const btn = document.getElementById('nav-' + id);
+                if (btn) btn.className = id === pageId ? "hover:text-primary transition-colors font-bold text-primary" : "hover:text-primary transition-colors";
+            });
+
+            if (currentUser && currentUser.role === 'photographer') {
+                const pRental = document.getElementById('pnav-rental');
+                if (pRental) {
+                    pRental.className = pageId === 'rental' ? "hover:text-primary transition-colors font-bold text-primary" : "hover:text-primary transition-colors";
+                }
+                if (pageId !== 'dashboard') {
+                    ['overview', 'orders', 'catalog', 'schedule'].forEach(sec => {
+                        const b = document.getElementById('pnav-' + sec);
+                        if (b) b.classList.remove('font-bold', 'text-primary');
+                    });
+                }
+            }
+
+            updateMobileMenuItems(pageId);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openPhotographerSection(sectionName) {
+            activePhotoSection = sectionName;
+            switchPage('dashboard');
+
+            ['overview', 'orders', 'catalog', 'schedule'].forEach(sec => {
+                const el = document.getElementById('psec-' + sec);
+                if (el) el.classList.toggle('hidden', sec !== sectionName);
+
+                const tabBtn = document.getElementById('ptab-' + sec);
+                if (tabBtn) {
+                    tabBtn.className = sec === sectionName
+                        ? "px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-slate-900 shadow-sm transition-all"
+                        : "px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 transition-all";
+                }
+
+                const navBtn = document.getElementById('pnav-' + sec);
+                if (navBtn) {
+                    if (sec === sectionName) {
+                        navBtn.classList.add('font-bold', 'text-primary');
+                    } else {
+                        navBtn.classList.remove('font-bold', 'text-primary');
+                    }
+                }
+            });
+
+            const pRental = document.getElementById('pnav-rental');
+            if (pRental) pRental.className = "hover:text-primary transition-colors";
+
+            if (sectionName === 'schedule') renderPhotographerScheduleList();
+            if (sectionName === 'orders') renderPhotographerOrders();
+            updateMobileMenuItems('dashboard');
+        }
+
+        function updateMobileMenuItems(activePageId = 'home') {
+            const mobileMenu = document.getElementById('mobileNavMenu');
+            if (!mobileMenu) return;
+
+            if (currentUser && currentUser.role === 'photographer') {
+                mobileMenu.innerHTML = `
+                    <button onclick="openPhotographerSection('overview'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' && activePhotoSection === 'overview' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Dashboard Bisnis</button>
+                    <button onclick="openPhotographerSection('orders'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' && activePhotoSection === 'orders' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Order & Progres</button>
+                    <button onclick="openPhotographerSection('catalog'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' && activePhotoSection === 'catalog' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Paket & Portofolio</button>
+                    <button onclick="openPhotographerSection('schedule'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' && activePhotoSection === 'schedule' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Jadwal Libur</button>
+                    <button onclick="switchPage('rental'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'rental' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Sewa Alat</button>
+                `;
+            } else {
+                const dashBtn = currentUser
+                    ? `<button onclick="switchPage('dashboard'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Pesanan Saya</button>`
+                    : '';
+                mobileMenu.innerHTML = `
+                    <button onclick="switchPage('home'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'home' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Beranda</button>
+                    <button onclick="switchPage('marketplace'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'marketplace' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Cari Fotografer</button>
+                    <button onclick="switchPage('rental'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'rental' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Sewa Alat</button>
+                    <button onclick="switchPage('howitworks'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'howitworks' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Cara Kerja</button>
+                    <button onclick="switchPage('faq'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'faq' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">FAQ</button>
+                    ${dashBtn}
+                `;
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileNavMenu');
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileNavMenu');
+            if (menu) menu.classList.add('hidden');
+        }
 
         // ==========================================
         // FAQ ACCORDION & FILTER LOGIC
@@ -817,9 +1110,7 @@
 
             const isHidden = answerEl.classList.contains('hidden');
             answerEl.classList.toggle('hidden');
-            if (iconEl) {
-                iconEl.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
-            }
+            if (iconEl) iconEl.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
         }
 
         function filterFaqCategory(category, btnEl) {
@@ -832,6 +1123,9 @@
             renderFaqList(category);
         }
 
+        // ==========================================
+        // LOAD DATA DARI SUPABASE
+        // ==========================================
         async function loadPhotographersFromDB() {
             try {
                 if (supabaseClient) {
@@ -843,7 +1137,6 @@
                     }
                 }
             } catch(e) { console.log(e); }
-            
             currentPhotographers = [...dummyPhotographers];
             renderPhotographerGrid(currentPhotographers);
         }
@@ -859,7 +1152,6 @@
                     }
                 }
             } catch(e) { console.log(e); }
-            
             currentEquipments = [...dummyEquipments];
             renderEquipmentGrid(currentEquipments);
         }
@@ -874,79 +1166,9 @@
                     }
                 }
             } catch(e) { console.log(e); }
-            renderDashboardOrders();
+            renderAllOrderViews();
         }
 
-        // ==========================================
-        // LOAD & REALTIME REVIEWS
-        // ==========================================
-        async function loadReviewsFromDB() {
-            try {
-                if (supabaseClient) {
-                    const { data, error } = await supabaseClient
-                        .from('reviewers')
-                        .select('*')
-                        .order('created_at', { ascending: false });
-                    if (!error && data) {
-                        allReviews = data;
-                        localStorage.setItem('clickly_reviews', JSON.stringify(allReviews));
-                    }
-                }
-            } catch (e) { console.log(e); }
-        }
-
-        function setupRealtimeReviews() {
-            if (supabaseClient) {
-                supabaseClient
-                    .channel('public:reviewers')
-                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reviewers' }, payload => {
-                        const exists = allReviews.some(r => r.id === payload.new.id);
-                        if (!exists) {
-                            allReviews.unshift(payload.new);
-                            localStorage.setItem('clickly_reviews', JSON.stringify(allReviews));
-                        }
-                    })
-                    .subscribe();
-            }
-        }
-
-        // ==========================================
-        // REALTIME BOOKING / ORDER LISTENER
-        // ==========================================
-        function setupRealtimeOrders() {
-            if (supabaseClient) {
-                supabaseClient
-                    .channel('public:order_detail')
-                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'order_detail' }, payload => {
-                        const exists = activeBookings.some(b => b.id === payload.new.id);
-                        if (!exists) {
-                            activeBookings.push(payload.new);
-                            localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
-                            renderDashboardOrders();
-                        }
-                    })
-                    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'order_detail' }, payload => {
-                        const idx = activeBookings.findIndex(b => b.id === payload.new.id);
-                        if (idx !== -1) {
-                            activeBookings[idx] = payload.new;
-                            localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
-                            renderDashboardOrders();
-                        }
-                    })
-                    .subscribe();
-            }
-
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'clickly_bookings') {
-                    activeBookings = JSON.parse(e.newValue) || [];
-                    renderDashboardOrders();
-                }
-            });
-        }
-
-        // ==========================================
-        // REALTIME CHAT & PESAN TERBARU
-        // ==========================================
         async function loadMessagesFromDB() {
             try {
                 if (supabaseClient) {
@@ -963,80 +1185,358 @@
             renderRecentMessages();
         }
 
-        function setupRealtimeChat() {
-            if (supabaseClient) {
-                supabaseClient
-                    .channel('public:messages')
-                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-                        const exists = allMessages.some(m => m.id === payload.new.id);
-                        if (!exists) {
-                            allMessages.push(payload.new);
-                            localStorage.setItem('clickly_messages', JSON.stringify(allMessages));
-                            renderRecentMessages();
-                            if (!document.getElementById('chatModal').classList.contains('hidden')) {
-                                renderChatBubbles();
-                            }
-                        }
-                    })
-                    .subscribe();
-            }
+        async function loadReviewsFromDB() {
+            try {
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient
+                        .from('reviewers')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    if (!error && data) {
+                        allReviews = data;
+                        localStorage.setItem('clickly_reviews', JSON.stringify(allReviews));
+                    }
+                }
+            } catch (e) { console.log(e); }
+            renderPhotographerDashboardReviews();
+        }
 
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'clickly_messages') {
-                    allMessages = JSON.parse(e.newValue) || [];
-                    renderRecentMessages();
-                    if (!document.getElementById('chatModal').classList.contains('hidden')) {
-                        renderChatBubbles();
+        async function loadSchedulesFromDB() {
+            try {
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient.from('photographer_schedules').select('*');
+                    if (!error && data) {
+                        dbBlockedSchedules = data;
+                        localStorage.setItem('clickly_db_schedules', JSON.stringify(dbBlockedSchedules));
+                    }
+                }
+            } catch (e) { console.log(e); }
+            renderPhotographerScheduleList();
+        }
+
+        // ==========================================
+        // SUPABASE REALTIME LISTENERS (SEMUA TABEL)
+        // ==========================================
+        function setupAllRealtimeSubscriptions() {
+            if (!supabaseClient) return;
+
+            const myId = () => (currentUser ? String(currentUser.id) : '');
+
+            // 1. REALTIME ORDER & PROGRES ESCROW
+            supabaseClient
+                .channel('realtime:order_detail')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'order_detail' }, payload => {
+                    const newOrder = payload.new;
+                    const exists = activeBookings.some(b => String(b.id) === String(newOrder.id));
+                    if (!exists) {
+                        activeBookings.push(newOrder);
+                        localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
+                        renderAllOrderViews();
+                        refreshOpenDetailModalAvailability(newOrder.photographer_id);
+
+                        if (currentUser && currentUser.role === 'photographer' && String(newOrder.photographer_id) === myId()) {
+                            showRealtimeToast(
+                                'Booking Baru Masuk! 🎉',
+                                `${newOrder.item_description} — Rp ${Number(newOrder.subtotal).toLocaleString('id-ID')}`,
+                                'calendar-check',
+                                () => openPhotographerSection('orders')
+                            );
+                        }
+                    }
+                })
+                .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'order_detail' }, payload => {
+                    const updated = payload.new;
+                    const idx = activeBookings.findIndex(b => String(b.id) === String(updated.id));
+                    if (idx !== -1) {
+                        activeBookings[idx] = updated;
+                    } else {
+                        activeBookings.push(updated);
+                    }
+                    localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
+                    renderAllOrderViews();
+
+                    if (currentUser) {
+                        if (currentUser.role === 'user' && String(updated.user_id) === myId()) {
+                            showRealtimeToast(
+                                `Status Order: ${updated.status}`,
+                                `${updated.item_description}`,
+                                'sparkles',
+                                () => switchPage('dashboard')
+                            );
+                        } else if (currentUser.role === 'photographer' && String(updated.photographer_id) === myId() && updated.status === 'Selesai') {
+                            showRealtimeToast(
+                                'Dana Escrow Cair! 💰',
+                                `Klien mengonfirmasi selesai untuk ${updated.item_description}`,
+                                'wallet',
+                                () => openPhotographerSection('overview')
+                            );
+                        }
+                    }
+                })
+                .subscribe();
+
+            // 2. REALTIME CHAT MESSAGES
+            supabaseClient
+                .channel('realtime:messages')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+                    const msg = payload.new;
+                    const exists = allMessages.some(m => String(m.id) === String(msg.id));
+                    if (!exists) {
+                        allMessages.push(msg);
+                        localStorage.setItem('clickly_messages', JSON.stringify(allMessages));
+                        renderRecentMessages();
+                        if (!document.getElementById('chatModal').classList.contains('hidden')) {
+                            renderChatBubbles();
+                        }
+
+                        if (msg.sender_id !== myId()) {
+                            showRealtimeToast(
+                                `Pesan dari ${msg.sender_name}`,
+                                msg.message_text,
+                                'message-circle',
+                                () => openChatRoom(msg.sender_name, msg.sender_id)
+                            );
+                        }
+                    }
+                })
+                .subscribe();
+
+            // 3. REALTIME KALENDER & JADWAL ANTI-BENTROK
+            supabaseClient
+                .channel('realtime:photographer_schedules')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'photographer_schedules' }, payload => {
+                    if (payload.eventType === 'INSERT') {
+                        if (!dbBlockedSchedules.some(s => String(s.id) === String(payload.new.id))) {
+                            dbBlockedSchedules.push(payload.new);
+                        }
+                        refreshOpenDetailModalAvailability(payload.new.photographer_id);
+                    } else if (payload.eventType === 'DELETE') {
+                        dbBlockedSchedules = dbBlockedSchedules.filter(s => String(s.id) !== String(payload.old.id));
+                        refreshOpenDetailModalAvailability(activeDetailPhotographerId);
+                    }
+                    localStorage.setItem('clickly_db_schedules', JSON.stringify(dbBlockedSchedules));
+                    renderPhotographerScheduleList();
+                })
+                .subscribe();
+
+            // 4. REALTIME KATALOG FOTOGRAFER & TARIF
+            supabaseClient
+                .channel('realtime:photographer')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'photographer' }, payload => {
+                    if (payload.eventType === 'INSERT') {
+                        if (!currentPhotographers.some(p => String(p.id) === String(payload.new.id))) {
+                            currentPhotographers.push(payload.new);
+                        }
+                    } else if (payload.eventType === 'UPDATE') {
+                        const idx = currentPhotographers.findIndex(p => String(p.id) === String(payload.new.id));
+                        if (idx !== -1) currentPhotographers[idx] = payload.new;
+                    } else if (payload.eventType === 'DELETE') {
+                        currentPhotographers = currentPhotographers.filter(p => String(p.id) !== String(payload.old.id));
+                    }
+                    applyMarketplaceFilter();
+                    if (currentUser && currentUser.role === 'photographer') {
+                        updateUserUIState();
+                    }
+                })
+                .subscribe();
+
+            // 5. REALTIME KATALOG SEWA ALAT
+            supabaseClient
+                .channel('realtime:equipments')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'equipments' }, payload => {
+                    if (payload.eventType === 'INSERT') {
+                        if (!currentEquipments.some(e => String(e.id) === String(payload.new.id))) {
+                            currentEquipments.push(payload.new);
+                        }
+                    } else if (payload.eventType === 'UPDATE') {
+                        const idx = currentEquipments.findIndex(e => String(e.id) === String(payload.new.id));
+                        if (idx !== -1) currentEquipments[idx] = payload.new;
+                    }
+                    filterEquipments();
+                })
+                .subscribe();
+
+            // 6. REALTIME REVIEWERS
+            supabaseClient
+                .channel('realtime:reviewers')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reviewers' }, payload => {
+                    const rev = payload.new;
+                    if (!allReviews.some(r => String(r.id) === String(rev.id))) {
+                        allReviews.unshift(rev);
+                        localStorage.setItem('clickly_reviews', JSON.stringify(allReviews));
+                        renderPhotographerDashboardReviews();
+
+                        if (currentUser && currentUser.role === 'photographer' && String(rev.photographer_id) === myId()) {
+                            showRealtimeToast(
+                                `Ulasan Baru (${rev.rating} ★)`,
+                                `${rev.client_name}: "${rev.comment}"`,
+                                'star',
+                                () => openPhotographerSection('overview')
+                            );
+                        }
+                    }
+                })
+                .subscribe();
+        }
+
+        // ==========================================
+        // KALENDER & ANTI-DOUBLE BOOKING HELPERS
+        // ==========================================
+        function getUnavailableDatesForPhotographer(photographerId) {
+            const pid = String(photographerId);
+            const result = [];
+
+            // 1. Tanggal yang sudah dibooking klien (bukan status Dibatalkan)
+            activeBookings.forEach(b => {
+                if (String(b.photographer_id) === pid && b.booking_date) {
+                    result.push({
+                        date: b.booking_date,
+                        type: 'booked',
+                        label: 'Sudah Dibooking Klien'
+                    });
+                }
+            });
+
+            // 2. Tanggal libur yang dikunci oleh fotografer
+            dbBlockedSchedules.forEach(s => {
+                if (String(s.photographer_id) === pid && s.blocked_date) {
+                    if (!result.some(r => r.date === s.blocked_date)) {
+                        result.push({
+                            date: s.blocked_date,
+                            type: 'blocked',
+                            id: s.id,
+                            label: s.reason || 'Libur / Jadwal Penuh'
+                        });
                     }
                 }
             });
+
+            return result.sort((a, b) => a.date.localeCompare(b.date));
         }
 
-        function renderRecentMessages() {
-            const container = document.getElementById('recentMessagesList');
-            const badge = document.getElementById('unreadMessagesBadge');
-            if (!container) return;
+        function refreshOpenDetailModalAvailability(photographerId) {
+            if (!activeDetailPhotographerId || String(activeDetailPhotographerId) !== String(photographerId)) return;
+            const listContainer = document.getElementById('modalUnavailableDatesChips');
+            if (!listContainer) return;
 
-            const myId = currentUser ? String(currentUser.id) : '';
-            const incoming = allMessages.filter(m => m.sender_id !== myId);
+            const unavailable = getUnavailableDatesForPhotographer(photographerId);
+            if (unavailable.length === 0) {
+                listContainer.innerHTML = `<span class="text-[11px] text-emerald-600 font-semibold">Semua tanggal bulan ini masih tersedia</span>`;
+            } else {
+                listContainer.innerHTML = unavailable.map(u => `
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold ${u.type === 'booked' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-rose-50 text-rose-600 border border-rose-200'}">
+                        <i data-lucide="calendar-x" class="w-3 h-3"></i> ${u.date} (${u.type === 'booked' ? 'Terisi' : 'Libur'})
+                    </span>
+                `).join('');
+            }
+            validateSelectedBookingDate(photographerId);
+            lucide.createIcons();
+        }
 
-            if (badge) {
-                const unreadCount = incoming.filter(m => !m.is_read).length;
-                badge.innerText = unreadCount;
+        function validateSelectedBookingDate(photographerId) {
+            const input = document.getElementById('bookingDate');
+            const warning = document.getElementById('bookingDateWarning');
+            const btn = document.getElementById('btnProceedBooking');
+            if (!input || !warning || !btn) return true;
+
+            const chosen = input.value;
+            if (!chosen) {
+                warning.classList.add('hidden');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                return true;
             }
 
-            if (incoming.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4 font-medium">Belum ada pesan masuk dari klien.</p>`;
+            const unavailable = getUnavailableDatesForPhotographer(photographerId);
+            const conflict = unavailable.find(u => u.date === chosen);
+
+            if (conflict) {
+                warning.innerText = `Tanggal ${chosen} tidak tersedia (${conflict.label}). Silakan pilih tanggal lain.`;
+                warning.classList.remove('hidden');
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                return false;
+            } else {
+                warning.classList.add('hidden');
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                return true;
+            }
+        }
+
+        async function addBlockedDate() {
+            if (!currentUser || currentUser.role !== 'photographer') return;
+            const dateVal = document.getElementById('blockDateInput').value;
+            const reasonVal = document.getElementById('blockReasonInput').value.trim() || 'Libur / Jadwal Penuh';
+            if (!dateVal) return alert('Pilih tanggal yang ingin diblokir terlebih dahulu!');
+
+            const existing = getUnavailableDatesForPhotographer(currentUser.id);
+            if (existing.some(e => e.date === dateVal)) {
+                return alert('Tanggal tersebut sudah tercatat sebagai tanggal penuh/libur.');
+            }
+
+            const newSched = {
+                id: 'SCH-' + Date.now(),
+                photographer_id: String(currentUser.id),
+                blocked_date: dateVal,
+                reason: reasonVal
+            };
+
+            dbBlockedSchedules.push(newSched);
+            localStorage.setItem('clickly_db_schedules', JSON.stringify(dbBlockedSchedules));
+            document.getElementById('blockDateInput').value = '';
+            document.getElementById('blockReasonInput').value = '';
+            renderPhotographerScheduleList();
+
+            if (supabaseClient) {
+                await supabaseClient.from('photographer_schedules').insert([newSched]);
+            }
+            showRealtimeToast('Jadwal Dikunci', `Tanggal ${dateVal} berhasil ditandai libur.`, 'calendar');
+        }
+
+        async function removeBlockedDate(schedId) {
+            dbBlockedSchedules = dbBlockedSchedules.filter(s => String(s.id) !== String(schedId));
+            localStorage.setItem('clickly_db_schedules', JSON.stringify(dbBlockedSchedules));
+            renderPhotographerScheduleList();
+
+            if (supabaseClient) {
+                await supabaseClient.from('photographer_schedules').delete().eq('id', schedId);
+            }
+        }
+
+        function renderPhotographerScheduleList() {
+            const container = document.getElementById('photographerScheduleOverviewList');
+            if (!container || !currentUser || currentUser.role !== 'photographer') return;
+
+            const unavailable = getUnavailableDatesForPhotographer(currentUser.id);
+            if (unavailable.length === 0) {
+                container.innerHTML = `<div class="text-center p-8 border-2 border-dashed border-slate-200 rounded-2xl text-xs font-medium text-slate-400">Semua tanggal saat ini terbuka untuk booking klien.</div>`;
                 return;
             }
 
-            const latestBySender = {};
-            incoming.forEach(m => {
-                latestBySender[m.sender_name] = m;
-            });
-
-            const threads = Object.values(latestBySender).reverse();
-            container.innerHTML = threads.map(m => {
-                const safeName = (m.sender_name || 'Klien').replace(/'/g, "\\'");
-                return `
-                <div class="cursor-pointer hover:bg-slate-50 p-3 rounded-[20px] transition-all border border-transparent hover:border-slate-100" onclick="openChatRoom('${safeName}', '${m.sender_id}')">
-                    <div class="flex items-start gap-3">
-                        <div class="w-11 h-11 rounded-full gradient-brand text-white flex items-center justify-center font-space font-bold text-base shrink-0">
-                            ${(m.sender_name || 'K').charAt(0).toUpperCase()}
+            container.innerHTML = unavailable.map(u => `
+                <div class="flex items-center justify-between p-4 rounded-2xl border ${u.type === 'booked' ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50 border-slate-100'}">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl ${u.type === 'booked' ? 'bg-amber-100 text-amber-600' : 'bg-rose-100 text-rose-500'} flex items-center justify-center">
+                            <i data-lucide="${u.type === 'booked' ? 'user-check' : 'calendar-off'}" class="w-5 h-5"></i>
                         </div>
-                        <div class="flex-1 min-w-0 pt-0.5">
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-sm text-slate-900 truncate">${m.sender_name}</span>
-                                <span class="text-[10px] ${!m.is_read ? 'text-primary font-bold' : 'text-slate-400'}">Baru</span>
-                            </div>
-                            <p class="text-xs text-slate-500 font-medium truncate mt-1">${m.message_text}</p>
+                        <div>
+                            <p class="font-space font-bold text-sm text-slate-900">${u.date}</p>
+                            <p class="text-xs font-medium text-slate-500">${u.label}</p>
                         </div>
-                        ${!m.is_read ? '<span class="w-2.5 h-2.5 rounded-full bg-primary mt-2 shrink-0"></span>' : ''}
                     </div>
-                </div>`;
-            }).join('');
+                    ${u.type === 'booked'
+                        ? `<span class="text-[10px] font-bold uppercase px-3 py-1 rounded-full bg-amber-100 text-amber-700">Terkunci Order</span>`
+                        : `<button type="button" onclick="removeBlockedDate('${u.id}')" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-rose-500 hover:bg-rose-50 transition-colors">Buka Jadwal</button>`
+                    }
+                </div>
+            `).join('');
+            lucide.createIcons();
         }
 
+        // ==========================================
+        // KATALOG FOTOGRAFER & SEWA ALAT
+        // ==========================================
         function renderPhotographerGrid(dataList) {
             const grid = document.getElementById('photographerGrid');
             if(!grid) return; grid.innerHTML = '';
@@ -1049,7 +1549,8 @@
             dataList.forEach(p => {
                 const isChecked = selectedForCompare.includes(p.id);
                 const safeCover = p.coverurl && p.coverurl.trim() !== '' ? p.coverurl : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80';
-                
+                const isOwnProfile = currentUser && currentUser.role === 'photographer' && String(currentUser.id) === String(p.id);
+
                 grid.innerHTML += `
                     <div class="bg-white rounded-[32px] border border-slate-100 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group">
                         <div class="relative h-60 overflow-hidden">
@@ -1069,7 +1570,10 @@
                             </div>
                             <div class="pt-5 mt-5 border-t border-slate-100 flex items-center justify-between">
                                 <div><span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wide">Mulai dari</span><span class="font-space font-bold text-primary text-lg">Rp ${Number(p.price).toLocaleString('id-ID')}</span></div>
-                                <button onclick="openDetailModal('${p.id}')" class="px-5 py-2.5 bg-slate-900 text-white hover:bg-primary font-bold text-xs rounded-xl shadow-md transition-colors">Lihat Profil</button>
+                                ${isOwnProfile
+                                    ? `<button onclick="openPhotographerSection('catalog')" class="px-5 py-2.5 bg-orange-50 text-primary hover:bg-primary hover:text-white font-bold text-xs rounded-xl transition-colors">Edit Paket Saya</button>`
+                                    : `<button onclick="openDetailModal('${p.id}')" class="px-5 py-2.5 bg-slate-900 text-white hover:bg-primary font-bold text-xs rounded-xl shadow-md transition-colors">Lihat Profil</button>`
+                                }
                             </div>
                         </div>
                     </div>`;
@@ -1104,15 +1608,16 @@
         }
 
         function filterEquipments() {
-            const query = document.getElementById('searchEquipmentInput').value.toLowerCase();
+            const input = document.getElementById('searchEquipmentInput');
+            const query = input ? input.value.toLowerCase() : '';
             const filtered = currentEquipments.filter(eq => eq.name.toLowerCase().includes(query) || eq.category.toLowerCase().includes(query));
             renderEquipmentGrid(filtered);
         }
 
         function applyMarketplaceFilter() {
-            const cat = document.getElementById('filterCategory').value;
-            const loc = document.getElementById('filterLocation').value;
-            const budget = Number(document.getElementById('filterBudget').value);
+            const cat = document.getElementById('filterCategory')?.value || '';
+            const loc = document.getElementById('filterLocation')?.value || '';
+            const budget = Number(document.getElementById('filterBudget')?.value || 99999999);
             
             const filtered = currentPhotographers.filter(p => {
                 const matchCat = !cat || p.category.toLowerCase() === cat.toLowerCase();
@@ -1123,6 +1628,9 @@
             renderPhotographerGrid(filtered);
         }
 
+        // ==========================================
+        // SEWA ALAT MODAL & CHECKOUT
+        // ==========================================
         let activeRentalItem = null;
         function openRentalModal(id) {
             const eq = currentEquipments.find(item => item.id == id);
@@ -1215,9 +1723,10 @@
             const totalAmount = diffDays * activeRentalItem.price;
             const clientLabel = currentUser ? currentUser.full_name : 'Klien Clickly';
             const uid = currentUser ? String(currentUser.id) : 'guest';
+            const trxId = 'RNT-' + Math.floor(100000 + Math.random() * 900000);
 
             const record = {
-                id: 'RNT-' + Math.floor(100000 + Math.random() * 900000),
+                id: trxId,
                 equipment_id: String(activeRentalItem.id),
                 user_id: uid,
                 rental_start_date: start,
@@ -1227,10 +1736,12 @@
             };
 
             const orderSummary = {
-                id: record.id,
-                booking_id: record.id,
+                id: trxId,
+                booking_id: trxId,
                 user_id: uid,
-                item_description: `Sewa: ${activeRentalItem.name} (${diffDays} Hari) - ${clientLabel}`,
+                booking_date: start,
+                status: 'Sewa Aktif',
+                item_description: `Sewa Alat: ${activeRentalItem.name} (${start} s/d ${end}) - ${clientLabel}`,
                 quantity: diffDays,
                 subtotal: totalAmount
             };
@@ -1239,24 +1750,28 @@
                 await supabaseClient.from('equipments_rental').insert([record]);
                 const { error } = await supabaseClient.from('order_detail').insert([orderSummary]);
                 if (error) {
-                    const fallbackOrder = {
+                    const fallback = {
                         id: orderSummary.id,
                         booking_id: orderSummary.booking_id,
+                        user_id: uid,
                         item_description: orderSummary.item_description,
                         quantity: orderSummary.quantity,
                         subtotal: orderSummary.subtotal
                     };
-                    await supabaseClient.from('order_detail').insert([fallbackOrder]);
+                    await supabaseClient.from('order_detail').insert([fallback]);
                 }
             }
             activeBookings.push(orderSummary);
             localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
             alert('Pembayaran Sewa Alat Berhasil!');
             closeModal('rentalModal');
-            renderDashboardOrders();
-            if (currentUser) switchPage('dashboard');
+            renderAllOrderViews();
+            if (currentUser && currentUser.role === 'user') switchPage('dashboard');
         }
 
+        // ==========================================
+        // COMPARE & DETAIL FOTOGRAFER MODAL
+        // ==========================================
         function toggleCompare(id) {
             if (selectedForCompare.includes(id)) selectedForCompare = selectedForCompare.filter(i => i !== id);
             else if (selectedForCompare.length >= 3) { alert('Maksimal membandingkan 3 orang!'); return; }
@@ -1273,7 +1788,7 @@
                     <thead><tr class="border-b border-slate-200"><th class="p-4 text-slate-500">Spesifikasi</th>${list.map(p => `<th class="p-4 font-space font-bold text-lg text-slate-900">${p.name}</th>`).join('')}</tr></thead>
                     <tbody class="divide-y divide-slate-100">
                         <tr><td class="p-4 text-slate-500">Rating</td>${list.map(p => `<td class="p-4 font-bold text-amber-500"><i data-lucide="star" class="w-3.5 h-3.5 inline fill-amber-500"></i> ${Number(p.rating || 5.0).toFixed(1)}</td>`).join('')}</tr>
-                        <tr><td class="p-4 text-slate-500">Tarif Dasar</td>${list.map(p => `<td class="p-4 font-space font-bold text-primary text-base">Rp ${Number(p.price).toLocaleString('id-ID')}</td>`).join('')}</tr>
+                        <tr><td class="p-4 text-slate-500">Paket Basic</td>${list.map(p => `<td class="p-4 font-space font-bold text-primary text-base">Rp ${Number(p.price).toLocaleString('id-ID')}</td>`).join('')}</tr>
                         <tr><td class="p-4 text-slate-500">Portofolio</td>${list.map(p => `<td class="p-4"><a href="${p.portfoliourl || '#'}" target="_blank" class="text-secondary font-bold underline bg-sky-50 px-2 py-1 rounded-md">Lihat Link</a></td>`).join('')}</tr>
                         <tr><td class="p-4"></td>${list.map(p => `<td class="p-4"><button onclick="openDetailModal('${p.id}')" class="w-full py-2.5 gradient-brand text-white font-bold rounded-xl shadow-md hover:scale-105 transition-transform">Pilih</button></td>`).join('')}</tr>
                     </tbody>
@@ -1282,9 +1797,6 @@
             openModal('compareModal');
         }
 
-        // ==========================================
-        // DETAIL FOTOGRAFER, PAKET & ULASAN KLIEN
-        // ==========================================
         function selectPhotoPackage(type, price) {
             selectedPhotoPackage = {
                 type: type,
@@ -1310,13 +1822,25 @@
             }
         }
 
+        function previewMyPublicProfile() {
+            if (!currentUser || currentUser.role !== 'photographer') return;
+            openDetailModal(currentUser.id);
+        }
+
         function openDetailModal(id) {
-            const p = currentPhotographers.find(i => i.id == id);
+            const p = currentPhotographers.find(i => String(i.id) === String(id));
             if(!p) return;
 
-            selectedPhotoPackage = { type: 'basic', name: 'Paket Basic', price: Number(p.price) };
+            activeDetailPhotographerId = String(p.id);
+            const basicPrice = Number(p.price || 500000);
+            const stdPrice = Number(p.std_price || basicPrice * 2);
+            const basicDesc = p.basic_desc || '1 Jam Sesi • 50 Edited Photos';
+            const stdDesc = p.std_desc || '3 Jam Sesi • 100 Edited Photos + All Raw Files';
+
+            selectedPhotoPackage = { type: 'basic', name: 'Paket Basic', price: basicPrice };
             const safeCover = p.coverurl && p.coverurl.trim() !== '' ? p.coverurl : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80';
             const safeName = (p.name || 'Fotografer').replace(/'/g, "\\'");
+            const isSelfPreview = currentUser && currentUser.role === 'photographer' && String(currentUser.id) === String(p.id);
 
             const photoReviews = allReviews.filter(r => String(r.photographer_id) === String(p.id));
             const reviewsHtml = photoReviews.length > 0
@@ -1328,10 +1852,44 @@
                                 <span class="font-bold text-xs text-slate-900">${r.client_name || 'Klien Clickly'}</span>
                                 <span class="text-amber-400 text-xs tracking-wider">${stars}</span>
                             </div>
-                            <p class="text-xs text-slate-600 font-medium leading-relaxed">${r.comment || 'Sesi foto berjalan lancar dan hasilnya memuaskan!'}</p>
+                            <p class="text-xs text-slate-600 font-medium leading-relaxed">${r.comment || 'Sesi foto berjalan lancar!'}</p>
                         </div>`;
                 }).join('')
-                : `<p class="text-xs text-slate-400 font-medium bg-slate-50 p-4 rounded-2xl text-center">Belum ada ulasan tertulis. Jadilah klien pertama yang memberi ulasan setelah sesi foto!</p>`;
+                : `<p class="text-xs text-slate-400 font-medium bg-slate-50 p-4 rounded-2xl text-center">Belum ada ulasan tertulis untuk fotografer ini.</p>`;
+
+            const rightActionPanel = isSelfPreview
+                ? `
+                    <div class="p-5 rounded-2xl bg-orange-50 border border-orange-100 text-center space-y-3">
+                        <p class="text-xs font-bold text-primary">Ini adalah tampilan profil publik kamu di mata klien.</p>
+                        <button onclick="closeModal('detailModal'); openPhotographerSection('catalog')" class="w-full py-3.5 gradient-brand text-white font-bold rounded-2xl shadow-md text-xs">
+                            Edit Paket & Portofolio Saya
+                        </button>
+                    </div>
+                `
+                : `
+                    <div class="pt-4 border-t border-slate-100 space-y-2">
+                        <label class="block text-xs font-bold text-slate-700">Tentukan Tanggal Sesi (Kalender Realtime)</label>
+                        <input type="date" id="bookingDate" onchange="validateSelectedBookingDate('${p.id}')" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm font-bold focus:outline-none focus:border-primary">
+                        <p id="bookingDateWarning" class="hidden text-xs font-bold text-rose-500 bg-rose-50 px-3 py-2 rounded-xl border border-rose-100"></p>
+                        <div class="pt-1">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase block mb-1.5">Status Ketersediaan:</span>
+                            <div id="modalUnavailableDatesChips" class="flex flex-wrap gap-1.5"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-50 p-3 rounded-xl flex items-start gap-2 border border-slate-100 text-xs text-slate-600 font-medium">
+                        <i data-lucide="lock" class="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"></i>
+                        <p>Dana aman di <strong>Clickly Escrow</strong> dan baru cair setelah hasil foto kamu konfirmasi.</p>
+                    </div>
+
+                    <button id="btnProceedBooking" onclick="startCheckout('${p.id}', '${safeName}')" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg hover:shadow-primary/40 hover:-translate-y-1 transition-all text-sm">
+                        Booking Sekarang <span id="checkoutBtnPriceLabel">(Rp ${basicPrice.toLocaleString('id-ID')})</span>
+                    </button>
+                    
+                    <button onclick="openChatRoom('${safeName}', '${p.id}')" class="w-full py-3 bg-white border-2 border-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all text-sm flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> Tanya Dulu (Chat)
+                    </button>
+                `;
 
             document.getElementById('detailModalContent').innerHTML = `
                 <div class="md:col-span-7 space-y-6">
@@ -1364,11 +1922,14 @@
 
                     <div>
                         <h3 class="font-space font-bold text-lg mb-3">Biografi Fotografer</h3>
-                        <p class="text-sm text-slate-600 font-medium leading-relaxed">${p.bio || 'Fotografer profesional terverifikasi dengan pengalaman lebih dari 5 tahun di bidangnya. Siap mengabadikan momen terbaik Anda dengan hasil editing premium dan gaya sinematik yang khas.'}</p>
+                        <p class="text-sm text-slate-600 font-medium leading-relaxed">${p.bio || 'Fotografer profesional terverifikasi dengan pengalaman lebih dari 5 tahun di bidangnya.'}</p>
                     </div>
 
                     <div>
-                        <h3 class="font-space font-bold text-lg mb-3 mt-6">Portofolio Klien</h3>
+                        <div class="flex items-center justify-between mb-3 mt-6">
+                            <h3 class="font-space font-bold text-lg">Portofolio Klien</h3>
+                            ${p.portfoliourl && p.portfoliourl !== '#' ? `<a href="${p.portfoliourl}" target="_blank" class="text-xs font-bold text-secondary underline">Buka Galeri Lengkap &rarr;</a>` : ''}
+                        </div>
                         <div class="grid grid-cols-2 gap-4">
                             <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=300&q=80" class="rounded-[20px] shadow-sm h-32 w-full object-cover">
                             <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=300&q=80" class="rounded-[20px] shadow-sm h-32 w-full object-cover">
@@ -1379,9 +1940,7 @@
                     <div class="pt-4 border-t border-slate-100">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-space font-bold text-lg text-slate-900">Ulasan Klien (${photoReviews.length})</h3>
-                            <button type="button" onclick="openRatingModal('${p.id}')" class="px-4 py-2 bg-amber-50 hover:bg-amber-500 text-amber-600 hover:text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors">
-                                <i data-lucide="star" class="w-3.5 h-3.5"></i> Beri Ulasan
-                            </button>
+                            ${isSelfPreview ? '' : `<button type="button" onclick="openRatingModal('${p.id}')" class="px-4 py-2 bg-amber-50 hover:bg-amber-500 text-amber-600 hover:text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors"><i data-lucide="star" class="w-3.5 h-3.5"></i> Beri Ulasan</button>`}
                         </div>
                         <div class="space-y-3 max-h-60 overflow-y-auto pr-1">
                             ${reviewsHtml}
@@ -1393,55 +1952,42 @@
                     <h3 class="font-space font-bold text-slate-900 text-xl text-center">Pilih Paket Sesi Foto</h3>
                     
                     <div class="space-y-3">
-                        <div id="pkgCardBasic" onclick="selectPhotoPackage('basic', ${Number(p.price)})" class="p-4 border-2 border-primary bg-orange-50 rounded-[20px] cursor-pointer relative overflow-hidden transition-all">
+                        <div id="pkgCardBasic" onclick="selectPhotoPackage('basic', ${basicPrice})" class="p-4 border-2 border-primary bg-orange-50 rounded-[20px] cursor-pointer relative overflow-hidden transition-all">
                             <span class="absolute top-0 right-0 bg-primary text-white text-[9px] font-bold px-2 py-1 rounded-bl-lg">TERPOPULER</span>
                             <h4 class="font-bold text-slate-900 mb-1">Paket Basic</h4>
-                            <p class="text-xs font-medium text-slate-600 mb-2">1 Jam Sesi • 50 Edited Photos</p>
-                            <p class="font-space font-bold text-primary text-lg">Rp ${Number(p.price).toLocaleString('id-ID')}</p>
+                            <p class="text-xs font-medium text-slate-600 mb-2">${basicDesc}</p>
+                            <p class="font-space font-bold text-primary text-lg">Rp ${basicPrice.toLocaleString('id-ID')}</p>
                         </div>
-                        <div id="pkgCardStandard" onclick="selectPhotoPackage('standard', ${Number(p.price) * 2})" class="p-4 border border-slate-200 hover:border-secondary rounded-[20px] cursor-pointer opacity-80 hover:opacity-100 transition-all">
+                        <div id="pkgCardStandard" onclick="selectPhotoPackage('standard', ${stdPrice})" class="p-4 border border-slate-200 hover:border-secondary rounded-[20px] cursor-pointer opacity-80 hover:opacity-100 transition-all">
                             <h4 class="font-bold text-slate-900 mb-1">Paket Standard</h4>
-                            <p class="text-xs font-medium text-slate-600 mb-2">3 Jam Sesi • 100 Edited Photos</p>
-                            <p class="font-space font-bold text-secondary text-lg">Rp ${(Number(p.price)*2).toLocaleString('id-ID')}</p>
+                            <p class="text-xs font-medium text-slate-600 mb-2">${stdDesc}</p>
+                            <p class="font-space font-bold text-secondary text-lg">Rp ${stdPrice.toLocaleString('id-ID')}</p>
                         </div>
                     </div>
 
-                    <div class="pt-4 border-t border-slate-100">
-                        <label class="block text-xs font-bold text-slate-700 mb-2">Tentukan Jadwal</label>
-                        <input type="date" id="bookingDate" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm font-bold focus:outline-none focus:border-primary">
-                    </div>
-                    
-                    <div class="bg-slate-50 p-3 rounded-xl flex items-start gap-2 border border-slate-100 text-xs text-slate-600 font-medium">
-                        <i data-lucide="lock" class="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"></i>
-                        <p>Pembayaran dilindungi oleh <strong>Clickly Escrow</strong>. Uang diteruskan setelah sesi selesai.</p>
-                    </div>
-
-                    <button onclick="startCheckout('${p.id}', '${safeName}')" class="w-full py-4 gradient-brand text-white font-bold rounded-2xl shadow-lg hover:shadow-primary/40 hover:-translate-y-1 transition-all text-sm">
-                        Booking Sekarang <span id="checkoutBtnPriceLabel">(Rp ${Number(p.price).toLocaleString('id-ID')})</span>
-                    </button>
-                    
-                    <button onclick="openChatRoom('${safeName}', '${p.id}')" class="w-full py-3 bg-white border-2 border-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all text-sm flex items-center justify-center gap-2">
-                        <i data-lucide="message-circle" class="w-4 h-4"></i> Tanya Dulu (Chat)
-                    </button>
+                    ${rightActionPanel}
                 </div>`;
+            refreshOpenDetailModalAvailability(p.id);
             lucide.createIcons();
             closeModal('compareModal'); openModal('detailModal');
         }
 
         let currentPayingOrder = null;
         function startCheckout(id, name) {
+            if (!currentUser) {
+                closeModal('detailModal');
+                alert('Silakan masuk atau daftar sebagai Klien terlebih dahulu untuk melakukan booking!');
+                openAuthModal('login');
+                return;
+            }
             const date = document.getElementById('bookingDate').value;
             if (!date) return alert('Pilih tanggal sesi foto terlebih dahulu!');
-
-            const blockedForPhoto = blockedDatesMap[String(id)] || [];
-            if (blockedForPhoto.includes(date)) {
-                return alert('Maaf, tanggal tersebut sudah penuh atau ditandai libur oleh fotografer. Silakan pilih tanggal lain!');
-            }
+            if (!validateSelectedBookingDate(id)) return;
 
             const amount = selectedPhotoPackage.price || 0;
             const pkgLabel = selectedPhotoPackage.name || 'Paket Basic';
-            const clientLabel = currentUser ? currentUser.full_name : 'Klien Clickly';
-            const uid = currentUser ? String(currentUser.id) : 'guest';
+            const clientLabel = currentUser.full_name || 'Klien Clickly';
+            const uid = String(currentUser.id);
             const trxId = 'CLK-' + Math.floor(100000 + Math.random() * 900000);
 
             currentPayingOrder = {
@@ -1449,6 +1995,9 @@
                 booking_id: trxId,
                 user_id: uid,
                 photographer_id: String(id),
+                booking_date: date,
+                status: 'Menunggu Konfirmasi',
+                result_url: '',
                 item_description: `${name} - ${pkgLabel} (${date}) - ${clientLabel}`,
                 quantity: 1,
                 subtotal: Number(amount)
@@ -1457,8 +2006,8 @@
             document.getElementById('detailModalContent').innerHTML = `
                 <div class="md:col-span-12 text-center space-y-6">
                     <div class="w-16 h-16 bg-sky-50 text-secondary mx-auto rounded-[20px] flex items-center justify-center mb-2 shadow-sm"><i data-lucide="credit-card" class="w-8 h-8"></i></div>
-                    <h3 class="text-2xl font-space font-bold text-slate-900">Pembayaran Booking</h3>
-                    <p class="text-sm font-medium text-slate-500">Fotografer: <strong>${name}</strong> (${pkgLabel}) | Total: <strong class="text-primary">Rp ${Number(amount).toLocaleString('id-ID')}</strong></p>
+                    <h3 class="text-2xl font-space font-bold text-slate-900">Pembayaran Booking Escrow</h3>
+                    <p class="text-sm font-medium text-slate-500">Fotografer: <strong>${name}</strong> (${pkgLabel} • ${date}) | Total: <strong class="text-primary">Rp ${Number(amount).toLocaleString('id-ID')}</strong></p>
                     
                     <select id="bookingPaymentMethod" class="w-full max-w-md mx-auto px-5 py-4 rounded-[20px] border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:border-secondary block">
                         <option value="">-- Pilih Metode Pembayaran --</option>
@@ -1488,6 +2037,7 @@
                     const fallbackOrder = {
                         id: currentPayingOrder.id,
                         booking_id: currentPayingOrder.booking_id,
+                        user_id: currentPayingOrder.user_id,
                         photographer_id: currentPayingOrder.photographer_id,
                         item_description: currentPayingOrder.item_description,
                         quantity: currentPayingOrder.quantity,
@@ -1503,10 +2053,287 @@
             if(!bookedList.includes(String(photographerId))) bookedList.push(String(photographerId));
             localStorage.setItem('clickly_booked_photographers', JSON.stringify(bookedList));
 
-            alert('Pembayaran Booking Berhasil! Escrow diaktifkan, kamu sekarang bisa chat dan kasih rating ke fotografer.');
+            alert('Pembayaran Escrow Berhasil! Jadwal otomatis terkunci dan kamu bisa memantau progres sesi secara realtime.');
             closeModal('detailModal');
-            renderDashboardOrders();
-            if (currentUser) switchPage('dashboard');
+            renderAllOrderViews();
+            switchPage('dashboard');
+        }
+
+        // ==========================================
+        // WORKFLOW PROGRES ORDER & PENCAIRAN ESCROW (REALTIME)
+        // ==========================================
+        async function updateOrderProgressStatus(orderId, newStatus, resultUrl = null) {
+            const idx = activeBookings.findIndex(b => String(b.id) === String(orderId));
+            if (idx === -1) return;
+
+            activeBookings[idx].status = newStatus;
+            if (resultUrl !== null) activeBookings[idx].result_url = resultUrl;
+            localStorage.setItem('clickly_bookings', JSON.stringify(activeBookings));
+            renderAllOrderViews();
+
+            if (supabaseClient) {
+                const updatePayload = { status: newStatus };
+                if (resultUrl !== null) updatePayload.result_url = resultUrl;
+                await supabaseClient.from('order_detail').update(updatePayload).eq('id', orderId);
+            }
+        }
+
+        function openDeliverResultModal(orderId) {
+            document.getElementById('deliverOrderId').value = orderId;
+            document.getElementById('deliverResultUrlInput').value = '';
+            openModal('deliverResultModal');
+        }
+
+        async function confirmDeliverPhotoResult() {
+            const orderId = document.getElementById('deliverOrderId').value;
+            const url = document.getElementById('deliverResultUrlInput').value.trim();
+            if (!url) return alert('Masukkan link Google Drive / galeri hasil foto terlebih dahulu!');
+
+            await updateOrderProgressStatus(orderId, 'Hasil Foto Dikirim', url);
+            closeModal('deliverResultModal');
+            showRealtimeToast('Hasil Foto Terkirim', 'Link hasil foto sudah dikirim ke klien untuk konfirmasi pencairan Escrow.', 'folder-check');
+        }
+
+        async function clientConfirmOrderFinished(orderId, photographerId) {
+            const ok = confirm('Pastikan hasil foto sudah kamu terima dengan baik. Konfirmasi selesai akan mencairkan dana Escrow ke fotografer. Lanjutkan?');
+            if (!ok) return;
+
+            await updateOrderProgressStatus(orderId, 'Selesai');
+            alert('Terima kasih! Pesanan selesai dan dana Escrow telah dicairkan ke fotografer. Yuk kasih rating!');
+            if (photographerId) {
+                openRatingModal(photographerId);
+            }
+        }
+
+        function withdrawEscrowFunds() {
+            const el = document.getElementById('dashClearedBalance');
+            const currentText = el ? el.innerText : 'Rp 0';
+            if (currentText === 'Rp 0') {
+                return alert('Belum ada saldo Escrow yang cair. Selesaikan pesanan klien terlebih dahulu.');
+            }
+            alert(`Permintaan pencairan dana sebesar ${currentText} sedang diproses ke rekening terdaftar kamu (estimasi 1x24 jam).`);
+        }
+
+        function renderAllOrderViews() {
+            renderClientOrders();
+            renderPhotographerOrders();
+        }
+
+        function getStatusBadgeHtml(status) {
+            const st = status || 'Menunggu Konfirmasi';
+            const map = {
+                'Menunggu Konfirmasi': 'bg-amber-50 text-amber-700 border-amber-200',
+                'Jadwal Terkunci': 'bg-sky-50 text-sky-700 border-sky-200',
+                'Proses Editing': 'bg-purple-50 text-purple-700 border-purple-200',
+                'Hasil Foto Dikirim': 'bg-orange-50 text-primary border-orange-200',
+                'Selesai': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                'Sewa Aktif': 'bg-emerald-50 text-emerald-700 border-emerald-200'
+            };
+            const cls = map[st] || 'bg-slate-100 text-slate-700 border-slate-200';
+            return `<span class="text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full border ${cls}">${st}</span>`;
+        }
+
+        // Render Daftar Pesanan di Dashboard Klien
+        function renderClientOrders() {
+            const list = document.getElementById('clientOrdersList');
+            if (!list || !currentUser || currentUser.role !== 'user') return;
+
+            const uid = String(currentUser.id);
+            const uname = (currentUser.full_name || '').toLowerCase();
+            const myOrders = activeBookings.filter(b =>
+                String(b.user_id) === uid ||
+                (!b.user_id && uname && (b.item_description || '').toLowerCase().includes(uname))
+            );
+
+            if (myOrders.length === 0) {
+                list.innerHTML = `<div class="text-center p-10 border-2 border-dashed border-slate-200 rounded-[24px]"><i data-lucide="calendar-x" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i><p class="text-sm font-medium text-slate-500">Kamu belum memiliki riwayat booking.</p></div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            list.innerHTML = [...myOrders].reverse().map(b => {
+                const st = b.status || 'Menunggu Konfirmasi';
+                const stepIdx = Math.max(0, ORDER_STEPS.indexOf(st));
+                const safeDesc = (b.item_description || 'Pesanan Clickly').replace(/'/g, "\\'");
+                const isPhotoOrder = Boolean(b.photographer_id);
+
+                const stepperHtml = isPhotoOrder ? `
+                    <div class="grid grid-cols-5 gap-1.5 pt-3">
+                        ${ORDER_STEPS.map((stepName, i) => `
+                            <div class="space-y-1">
+                                <div class="h-1.5 rounded-full ${i <= stepIdx ? 'gradient-brand' : 'bg-slate-200'}"></div>
+                                <p class="text-[9px] font-bold truncate ${i <= stepIdx ? 'text-slate-800' : 'text-slate-400'}">${stepName}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '';
+
+                const resultLinkHtml = b.result_url
+                    ? `<a href="${b.result_url}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-50 text-secondary border border-sky-200 font-bold text-xs hover:bg-secondary hover:text-white transition-colors"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Buka Link Hasil Foto</a>`
+                    : '';
+
+                const confirmFinishBtn = (isPhotoOrder && st === 'Hasil Foto Dikirim')
+                    ? `<button onclick="clientConfirmOrderFinished('${b.id}', '${b.photographer_id}')" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 transition-colors"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Konfirmasi Selesai & Cairkan Escrow</button>`
+                    : '';
+
+                const ratingBtn = isPhotoOrder
+                    ? `<button onclick="openRatingModal('${b.photographer_id}')" class="px-4 py-2 bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors"><i data-lucide="star" class="w-4 h-4"></i> Rating</button>`
+                    : '';
+
+                return `
+                    <div class="p-6 bg-white shadow-sm border border-slate-100 rounded-[28px] space-y-4 hover:shadow-md transition-shadow">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    ${getStatusBadgeHtml(st)}
+                                    <span class="text-xs font-medium text-slate-400">ID: ${b.booking_id}</span>
+                                </div>
+                                <p class="font-space font-bold text-slate-900 text-lg mt-2">${b.item_description}</p>
+                            </div>
+                            <strong class="font-space font-bold text-primary text-xl">Rp ${Number(b.subtotal).toLocaleString('id-ID')}</strong>
+                        </div>
+                        ${stepperHtml}
+                        <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex flex-wrap gap-2">
+                                ${resultLinkHtml}
+                                ${confirmFinishBtn}
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="openChatRoom('${safeDesc}', '${b.photographer_id || 'all'}')" class="px-4 py-2 bg-secondary/10 text-secondary hover:bg-secondary hover:text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors"><i data-lucide="message-square" class="w-4 h-4"></i> Chat</button>
+                                ${ratingBtn}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // Render Daftar Order & Metrik Escrow di Workspace Fotografer
+        function filterPhotoOrders(filterType, btnEl) {
+            photoOrderFilter = filterType;
+            document.querySelectorAll('.porder-filter-btn').forEach(btn => {
+                btn.className = 'porder-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600';
+            });
+            if (btnEl) {
+                btnEl.className = 'porder-filter-btn px-4 py-2 rounded-xl text-xs font-bold gradient-brand text-white';
+            }
+            renderPhotographerOrders();
+        }
+
+        function renderPhotographerOrders() {
+            if (!currentUser || currentUser.role !== 'photographer') return;
+
+            const uid = String(currentUser.id);
+            const uname = (currentUser.full_name || '').toLowerCase();
+            const myPhotoOrders = activeBookings.filter(b =>
+                String(b.photographer_id) === uid ||
+                (uname && (b.item_description || '').toLowerCase().startsWith(uname))
+            );
+
+            // Hitung Dana Escrow Tertahan vs Saldo Cair
+            let clearedAmount = 0;
+            let heldEscrowAmount = 0;
+            let activeCount = 0;
+
+            myPhotoOrders.forEach(o => {
+                const val = Number(o.subtotal || 0);
+                if (o.status === 'Selesai') {
+                    clearedAmount += val;
+                } else {
+                    heldEscrowAmount += val;
+                    activeCount++;
+                }
+            });
+
+            if (document.getElementById('dashClearedBalance')) document.getElementById('dashClearedBalance').innerText = `Rp ${clearedAmount.toLocaleString('id-ID')}`;
+            if (document.getElementById('dashHeldEscrow')) document.getElementById('dashHeldEscrow').innerText = `Rp ${heldEscrowAmount.toLocaleString('id-ID')}`;
+            if (document.getElementById('dashTotalOrders')) document.getElementById('dashTotalOrders').innerText = myPhotoOrders.length;
+
+            const navBadge = document.getElementById('navPendingOrderBadge');
+            if (navBadge) {
+                navBadge.innerText = activeCount;
+                navBadge.classList.toggle('hidden', activeCount === 0);
+            }
+
+            const list = document.getElementById('photographerOrdersList');
+            if (!list) return;
+
+            let displayed = [...myPhotoOrders];
+            if (photoOrderFilter === 'active') displayed = displayed.filter(o => o.status !== 'Selesai');
+            if (photoOrderFilter === 'done') displayed = displayed.filter(o => o.status === 'Selesai');
+
+            if (displayed.length === 0) {
+                list.innerHTML = `<div class="text-center p-10 border-2 border-dashed border-slate-200 rounded-[24px]"><i data-lucide="inbox" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i><p class="text-sm font-medium text-slate-500">Belum ada booking pada kategori ini.</p></div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            list.innerHTML = [...displayed].reverse().map(b => {
+                const st = b.status || 'Menunggu Konfirmasi';
+                const safeDesc = (b.item_description || 'Order Klien').replace(/'/g, "\\'");
+
+                let nextActionBtn = '';
+                if (st === 'Menunggu Konfirmasi') {
+                    nextActionBtn = `<button onclick="updateOrderProgressStatus('${b.id}', 'Jadwal Terkunci')" class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-sm transition-colors">Terima & Kunci Jadwal</button>`;
+                } else if (st === 'Jadwal Terkunci') {
+                    nextActionBtn = `<button onclick="updateOrderProgressStatus('${b.id}', 'Proses Editing')" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-sm transition-colors">Mulai Proses Editing</button>`;
+                } else if (st === 'Proses Editing') {
+                    nextActionBtn = `<button onclick="openDeliverResultModal('${b.id}')" class="px-4 py-2 gradient-brand text-white font-bold text-xs rounded-xl shadow-md hover:opacity-95 transition-all">Kirim Hasil Foto</button>`;
+                } else if (st === 'Hasil Foto Dikirim') {
+                    nextActionBtn = `<span class="text-xs font-bold text-orange-600 bg-orange-50 px-3 py-1.5 rounded-xl border border-orange-100">Menunggu Konfirmasi Klien</span>`;
+                }
+
+                return `
+                    <div class="p-6 bg-slate-50/70 border border-slate-200/70 rounded-[24px] flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                        <div class="space-y-1.5">
+                            <div class="flex flex-wrap items-center gap-2">
+                                ${getStatusBadgeHtml(st)}
+                                <span class="text-[11px] font-bold ${st === 'Selesai' ? 'text-emerald-600' : 'text-slate-500'}">
+                                    ${st === 'Selesai' ? '• Dana Cair ke Saldo' : '• Dana Aman di Escrow'}
+                                </span>
+                                <span class="text-xs text-slate-400">• ${b.booking_id}</span>
+                            </div>
+                            <p class="font-space font-bold text-slate-900 text-base">${b.item_description}</p>
+                            ${b.result_url ? `<a href="${b.result_url}" target="_blank" class="text-xs font-bold text-secondary underline inline-block">Link Hasil Terkirim: ${b.result_url}</a>` : ''}
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
+                            <strong class="font-space font-bold text-primary text-lg mr-2">Rp ${Number(b.subtotal).toLocaleString('id-ID')}</strong>
+                            <div class="flex flex-wrap gap-2">
+                                ${nextActionBtn}
+                                <button onclick="openChatRoom('${safeDesc}', '${b.user_id || 'all'}')" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:border-secondary hover:text-secondary font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors">
+                                    <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Chat Klien
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function renderPhotographerDashboardReviews() {
+            const container = document.getElementById('photoDashboardReviewsList');
+            if (!container || !currentUser || currentUser.role !== 'photographer') return;
+
+            const myReviews = allReviews.filter(r => String(r.photographer_id) === String(currentUser.id));
+            if (myReviews.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 font-medium text-center py-6 bg-slate-50 rounded-2xl">Belum ada ulasan dari klien.</p>`;
+                return;
+            }
+
+            container.innerHTML = myReviews.slice(0, 5).map(r => {
+                const stars = '★'.repeat(Number(r.rating || 5)) + '☆'.repeat(5 - Number(r.rating || 5));
+                return `
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-xs text-slate-900">${r.client_name || 'Klien Clickly'}</span>
+                            <span class="text-amber-400 text-xs">${stars}</span>
+                        </div>
+                        <p class="text-xs text-slate-600 font-medium">${r.comment}</p>
+                    </div>
+                `;
+            }).join('');
         }
 
         // ==========================================
@@ -1601,6 +2428,51 @@
             }
         }
 
+        function renderRecentMessages() {
+            const container = document.getElementById('recentMessagesList');
+            const badge = document.getElementById('unreadMessagesBadge');
+            if (!container) return;
+
+            const myId = currentUser ? String(currentUser.id) : '';
+            const incoming = allMessages.filter(m => m.sender_id !== myId);
+
+            if (badge) {
+                const unreadCount = incoming.filter(m => !m.is_read).length;
+                badge.innerText = unreadCount;
+            }
+
+            if (incoming.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6 font-medium">Belum ada pesan masuk dari klien.</p>`;
+                return;
+            }
+
+            const latestBySender = {};
+            incoming.forEach(m => {
+                latestBySender[m.sender_name] = m;
+            });
+
+            const threads = Object.values(latestBySender).reverse();
+            container.innerHTML = threads.map(m => {
+                const safeName = (m.sender_name || 'Klien').replace(/'/g, "\\'");
+                return `
+                <div class="cursor-pointer hover:bg-slate-50 p-3 rounded-[20px] transition-all border border-transparent hover:border-slate-100" onclick="openChatRoom('${safeName}', '${m.sender_id}')">
+                    <div class="flex items-start gap-3">
+                        <div class="w-11 h-11 rounded-full gradient-brand text-white flex items-center justify-center font-space font-bold text-base shrink-0">
+                            ${(m.sender_name || 'K').charAt(0).toUpperCase()}
+                        </div>
+                        <div class="flex-1 min-w-0 pt-0.5">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-slate-900 truncate">${m.sender_name}</span>
+                                <span class="text-[10px] ${!m.is_read ? 'text-primary font-bold' : 'text-slate-400'}">Live</span>
+                            </div>
+                            <p class="text-xs text-slate-500 font-medium truncate mt-1">${m.message_text}</p>
+                        </div>
+                        ${!m.is_read ? '<span class="w-2.5 h-2.5 rounded-full bg-primary mt-2 shrink-0"></span>' : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
         // ==========================================
         // RATING & ULASAN KLIEN KE FOTOGRAFER
         // ==========================================
@@ -1664,7 +2536,6 @@
                 await supabaseClient.from('reviewers').insert([reviewRecord]);
             }
 
-            // Recalculate rating rata-rata & jumlah ulasan fotografer
             const photoIdx = currentPhotographers.findIndex(p => String(p.id) === photographerId);
             if (photoIdx !== -1) {
                 const p = currentPhotographers[photoIdx];
@@ -1685,7 +2556,7 @@
                 }
             }
 
-            alert('Terima kasih! Rating dan ulasan kamu berhasil dikirim dan langsung memperbarui skor fotografer.');
+            alert('Terima kasih! Rating dan ulasan kamu berhasil dikirim.');
             closeModal('ratingModal');
 
             if (!document.getElementById('detailModal').classList.contains('hidden')) {
@@ -1694,68 +2565,7 @@
         }
 
         // ==========================================
-        // QUICK ACTIONS & KELOLA JADWAL FOTOGRAFER
-        // ==========================================
-        function jumpToProfileField(fieldId) {
-            const section = document.getElementById('profileSettingsSection');
-            const input = document.getElementById(fieldId);
-            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            if (input) {
-                setTimeout(() => {
-                    input.focus();
-                    input.classList.add('ring-2', 'ring-primary');
-                    setTimeout(() => input.classList.remove('ring-2', 'ring-primary'), 2000);
-                }, 400);
-            }
-        }
-
-        function openScheduleModal() {
-            renderBlockedDates();
-            openModal('scheduleModal');
-        }
-
-        function renderBlockedDates() {
-            const listEl = document.getElementById('blockedDatesList');
-            if (!listEl || !currentUser) return;
-            const myDates = blockedDatesMap[String(currentUser.id)] || [];
-
-            if (myDates.length === 0) {
-                listEl.innerHTML = `<p class="text-xs text-slate-400 text-center py-4 bg-slate-50 rounded-2xl">Belum ada tanggal libur yang diblokir.</p>`;
-                return;
-            }
-
-            listEl.innerHTML = myDates.map(d => `
-                <div class="flex items-center justify-between px-4 py-2.5 bg-slate-50 rounded-xl border border-slate-100 text-xs font-bold text-slate-700">
-                    <span>${d}</span>
-                    <button type="button" onclick="removeBlockedDate('${d}')" class="text-rose-500 hover:underline">Hapus</button>
-                </div>
-            `).join('');
-        }
-
-        function addBlockedDate() {
-            if (!currentUser) return;
-            const dateVal = document.getElementById('blockDateInput').value;
-            if (!dateVal) return alert('Pilih tanggal terlebih dahulu!');
-            const uid = String(currentUser.id);
-            if (!blockedDatesMap[uid]) blockedDatesMap[uid] = [];
-            if (!blockedDatesMap[uid].includes(dateVal)) {
-                blockedDatesMap[uid].push(dateVal);
-                localStorage.setItem('clickly_blocked_dates', JSON.stringify(blockedDatesMap));
-            }
-            document.getElementById('blockDateInput').value = '';
-            renderBlockedDates();
-        }
-
-        function removeBlockedDate(dateVal) {
-            if (!currentUser) return;
-            const uid = String(currentUser.id);
-            blockedDatesMap[uid] = (blockedDatesMap[uid] || []).filter(d => d !== dateVal);
-            localStorage.setItem('clickly_blocked_dates', JSON.stringify(blockedDatesMap));
-            renderBlockedDates();
-        }
-
-        // ==========================================
-        // AUTH & VALIDASI DAFTAR SEBELUM LOGIN
+        // AUTH & UPDATE PROFIL (KLIEN & FOTOGRAFER)
         // ==========================================
         function openAuthModal(mode) {
             document.getElementById('authMode').value = mode;
@@ -1825,7 +2635,7 @@
                 }
 
                 if (!matchedUser) {
-                    alert('Akun belum terdaftar! Silakan daftar (Register) terlebih dahulu sebelum masuk.');
+                    alert('Akun belum terdaftar! Silakan daftar terlebih dahulu sebelum masuk.');
                     openAuthModal('register');
                     return;
                 }
@@ -1854,10 +2664,14 @@
                 localStorage.setItem('clickly_user', JSON.stringify(currentUser));
                 closeModal('authModal');
                 updateUserUIState();
+                renderAllOrderViews();
                 renderRecentMessages();
-                renderDashboardOrders();
                 alert(`Selamat datang kembali, ${currentUser.full_name}!`);
-                switchPage('dashboard');
+                if (currentUser.role === 'photographer') {
+                    openPhotographerSection('overview');
+                } else {
+                    switchPage('marketplace');
+                }
                 return;
             }
 
@@ -1899,12 +2713,16 @@
             if (supabaseClient) {
                 await supabaseClient.from('users').insert([newUserRecord]);
                 if (role === 'photographer') {
+                    const basePrice = Number(document.getElementById('photoPrice').value) || 500000;
                     const newPhoto = {
                         id: userId,
                         name: document.getElementById('photoName').value.trim() || fullName,
                         category: document.getElementById('photoCategory').value,
                         location: document.getElementById('photoLocation').value,
-                        price: Number(document.getElementById('photoPrice').value) || 500000,
+                        price: basePrice,
+                        std_price: basePrice * 2,
+                        basic_desc: '1 Jam Sesi • 50 Edited Photos',
+                        std_desc: '3 Jam Sesi • 100 Edited Photos + All Raw Files',
                         coverurl: document.getElementById('photoCoverUrl').value.trim() || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
                         portfoliourl: document.getElementById('photoPortfolioUrl').value.trim() || '#',
                         rating: 5.0,
@@ -1924,161 +2742,172 @@
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
             closeModal('authModal');
             updateUserUIState();
+            renderAllOrderViews();
             renderRecentMessages();
-            renderDashboardOrders();
             alert('Pendaftaran Berhasil! Akun Anda telah aktif.');
-            switchPage('dashboard');
+            if (currentUser.role === 'photographer') {
+                openPhotographerSection('overview');
+            } else {
+                switchPage('marketplace');
+            }
         }
 
-        async function handleUpdateProfile(e) {
+        async function handleUpdateClientProfile(e) {
             e.preventDefault();
             if (!currentUser) return;
 
-            currentUser.full_name = document.getElementById('editFullName').value;
-            currentUser.phone_number = document.getElementById('editPhone').value;
+            currentUser.full_name = document.getElementById('editClientFullName').value.trim();
+            currentUser.phone_number = document.getElementById('editClientPhone').value.trim();
 
             if (supabaseClient) {
                 await supabaseClient.from('users').update({ full_name: currentUser.full_name, phone_number: currentUser.phone_number }).eq('id', currentUser.id);
-
-                if (currentUser.role === 'photographer') {
-                    const updatedPhoto = {
-                        name: document.getElementById('editFullName').value,
-                        category: document.getElementById('editCategory').value,
-                        location: document.getElementById('editLocation').value,
-                        price: Number(document.getElementById('editPrice').value),
-                        coverurl: document.getElementById('editCoverUrl').value,
-                        portfoliourl: document.getElementById('editPortfolioUrl').value,
-                        bio: document.getElementById('editBio').value
-                    };
-                    await supabaseClient.from('photographer').update(updatedPhoto).eq('id', currentUser.id);
-                }
-            }
-
-            let localUsers = JSON.parse(localStorage.getItem('clickly_registered_users')) || [];
-            const idx = localUsers.findIndex(u => u.id === currentUser.id);
-            if (idx !== -1) {
-                localUsers[idx].full_name = currentUser.full_name;
-                localUsers[idx].phone_number = currentUser.phone_number;
-                localStorage.setItem('clickly_registered_users', JSON.stringify(localUsers));
             }
 
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
-            alert('Profil Berhasil Diperbarui!');
-            await loadPhotographersFromDB();
             updateUserUIState();
+            alert('Profil klien berhasil diperbarui!');
+        }
+
+        async function handleUpdatePhotographerCatalog(e) {
+            e.preventDefault();
+            if (!currentUser || currentUser.role !== 'photographer') return;
+
+            const studioName = document.getElementById('editPhotoStudioName').value.trim();
+            const phone = document.getElementById('editPhotoPhone').value.trim();
+            const basicPrice = Number(document.getElementById('editPrice').value) || 500000;
+            const stdPrice = Number(document.getElementById('editStdPrice').value) || basicPrice * 2;
+
+            currentUser.full_name = studioName;
+            currentUser.phone_number = phone;
+
+            const updatedPhoto = {
+                name: studioName,
+                category: document.getElementById('editCategory').value,
+                location: document.getElementById('editLocation').value,
+                price: basicPrice,
+                std_price: stdPrice,
+                basic_desc: document.getElementById('editBasicDesc').value.trim() || '1 Jam Sesi • 50 Edited Photos',
+                std_desc: document.getElementById('editStdDesc').value.trim() || '3 Jam Sesi • 100 Edited Photos + Raw',
+                coverurl: document.getElementById('editCoverUrl').value.trim(),
+                portfoliourl: document.getElementById('editPortfolioUrl').value.trim(),
+                bio: document.getElementById('editBio').value.trim()
+            };
+
+            if (supabaseClient) {
+                await supabaseClient.from('users').update({ full_name: studioName, phone_number: phone }).eq('id', currentUser.id);
+                const { error } = await supabaseClient.from('photographer').update(updatedPhoto).eq('id', currentUser.id);
+                if (error) {
+                    await supabaseClient.from('photographer').update({
+                        name: updatedPhoto.name,
+                        category: updatedPhoto.category,
+                        location: updatedPhoto.location,
+                        price: updatedPhoto.price,
+                        coverurl: updatedPhoto.coverurl,
+                        portfoliourl: updatedPhoto.portfoliourl,
+                        bio: updatedPhoto.bio
+                    }).eq('id', currentUser.id);
+                }
+            }
+
+            const pIdx = currentPhotographers.findIndex(p => String(p.id) === String(currentUser.id));
+            if (pIdx !== -1) {
+                currentPhotographers[pIdx] = { ...currentPhotographers[pIdx], ...updatedPhoto };
+            }
+
+            localStorage.setItem('clickly_user', JSON.stringify(currentUser));
+            renderPhotographerGrid(currentPhotographers);
+            updateUserUIState();
+            alert('Paket & Portofolio berhasil disimpan dan langsung live di katalog!');
         }
 
         function updateUserUIState() {
-            if (currentUser) {
-                const navAuth = document.getElementById('navAuthSection');
-                if(navAuth) {
-                    let avatarUrl = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=150&q=80';
-                    if (currentUser.role === 'photographer') {
-                        const pData = currentPhotographers.find(p => String(p.id) === String(currentUser.id));
-                        if (pData && pData.coverurl) avatarUrl = pData.coverurl;
-                    }
+            const deskClient = document.getElementById('desktopNavClient');
+            const deskPhoto = document.getElementById('desktopNavPhotographer');
+            const brandSub = document.getElementById('brandRoleSubtitle');
+            const photoWs = document.getElementById('photographerWorkspace');
+            const clientWs = document.getElementById('clientWorkspace');
 
-                    navAuth.innerHTML = `
-                        <div class="flex items-center gap-2.5 cursor-pointer hover:bg-slate-50 p-1.5 rounded-full transition-colors" onclick="switchPage('dashboard')">
-                            <img src="${avatarUrl}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-primary shadow-sm">
-                            <div class="hidden sm:block text-left pr-2">
-                                <span class="text-xs font-bold block text-slate-900">${currentUser.full_name || currentUser.email}</span>
-                                <span class="text-[10px] text-primary uppercase font-bold">${currentUser.role}</span>
-                            </div>
-                        </div>
-                        <button onclick="localStorage.removeItem('clickly_user'); location.reload()" title="Keluar" class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:text-rose-500 hover:bg-rose-50 transition-colors"><i data-lucide="log-out" class="w-4 h-4"></i></button>
-                    `;
-                    lucide.createIcons();
-                }
+            if (!currentUser) {
+                if (deskClient) deskClient.className = 'hidden md:flex items-center gap-7 font-medium text-slate-600 text-sm';
+                if (deskPhoto) deskPhoto.className = 'hidden';
+                if (brandSub) brandSub.innerText = 'Sekali Klik Beres';
+                if (photoWs) photoWs.classList.add('hidden');
+                if (clientWs) clientWs.classList.remove('hidden');
+                updateMobileMenuItems('home');
+                return;
+            }
 
-                const mobileDashBtn = document.getElementById('mnav-dashboard');
-                if (mobileDashBtn) mobileDashBtn.classList.remove('hidden');
+            const isPhoto = currentUser.role === 'photographer';
 
-                document.getElementById('editFullName').value = currentUser.full_name || '';
-                document.getElementById('editPhone').value = currentUser.phone_number || '';
+            if (isPhoto) {
+                if (deskClient) deskClient.className = 'hidden';
+                if (deskPhoto) deskPhoto.className = 'hidden md:flex items-center gap-6 font-medium text-slate-600 text-sm';
+                if (brandSub) brandSub.innerText = 'Mitra Studio Portal';
+                if (photoWs) photoWs.classList.remove('hidden');
+                if (clientWs) clientWs.classList.add('hidden');
+            } else {
+                if (deskClient) deskClient.className = 'hidden md:flex items-center gap-7 font-medium text-slate-600 text-sm';
+                if (deskPhoto) deskPhoto.className = 'hidden';
+                if (brandSub) brandSub.innerText = 'Sekali Klik Beres';
+                if (photoWs) photoWs.classList.add('hidden');
+                if (clientWs) clientWs.classList.remove('hidden');
+                const navDash = document.getElementById('nav-dashboard');
+                if (navDash) navDash.classList.remove('hidden');
+            }
 
-                const isPhoto = currentUser.role === 'photographer';
-                document.getElementById('photographerDashboardLayout').style.display = isPhoto ? 'grid' : 'none';
-                document.getElementById('editPhotographerExtra').style.display = isPhoto ? 'block' : 'none';
-                document.getElementById('dashTitleMain').innerText = isPhoto ? 'Dashboard Fotografer' : 'Dashboard Klien';
-                document.getElementById('dashSubtitleMain').innerText = isPhoto
-                    ? 'Kelola bisnis fotografi, jadwal, dan ulasan klien dalam satu tempat'
-                    : 'Pantau riwayat booking, chat fotografer, dan berikan rating sesi foto';
-
+            const navAuth = document.getElementById('navAuthSection');
+            if (navAuth) {
+                let avatarUrl = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=150&q=80';
                 if (isPhoto) {
                     const pData = currentPhotographers.find(p => String(p.id) === String(currentUser.id));
-                    if (pData) {
-                        document.getElementById('editCategory').value = pData.category || 'Wisuda';
-                        document.getElementById('editLocation').value = pData.location || 'Jabodetabek';
-                        document.getElementById('editPrice').value = pData.price || 0;
-                        document.getElementById('editCoverUrl').value = pData.coverurl || '';
-                        document.getElementById('editPortfolioUrl').value = pData.portfoliourl || '';
-                        document.getElementById('editBio').value = pData.bio || '';
-                        if (document.getElementById('dashMyRating')) document.getElementById('dashMyRating').innerText = Number(pData.rating || 5.0).toFixed(1);
-                        if (document.getElementById('dashMyReviewCount')) document.getElementById('dashMyReviewCount').innerText = pData.reviewscount || 0;
-                    }
+                    if (pData && pData.coverurl) avatarUrl = pData.coverurl;
                 }
-            }
-        }
 
-        function renderDashboardOrders() {
-            const list = document.getElementById('dashboardOrdersList');
-            if(!list) return;
-
-            let filteredBookings = [...activeBookings];
-            if (currentUser) {
-                const uid = String(currentUser.id);
-                const uname = (currentUser.full_name || '').toLowerCase();
-                if (currentUser.role === 'photographer') {
-                    filteredBookings = activeBookings.filter(b =>
-                        String(b.photographer_id) === uid ||
-                        (uname && (b.item_description || '').toLowerCase().startsWith(uname))
-                    );
-                } else {
-                    filteredBookings = activeBookings.filter(b =>
-                        String(b.user_id) === uid ||
-                        (!b.user_id && uname && (b.item_description || '').toLowerCase().includes(uname))
-                    );
-                }
+                navAuth.innerHTML = `
+                    <div class="flex items-center gap-2.5 cursor-pointer hover:bg-slate-50 p-1.5 rounded-full transition-colors" onclick="${isPhoto ? "openPhotographerSection('overview')" : "switchPage('dashboard')"}">
+                        <img src="${avatarUrl}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-primary shadow-sm">
+                        <div class="hidden sm:block text-left pr-2">
+                            <span class="text-xs font-bold block text-slate-900">${currentUser.full_name || currentUser.email}</span>
+                            <span class="text-[10px] text-primary uppercase font-bold">${isPhoto ? 'Mitra Fotografer' : 'Klien'}</span>
+                        </div>
+                    </div>
+                    <button onclick="localStorage.removeItem('clickly_user'); location.reload()" title="Keluar" class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:text-rose-500 hover:bg-rose-50 transition-colors"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+                `;
+                lucide.createIcons();
             }
 
-            list.innerHTML = filteredBookings.length
-                ? ''
-                : '<div class="text-center p-8 border-2 border-dashed border-slate-200 rounded-[20px]"><i data-lucide="calendar-x" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i><p class="text-sm font-medium text-slate-500">Belum ada pesanan aktif.</p></div>';
+            if (isPhoto) {
+                const pData = currentPhotographers.find(p => String(p.id) === String(currentUser.id));
+                const avatar = (pData && pData.coverurl) ? pData.coverurl : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=150&q=80';
+                if (document.getElementById('photoWorkspaceAvatar')) document.getElementById('photoWorkspaceAvatar').src = avatar;
+                if (document.getElementById('photoWorkspaceTitle')) document.getElementById('photoWorkspaceTitle').innerText = (pData && pData.name) || currentUser.full_name;
+                if (document.getElementById('photoWorkspaceMeta')) document.getElementById('photoWorkspaceMeta').innerText = `${(pData && pData.category) || 'Fotografi'} • ${(pData && pData.location) || 'Indonesia'}`;
 
-            let total = 0;
-            filteredBookings.forEach(b => {
-                total += Number(b.subtotal || 0);
-            });
+                if (pData) {
+                    document.getElementById('editPhotoStudioName').value = pData.name || currentUser.full_name || '';
+                    document.getElementById('editPhotoPhone').value = currentUser.phone_number || '';
+                    document.getElementById('editCategory').value = pData.category || 'Wisuda';
+                    document.getElementById('editLocation').value = pData.location || 'Jabodetabek';
+                    document.getElementById('editPrice').value = pData.price || 500000;
+                    document.getElementById('editStdPrice').value = pData.std_price || (Number(pData.price || 500000) * 2);
+                    document.getElementById('editBasicDesc').value = pData.basic_desc || '1 Jam Sesi • 50 Edited Photos';
+                    document.getElementById('editStdDesc').value = pData.std_desc || '3 Jam Sesi • 100 Edited Photos + All Raw Files';
+                    document.getElementById('editCoverUrl').value = pData.coverurl || '';
+                    document.getElementById('editPortfolioUrl').value = pData.portfoliourl || '';
+                    document.getElementById('editBio').value = pData.bio || '';
 
-            const isClient = !currentUser || currentUser.role === 'user';
+                    if (document.getElementById('dashMyRating')) document.getElementById('dashMyRating').innerText = Number(pData.rating || 5.0).toFixed(1);
+                    if (document.getElementById('dashMyReviewCount')) document.getElementById('dashMyReviewCount').innerText = pData.reviewscount || 0;
+                }
+                renderPhotographerDashboardReviews();
+                renderPhotographerScheduleList();
+            } else {
+                document.getElementById('editClientFullName').value = currentUser.full_name || '';
+                document.getElementById('editClientPhone').value = currentUser.phone_number || '';
+            }
 
-            [...filteredBookings].reverse().forEach(b => {
-                const safeDesc = (b.item_description || 'Pesanan Clickly').replace(/'/g, "\\'");
-                const isPhotographerOrder = Boolean(b.photographer_id);
-                const ratingBtnHtml = (isClient && isPhotographerOrder)
-                    ? `<button onclick="openRatingModal('${b.photographer_id}')" class="flex-1 sm:flex-none px-4 py-2 bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors"><i data-lucide="star" class="w-4 h-4"></i> Rating</button>`
-                    : '';
-
-                list.innerHTML += `
-                    <div class="p-5 bg-white shadow-sm border border-slate-100 rounded-[24px] flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm gap-4 hover:shadow-md transition-shadow">
-                        <div>
-                            <span class="text-[10px] text-emerald-600 font-bold uppercase tracking-wide bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">Dikonfirmasi Lunas</span>
-                            <p class="font-space font-bold text-slate-900 text-base mt-2">${b.item_description}</p>
-                            <p class="text-xs font-medium text-slate-400 mt-0.5">Trx ID: ${b.booking_id}</p>
-                        </div>
-                        <div class="flex flex-col sm:items-end gap-3 w-full sm:w-auto">
-                            <strong class="font-space font-bold text-primary text-lg">Rp ${Number(b.subtotal).toLocaleString('id-ID')}</strong>
-                            <div class="flex gap-2 w-full sm:w-auto">
-                                <button onclick="openChatRoom('${safeDesc}', '${b.photographer_id || 'all'}')" class="flex-1 sm:flex-none px-4 py-2 bg-secondary/10 text-secondary hover:bg-secondary hover:text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors"><i data-lucide="message-square" class="w-4 h-4"></i> Chat</button>
-                                ${ratingBtnHtml}
-                            </div>
-                        </div>
-                    </div>`;
-            });
-            lucide.createIcons();
-            if(document.getElementById('dashTotalOrders')) document.getElementById('dashTotalOrders').innerText = filteredBookings.length;
-            if(document.getElementById('dashTotalIncome')) document.getElementById('dashTotalIncome').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+            renderAllOrderViews();
+            updateMobileMenuItems(isPhoto ? 'dashboard' : 'home');
         }
 
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
