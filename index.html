@@ -88,7 +88,7 @@
                 <button onclick="switchPage('rental')" id="nav-rental" class="hover:text-primary transition-colors">Sewa Alat</button>
                 <button onclick="switchPage('howitworks')" id="nav-howitworks" class="hover:text-primary transition-colors">Cara Kerja</button>
                 <button onclick="switchPage('faq')" id="nav-faq" class="hover:text-primary transition-colors">FAQ</button>
-                <button onclick="switchPage('dashboard')" id="nav-dashboard" class="hidden hover:text-primary transition-colors">Pesanan Saya</button>
+                <button onclick="switchPage('dashboard')" id="nav-dashboard" class="hidden hover:text-primary transition-colors">Pesanan & Profil</button>
             </nav>
 
             <!-- Desktop Menu: Khusus Mitra Fotografer -->
@@ -97,7 +97,7 @@
                 <button onclick="openPhotographerSection('orders')" id="pnav-orders" class="hover:text-primary transition-colors flex items-center gap-1.5">
                     Order & Kirim Hasil <span id="navPendingOrderBadge" class="hidden bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
                 </button>
-                <button onclick="openPhotographerSection('catalog')" id="pnav-catalog" class="hover:text-primary transition-colors">Paket & Portofolio</button>
+                <button onclick="openPhotographerSection('catalog')" id="pnav-catalog" class="hover:text-primary transition-colors">Profil, Paket & Portofolio</button>
                 <button onclick="openPhotographerSection('schedule')" id="pnav-schedule" class="hover:text-primary transition-colors">Jadwal</button>
                 <button onclick="switchPage('rental')" id="pnav-rental" class="hover:text-primary transition-colors">Sewa Alat</button>
             </nav>
@@ -114,7 +114,7 @@
             </div>
         </div>
 
-        <!-- Mobile Menu Dropdown (Dinamis mengikuti role) -->
+        <!-- Mobile Menu Dropdown -->
         <div id="mobileNavMenu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-5 space-y-2 shadow-lg"></div>
     </header>
 
@@ -310,7 +310,7 @@
             </div>
         </div>
 
-        <!-- TAB 6: DASHBOARD (TERPISAH TOTAL: WORKSPACE FOTOGRAFER VS PESANAN KLIEN) -->
+        <!-- TAB 6: DASHBOARD (TERPISAH TOTAL: WORKSPACE FOTOGRAFER VS PESANAN & PROFIL KLIEN) -->
         <div id="view-dashboard" class="page-view py-10 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
@@ -321,7 +321,12 @@
                     <!-- Header Workspace Mitra -->
                     <div class="bg-white rounded-[32px] p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                         <div class="flex items-center gap-4">
-                            <img id="photoWorkspaceAvatar" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=150&q=80" class="w-16 h-16 rounded-2xl object-cover border-2 border-primary shadow-md">
+                            <div class="relative group cursor-pointer" onclick="openPhotographerSection('catalog')" title="Ganti Foto Profil Studio">
+                                <img id="photoWorkspaceAvatar" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=150&q=80" class="w-16 h-16 rounded-2xl object-cover border-2 border-primary shadow-md">
+                                <span class="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-md border-2 border-white">
+                                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                                </span>
+                            </div>
                             <div>
                                 <div class="flex items-center gap-2">
                                     <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-orange-50 text-primary border border-orange-100">Mitra Terverifikasi</span>
@@ -338,7 +343,7 @@
                         <div class="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl">
                             <button onclick="openPhotographerSection('overview')" id="ptab-overview" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-slate-900 shadow-sm transition-all">Ringkasan & Escrow</button>
                             <button onclick="openPhotographerSection('orders')" id="ptab-orders" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 transition-all">Order & Kirim Hasil</button>
-                            <button onclick="openPhotographerSection('catalog')" id="ptab-catalog" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 transition-all">Paket & Portofolio</button>
+                            <button onclick="openPhotographerSection('catalog')" id="ptab-catalog" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 transition-all">Profil, Paket & Portofolio</button>
                             <button onclick="openPhotographerSection('schedule')" id="ptab-schedule" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 transition-all">Jadwal Libur</button>
                         </div>
                     </div>
@@ -463,14 +468,37 @@
                         </div>
                     </div>
 
-                    <!-- SUB-VIEW 3: PAKET FOTO & PORTOFOLIO -->
+                    <!-- SUB-VIEW 3: PROFIL STUDIO, PAKET FOTO & PORTOFOLIO -->
                     <div id="psec-catalog" class="hidden">
                         <div class="bg-white rounded-[32px] p-6 sm:p-8 border border-slate-100 shadow-sm">
                             <div class="mb-6">
-                                <h3 class="font-space font-bold text-xl text-slate-900">Pengaturan Paket Sesi & Portofolio</h3>
-                                <p class="text-xs font-medium text-slate-500 mt-1">Perubahan harga dan portofolio langsung tampil live di halaman Cari Fotografer.</p>
+                                <h3 class="font-space font-bold text-xl text-slate-900">Profil Studio, Paket Sesi & Portofolio</h3>
+                                <p class="text-xs font-medium text-slate-500 mt-1">Foto profil, harga paket, dan portofolio langsung tampil live di halaman Cari Fotografer.</p>
                             </div>
                             <form onsubmit="handleUpdatePhotographerCatalog(event)" class="space-y-6 max-w-3xl">
+                                <!-- Foto Profil & Sampul Studio -->
+                                <div class="p-5 rounded-[24px] bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-5">
+                                    <div class="relative shrink-0">
+                                        <img id="photoProfileAvatarPreview" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=300&q=80" alt="Foto Profil Studio" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg">
+                                        <label for="photoProfileFileInput" class="absolute bottom-0 right-0 w-8 h-8 rounded-full gradient-brand text-white flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform" title="Upload Foto Profil">
+                                            <i data-lucide="camera" class="w-4 h-4"></i>
+                                        </label>
+                                        <input type="file" id="photoProfileFileInput" accept="image/*" onchange="handleProfilePhotoFileSelect(event, 'photographer')" class="hidden">
+                                    </div>
+                                    <div class="flex-1 w-full space-y-2.5 text-center sm:text-left">
+                                        <div>
+                                            <h4 class="font-space font-bold text-sm text-slate-900">Foto Profil & Sampul Studio</h4>
+                                            <p class="text-xs text-slate-500 font-medium">Upload foto langsung dari perangkat atau masukkan URL gambar di bawah.</p>
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row gap-2.5">
+                                            <label for="photoProfileFileInput" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-primary text-white font-bold text-xs cursor-pointer transition-colors inline-flex items-center justify-center gap-1.5 shrink-0">
+                                                <i data-lucide="upload" class="w-3.5 h-3.5"></i> Pilih Foto dari Perangkat
+                                            </label>
+                                            <input type="url" id="editCoverUrl" placeholder="Atau tempel URL foto sampul (https://...)" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs focus:outline-none focus:border-secondary">
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                     <div>
                                         <label class="block text-xs font-bold text-slate-600 mb-2">Nama Studio / Talent</label>
@@ -524,15 +552,9 @@
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
-                                    <div>
-                                        <label class="block text-xs font-bold text-slate-600 mb-2">URL Foto Sampul Utama</label>
-                                        <input type="url" id="editCoverUrl" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-bold text-slate-600 mb-2">URL Link Portofolio (Drive / Web / IG)</label>
-                                        <input type="url" id="editPortfolioUrl" class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-2">URL Link Portofolio (Drive / Web / IG)</label>
+                                    <input type="url" id="editPortfolioUrl" placeholder="https://drive.google.com/..." class="w-full px-5 py-3.5 rounded-[20px] border border-slate-200 text-sm focus:outline-none focus:border-secondary">
                                 </div>
 
                                 <div>
@@ -583,7 +605,7 @@
                 </div>
 
                 <!-- =========================================================
-                     B. DASHBOARD KHUSUS KLIEN (AKTIVITAS BOOKING, GALERI HASIL & ESCROW)
+                     B. DASHBOARD KHUSUS KLIEN (AKTIVITAS BOOKING, GALERI HASIL & PROFIL)
                 ========================================================= -->
                 <div id="clientWorkspace" class="space-y-8">
                     <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
@@ -609,12 +631,35 @@
                         <div id="clientOrdersList" class="space-y-5"></div>
                     </div>
 
-                    <!-- PENGATURAN PROFIL KLIEN -->
+                    <!-- PENGATURAN PROFIL KLIEN + UPDATE FOTO PROFIL -->
                     <div class="bg-white rounded-[32px] p-6 sm:p-8 border border-slate-100 shadow-sm">
                         <h3 class="font-space font-bold text-xl text-slate-900 mb-6 flex items-center gap-2">
                             <i data-lucide="user-pen" class="w-5 h-5 text-secondary"></i> Pengaturan Profil Klien
                         </h3>
-                        <form onsubmit="handleUpdateClientProfile(event)" class="space-y-5 max-w-2xl">
+                        <form onsubmit="handleUpdateClientProfile(event)" class="space-y-6 max-w-2xl">
+                            <!-- Foto Profil Klien -->
+                            <div class="p-5 rounded-[24px] bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-5">
+                                <div class="relative shrink-0">
+                                    <img id="clientProfileAvatarPreview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" alt="Foto Profil Klien" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg">
+                                    <label for="clientProfileFileInput" class="absolute bottom-0 right-0 w-8 h-8 rounded-full gradient-brand text-white flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform" title="Ganti Foto Profil">
+                                        <i data-lucide="camera" class="w-4 h-4"></i>
+                                    </label>
+                                    <input type="file" id="clientProfileFileInput" accept="image/*" onchange="handleProfilePhotoFileSelect(event, 'client')" class="hidden">
+                                </div>
+                                <div class="flex-1 w-full space-y-2.5 text-center sm:text-left">
+                                    <div>
+                                        <h4 class="font-space font-bold text-sm text-slate-900">Foto Profil Akun</h4>
+                                        <p class="text-xs text-slate-500 font-medium">Upload foto langsung dari HP/Laptop atau tempel link gambar.</p>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row gap-2.5">
+                                        <label for="clientProfileFileInput" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-primary text-white font-bold text-xs cursor-pointer transition-colors inline-flex items-center justify-center gap-1.5 shrink-0">
+                                            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Pilih Foto
+                                        </label>
+                                        <input type="url" id="editClientAvatarUrl" placeholder="Atau tempel URL foto (https://...)" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-xs focus:outline-none focus:border-secondary">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600 mb-2">Nama Lengkap</label>
@@ -820,7 +865,6 @@
             </div>
             <input type="hidden" id="deliverOrderId">
 
-            <!-- 1. Upload File Foto Langsung -->
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-slate-700">1. Upload File Foto Langsung (Bisa Pilih Banyak)</label>
                 <label for="deliverPhotoFilesInput" class="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-secondary/50 bg-sky-50/50 hover:bg-sky-50 rounded-2xl cursor-pointer transition-colors text-center">
@@ -832,13 +876,11 @@
                 <div id="deliveryUploadPreviewGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-2.5 pt-2"></div>
             </div>
 
-            <!-- 2. Link Google Drive / Cloud (Opsional) -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">2. Link Folder Google Drive / Raw Files (Opsional)</label>
                 <input type="url" id="deliverResultUrlInput" placeholder="https://drive.google.com/drive/folders/..." class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:border-secondary">
             </div>
 
-            <!-- 3. Catatan Pengiriman -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">3. Catatan untuk Klien</label>
                 <textarea id="deliverNotesInput" rows="2" placeholder="Contoh: Ini hasil edit tone warm ya kak, silakan dicek dan konfirmasi kalau sudah sesuai!" class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-xs focus:outline-none focus:border-secondary"></textarea>
@@ -850,7 +892,7 @@
         </div>
     </div>
 
-    <!-- MODAL PREVIEW & DOWNLOAD FOTO FULLSCREEN (KLIEN & FOTOGRAFER) -->
+    <!-- MODAL PREVIEW & DOWNLOAD FOTO FULLSCREEN -->
     <div id="photoPreviewModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
         <div class="bg-white rounded-[32px] max-w-3xl w-full p-5 sm:p-6 shadow-2xl relative space-y-4">
             <div class="flex items-center justify-between">
@@ -892,6 +934,9 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_BUXo9A8fhlN0e-RICss1MA_gBASimd0';
         let supabaseClient = typeof supabase !== 'undefined' ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
+        const DEFAULT_CLIENT_AVATAR = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
+        const DEFAULT_PHOTO_AVATAR = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80';
+
         let currentPhotographers = [];
         let currentEquipments = [];
         let selectedForCompare = [];
@@ -907,6 +952,8 @@
         let activePhotoSection = 'overview';
         let photoOrderFilter = 'all';
         let stagedDeliveryPhotos = [];
+        let stagedClientAvatarDataUrl = null;
+        let stagedPhotoAvatarDataUrl = null;
 
         const ORDER_STEPS = [
             'Menunggu Konfirmasi',
@@ -1108,13 +1155,13 @@
                 mobileMenu.innerHTML = `
                     <button onclick="openPhotographerSection('overview'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' && activePhotoSection === 'overview' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Dashboard Bisnis</button>
                     <button onclick="openPhotographerSection('orders'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' && activePhotoSection === 'orders' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Order & Kirim Hasil</button>
-                    <button onclick="openPhotographerSection('catalog'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' && activePhotoSection === 'catalog' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Paket & Portofolio</button>
+                    <button onclick="openPhotographerSection('catalog'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' && activePhotoSection === 'catalog' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Profil, Paket & Portofolio</button>
                     <button onclick="openPhotographerSection('schedule'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' && activePhotoSection === 'schedule' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Jadwal Libur</button>
                     <button onclick="switchPage('rental'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'rental' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Sewa Alat</button>
                 `;
             } else {
                 const dashBtn = currentUser
-                    ? `<button onclick="switchPage('dashboard'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Pesanan Saya</button>`
+                    ? `<button onclick="switchPage('dashboard'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'dashboard' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Pesanan & Profil</button>`
                     : '';
                 mobileMenu.innerHTML = `
                     <button onclick="switchPage('home'); closeMobileMenu()" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold ${activePageId === 'home' ? 'text-primary bg-orange-50/70' : 'text-slate-700'}">Beranda</button>
@@ -1302,7 +1349,6 @@
 
             const myId = () => (currentUser ? String(currentUser.id) : '');
 
-            // 1. REALTIME ORDER & PROGRES ESCROW
             supabaseClient
                 .channel('realtime:order_detail')
                 .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'order_detail' }, payload => {
@@ -1367,7 +1413,6 @@
                 })
                 .subscribe();
 
-            // 2. REALTIME HASIL FOTO YANG DIKIRIM FOTOGRAFER (ORDER_DELIVERIES)
             supabaseClient
                 .channel('realtime:order_deliveries')
                 .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'order_deliveries' }, payload => {
@@ -1389,7 +1434,6 @@
                 })
                 .subscribe();
 
-            // 3. REALTIME CHAT MESSAGES
             supabaseClient
                 .channel('realtime:messages')
                 .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
@@ -1415,7 +1459,6 @@
                 })
                 .subscribe();
 
-            // 4. REALTIME KALENDER & JADWAL ANTI-BENTROK
             supabaseClient
                 .channel('realtime:photographer_schedules')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'photographer_schedules' }, payload => {
@@ -1433,7 +1476,6 @@
                 })
                 .subscribe();
 
-            // 5. REALTIME KATALOG FOTOGRAFER & TARIF
             supabaseClient
                 .channel('realtime:photographer')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'photographer' }, payload => {
@@ -1454,7 +1496,6 @@
                 })
                 .subscribe();
 
-            // 6. REALTIME KATALOG SEWA ALAT
             supabaseClient
                 .channel('realtime:equipments')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'equipments' }, payload => {
@@ -1470,7 +1511,6 @@
                 })
                 .subscribe();
 
-            // 7. REALTIME REVIEWERS
             supabaseClient
                 .channel('realtime:reviewers')
                 .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reviewers' }, payload => {
@@ -1494,19 +1534,8 @@
         }
 
         // ==========================================
-        // FITUR FOTOGRAFER KIRIM HASIL FOTO REALTIME
+        // KOMPRESI & UPLOAD FOTO PROFIL (DUA ROLE)
         // ==========================================
-        function openDeliverResultModal(orderId) {
-            stagedDeliveryPhotos = [];
-            document.getElementById('deliverOrderId').value = orderId;
-            document.getElementById('deliverPhotoFilesInput').value = '';
-            document.getElementById('deliverResultUrlInput').value = '';
-            document.getElementById('deliverNotesInput').value = '';
-            document.getElementById('deliveryUploadPreviewGrid').innerHTML = '';
-            openModal('deliverResultModal');
-            lucide.createIcons();
-        }
-
         function compressImageFileToDataUrl(file, maxWidth = 1000, quality = 0.8) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1532,6 +1561,42 @@
                 reader.onerror = reject;
                 reader.readAsDataURL(file);
             });
+        }
+
+        async function handleProfilePhotoFileSelect(event, roleType) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            try {
+                const maxDim = roleType === 'photographer' ? 720 : 400;
+                const dataUrl = await compressImageFileToDataUrl(file, maxDim, 0.82);
+
+                if (roleType === 'client') {
+                    stagedClientAvatarDataUrl = dataUrl;
+                    const previewEl = document.getElementById('clientProfileAvatarPreview');
+                    if (previewEl) previewEl.src = dataUrl;
+                } else if (roleType === 'photographer') {
+                    stagedPhotoAvatarDataUrl = dataUrl;
+                    const previewEl = document.getElementById('photoProfileAvatarPreview');
+                    if (previewEl) previewEl.src = dataUrl;
+                }
+            } catch (err) {
+                alert('Gagal memproses file gambar. Pastikan format file JPG/PNG/WEBP.');
+            }
+        }
+
+        // ==========================================
+        // FITUR FOTOGRAFER KIRIM HASIL FOTO REALTIME
+        // ==========================================
+        function openDeliverResultModal(orderId) {
+            stagedDeliveryPhotos = [];
+            document.getElementById('deliverOrderId').value = orderId;
+            document.getElementById('deliverPhotoFilesInput').value = '';
+            document.getElementById('deliverResultUrlInput').value = '';
+            document.getElementById('deliverNotesInput').value = '';
+            document.getElementById('deliveryUploadPreviewGrid').innerHTML = '';
+            openModal('deliverResultModal');
+            lucide.createIcons();
         }
 
         async function previewSelectedDeliveryPhotos(event) {
@@ -1867,7 +1932,7 @@
 
             dataList.forEach(p => {
                 const isChecked = selectedForCompare.includes(p.id);
-                const safeCover = p.coverurl && p.coverurl.trim() !== '' ? p.coverurl : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80';
+                const safeCover = p.coverurl && p.coverurl.trim() !== '' ? p.coverurl : DEFAULT_PHOTO_AVATAR;
                 const isOwnProfile = currentUser && currentUser.role === 'photographer' && String(currentUser.id) === String(p.id);
 
                 grid.innerHTML += `
@@ -1890,7 +1955,7 @@
                             <div class="pt-5 mt-5 border-t border-slate-100 flex items-center justify-between">
                                 <div><span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wide">Mulai dari</span><span class="font-space font-bold text-primary text-lg">Rp ${Number(p.price).toLocaleString('id-ID')}</span></div>
                                 ${isOwnProfile
-                                    ? `<button onclick="openPhotographerSection('catalog')" class="px-5 py-2.5 bg-orange-50 text-primary hover:bg-primary hover:text-white font-bold text-xs rounded-xl transition-colors">Edit Paket Saya</button>`
+                                    ? `<button onclick="openPhotographerSection('catalog')" class="px-5 py-2.5 bg-orange-50 text-primary hover:bg-primary hover:text-white font-bold text-xs rounded-xl transition-colors">Edit Profil & Paket</button>`
                                     : `<button onclick="openDetailModal('${p.id}')" class="px-5 py-2.5 bg-slate-900 text-white hover:bg-primary font-bold text-xs rounded-xl shadow-md transition-colors">Lihat Profil</button>`
                                 }
                             </div>
@@ -2157,7 +2222,7 @@
             const stdDesc = p.std_desc || '3 Jam Sesi • 100 Edited Photos + All Raw Files';
 
             selectedPhotoPackage = { type: 'basic', name: 'Paket Basic', price: basicPrice };
-            const safeCover = p.coverurl && p.coverurl.trim() !== '' ? p.coverurl : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80';
+            const safeCover = p.coverurl && p.coverurl.trim() !== '' ? p.coverurl : DEFAULT_PHOTO_AVATAR;
             const safeName = (p.name || 'Fotografer').replace(/'/g, "\\'");
             const isSelfPreview = currentUser && currentUser.role === 'photographer' && String(currentUser.id) === String(p.id);
 
@@ -2181,7 +2246,7 @@
                     <div class="p-5 rounded-2xl bg-orange-50 border border-orange-100 text-center space-y-3">
                         <p class="text-xs font-bold text-primary">Ini adalah tampilan profil publik kamu di mata klien.</p>
                         <button onclick="closeModal('detailModal'); openPhotographerSection('catalog')" class="w-full py-3.5 gradient-brand text-white font-bold rounded-2xl shadow-md text-xs">
-                            Edit Paket & Portofolio Saya
+                            Edit Profil, Paket & Portofolio
                         </button>
                     </div>
                 `
@@ -2438,7 +2503,6 @@
             return `<span class="text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full border ${cls}">${st}</span>`;
         }
 
-        // Render Daftar Pesanan & Galeri Hasil Foto di Dashboard Klien
         function renderClientOrders() {
             const list = document.getElementById('clientOrdersList');
             if (!list || !currentUser || currentUser.role !== 'user') return;
@@ -2550,7 +2614,6 @@
             lucide.createIcons();
         }
 
-        // Render Daftar Order & Tombol Kirim Hasil Foto di Workspace Fotografer
         function filterPhotoOrders(filterType, btnEl) {
             photoOrderFilter = filterType;
             document.querySelectorAll('.porder-filter-btn').forEach(btn => {
@@ -2920,7 +2983,7 @@
         }
 
         // ==========================================
-        // AUTH & UPDATE PROFIL (KLIEN & FOTOGRAFER)
+        // AUTH & UPDATE PROFIL + FOTO PROFIL (DUA ROLE)
         // ==========================================
         function openAuthModal(mode) {
             document.getElementById('authMode').value = mode;
@@ -2961,6 +3024,17 @@
         function toggleAuthMode() {
             const mode = document.getElementById('authMode').value;
             openAuthModal(mode === 'login' ? 'register' : 'login');
+        }
+
+        function syncLocalUsersCache(updatedUser) {
+            let localUsers = JSON.parse(localStorage.getItem('clickly_registered_users')) || [];
+            const idx = localUsers.findIndex(u => String(u.id) === String(updatedUser.id) || u.email.toLowerCase() === updatedUser.email.toLowerCase());
+            if (idx !== -1) {
+                localUsers[idx] = { ...localUsers[idx], ...updatedUser };
+            } else {
+                localUsers.push(updatedUser);
+            }
+            localStorage.setItem('clickly_registered_users', JSON.stringify(localUsers));
         }
 
         async function handleAuthSubmit(e) {
@@ -3013,7 +3087,8 @@
                     email: matchedUser.email,
                     role: matchedUser.role || role,
                     full_name: matchedUser.full_name,
-                    phone_number: matchedUser.phone_number
+                    phone_number: matchedUser.phone_number,
+                    avatar_url: matchedUser.avatar_url || (localAccount && localAccount.avatar_url) || ''
                 };
 
                 localStorage.setItem('clickly_user', JSON.stringify(currentUser));
@@ -3057,16 +3132,31 @@
             }
 
             const userId = String(Date.now());
+            const initialPhotoCover = role === 'photographer'
+                ? (document.getElementById('photoCoverUrl').value.trim() || DEFAULT_PHOTO_AVATAR)
+                : DEFAULT_CLIENT_AVATAR;
+
             const newUserRecord = {
                 id: userId,
                 email: email,
                 role: role,
                 full_name: fullName,
-                phone_number: phone
+                phone_number: phone,
+                avatar_url: initialPhotoCover
             };
 
             if (supabaseClient) {
-                await supabaseClient.from('users').insert([newUserRecord]);
+                const { error } = await supabaseClient.from('users').insert([newUserRecord]);
+                if (error) {
+                    await supabaseClient.from('users').insert([{
+                        id: userId,
+                        email: email,
+                        role: role,
+                        full_name: fullName,
+                        phone_number: phone
+                    }]);
+                }
+
                 if (role === 'photographer') {
                     const basePrice = Number(document.getElementById('photoPrice').value) || 500000;
                     const newPhoto = {
@@ -3078,7 +3168,7 @@
                         std_price: basePrice * 2,
                         basic_desc: '1 Jam Sesi • 50 Edited Photos',
                         std_desc: '3 Jam Sesi • 100 Edited Photos + All Raw Files',
-                        coverurl: document.getElementById('photoCoverUrl').value.trim() || 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
+                        coverurl: initialPhotoCover,
                         portfoliourl: document.getElementById('photoPortfolioUrl').value.trim() || '#',
                         rating: 5.0,
                         reviewscount: 1,
@@ -3111,16 +3201,46 @@
             e.preventDefault();
             if (!currentUser) return;
 
-            currentUser.full_name = document.getElementById('editClientFullName').value.trim();
-            currentUser.phone_number = document.getElementById('editClientPhone').value.trim();
+            const newFullName = document.getElementById('editClientFullName').value.trim();
+            const newPhone = document.getElementById('editClientPhone').value.trim();
+            const urlInput = document.getElementById('editClientAvatarUrl').value.trim();
+
+            const finalAvatar = stagedClientAvatarDataUrl
+                || (urlInput !== '' ? urlInput : '')
+                || currentUser.avatar_url
+                || DEFAULT_CLIENT_AVATAR;
+
+            currentUser.full_name = newFullName;
+            currentUser.phone_number = newPhone;
+            currentUser.avatar_url = finalAvatar;
 
             if (supabaseClient) {
-                await supabaseClient.from('users').update({ full_name: currentUser.full_name, phone_number: currentUser.phone_number }).eq('id', currentUser.id);
+                const { error } = await supabaseClient
+                    .from('users')
+                    .update({
+                        full_name: currentUser.full_name,
+                        phone_number: currentUser.phone_number,
+                        avatar_url: currentUser.avatar_url
+                    })
+                    .eq('id', currentUser.id);
+
+                if (error) {
+                    await supabaseClient
+                        .from('users')
+                        .update({
+                            full_name: currentUser.full_name,
+                            phone_number: currentUser.phone_number
+                        })
+                        .eq('id', currentUser.id);
+                }
             }
 
+            stagedClientAvatarDataUrl = null;
+            document.getElementById('clientProfileFileInput').value = '';
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
+            syncLocalUsersCache(currentUser);
             updateUserUIState();
-            alert('Profil klien berhasil diperbarui!');
+            showRealtimeToast('Profil Klien Diperbarui ✨', 'Foto profil dan informasi akun kamu berhasil disimpan.', 'check-circle-2');
         }
 
         async function handleUpdatePhotographerCatalog(e) {
@@ -3131,9 +3251,20 @@
             const phone = document.getElementById('editPhotoPhone').value.trim();
             const basicPrice = Number(document.getElementById('editPrice').value) || 500000;
             const stdPrice = Number(document.getElementById('editStdPrice').value) || basicPrice * 2;
+            const urlInput = document.getElementById('editCoverUrl').value.trim();
+
+            const pIdx = currentPhotographers.findIndex(p => String(p.id) === String(currentUser.id));
+            const existingCover = (pIdx !== -1 && currentPhotographers[pIdx].coverurl) ? currentPhotographers[pIdx].coverurl : '';
+
+            const finalCoverUrl = stagedPhotoAvatarDataUrl
+                || (urlInput !== '' ? urlInput : '')
+                || existingCover
+                || currentUser.avatar_url
+                || DEFAULT_PHOTO_AVATAR;
 
             currentUser.full_name = studioName;
             currentUser.phone_number = phone;
+            currentUser.avatar_url = finalCoverUrl;
 
             const updatedPhoto = {
                 name: studioName,
@@ -3143,13 +3274,23 @@
                 std_price: stdPrice,
                 basic_desc: document.getElementById('editBasicDesc').value.trim() || '1 Jam Sesi • 50 Edited Photos',
                 std_desc: document.getElementById('editStdDesc').value.trim() || '3 Jam Sesi • 100 Edited Photos + Raw',
-                coverurl: document.getElementById('editCoverUrl').value.trim(),
+                coverurl: finalCoverUrl,
                 portfoliourl: document.getElementById('editPortfolioUrl').value.trim(),
                 bio: document.getElementById('editBio').value.trim()
             };
 
             if (supabaseClient) {
-                await supabaseClient.from('users').update({ full_name: studioName, phone_number: phone }).eq('id', currentUser.id);
+                const { error: userErr } = await supabaseClient
+                    .from('users')
+                    .update({ full_name: studioName, phone_number: phone, avatar_url: finalCoverUrl })
+                    .eq('id', currentUser.id);
+                if (userErr) {
+                    await supabaseClient
+                        .from('users')
+                        .update({ full_name: studioName, phone_number: phone })
+                        .eq('id', currentUser.id);
+                }
+
                 const { error } = await supabaseClient.from('photographer').update(updatedPhoto).eq('id', currentUser.id);
                 if (error) {
                     await supabaseClient.from('photographer').update({
@@ -3164,15 +3305,17 @@
                 }
             }
 
-            const pIdx = currentPhotographers.findIndex(p => String(p.id) === String(currentUser.id));
             if (pIdx !== -1) {
                 currentPhotographers[pIdx] = { ...currentPhotographers[pIdx], ...updatedPhoto };
             }
 
+            stagedPhotoAvatarDataUrl = null;
+            document.getElementById('photoProfileFileInput').value = '';
             localStorage.setItem('clickly_user', JSON.stringify(currentUser));
+            syncLocalUsersCache(currentUser);
             renderPhotographerGrid(currentPhotographers);
             updateUserUIState();
-            alert('Paket & Portofolio berhasil disimpan dan langsung live di katalog!');
+            showRealtimeToast('Profil & Katalog Live! 📸', 'Foto profil, paket sesi, dan portofolio berhasil diperbarui.', 'check-circle-2');
         }
 
         function updateUserUIState() {
@@ -3210,17 +3353,19 @@
                 if (navDash) navDash.classList.remove('hidden');
             }
 
+            let resolvedAvatar = DEFAULT_CLIENT_AVATAR;
+            if (isPhoto) {
+                const pData = currentPhotographers.find(p => String(p.id) === String(currentUser.id));
+                resolvedAvatar = (pData && pData.coverurl) || currentUser.avatar_url || DEFAULT_PHOTO_AVATAR;
+            } else {
+                resolvedAvatar = currentUser.avatar_url || DEFAULT_CLIENT_AVATAR;
+            }
+
             const navAuth = document.getElementById('navAuthSection');
             if (navAuth) {
-                let avatarUrl = 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=150&q=80';
-                if (isPhoto) {
-                    const pData = currentPhotographers.find(p => String(p.id) === String(currentUser.id));
-                    if (pData && pData.coverurl) avatarUrl = pData.coverurl;
-                }
-
                 navAuth.innerHTML = `
                     <div class="flex items-center gap-2.5 cursor-pointer hover:bg-slate-50 p-1.5 rounded-full transition-colors" onclick="${isPhoto ? "openPhotographerSection('overview')" : "switchPage('dashboard')"}">
-                        <img src="${avatarUrl}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-primary shadow-sm">
+                        <img src="${resolvedAvatar}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-primary shadow-sm">
                         <div class="hidden sm:block text-left pr-2">
                             <span class="text-xs font-bold block text-slate-900">${currentUser.full_name || currentUser.email}</span>
                             <span class="text-[10px] text-primary uppercase font-bold">${isPhoto ? 'Mitra Fotografer' : 'Klien'}</span>
@@ -3233,8 +3378,8 @@
 
             if (isPhoto) {
                 const pData = currentPhotographers.find(p => String(p.id) === String(currentUser.id));
-                const avatar = (pData && pData.coverurl) ? pData.coverurl : 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=150&q=80';
-                if (document.getElementById('photoWorkspaceAvatar')) document.getElementById('photoWorkspaceAvatar').src = avatar;
+                if (document.getElementById('photoWorkspaceAvatar')) document.getElementById('photoWorkspaceAvatar').src = resolvedAvatar;
+                if (document.getElementById('photoProfileAvatarPreview')) document.getElementById('photoProfileAvatarPreview').src = resolvedAvatar;
                 if (document.getElementById('photoWorkspaceTitle')) document.getElementById('photoWorkspaceTitle').innerText = (pData && pData.name) || currentUser.full_name;
                 if (document.getElementById('photoWorkspaceMeta')) document.getElementById('photoWorkspaceMeta').innerText = `${(pData && pData.category) || 'Fotografi'} • ${(pData && pData.location) || 'Indonesia'}`;
 
@@ -3247,7 +3392,7 @@
                     document.getElementById('editStdPrice').value = pData.std_price || (Number(pData.price || 500000) * 2);
                     document.getElementById('editBasicDesc').value = pData.basic_desc || '1 Jam Sesi • 50 Edited Photos';
                     document.getElementById('editStdDesc').value = pData.std_desc || '3 Jam Sesi • 100 Edited Photos + All Raw Files';
-                    document.getElementById('editCoverUrl').value = pData.coverurl || '';
+                    document.getElementById('editCoverUrl').value = (pData.coverurl && !pData.coverurl.startsWith('data:')) ? pData.coverurl : '';
                     document.getElementById('editPortfolioUrl').value = pData.portfoliourl || '';
                     document.getElementById('editBio').value = pData.bio || '';
 
@@ -3257,12 +3402,15 @@
                 renderPhotographerDashboardReviews();
                 renderPhotographerScheduleList();
             } else {
+                if (document.getElementById('clientProfileAvatarPreview')) document.getElementById('clientProfileAvatarPreview').src = resolvedAvatar;
                 document.getElementById('editClientFullName').value = currentUser.full_name || '';
                 document.getElementById('editClientPhone').value = currentUser.phone_number || '';
+                document.getElementById('editClientAvatarUrl').value = (currentUser.avatar_url && !currentUser.avatar_url.startsWith('data:')) ? currentUser.avatar_url : '';
             }
 
             renderAllOrderViews();
             updateMobileMenuItems(isPhoto ? 'dashboard' : 'home');
+            lucide.createIcons();
         }
 
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
